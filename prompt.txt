@@ -1,0 +1,11 @@
+Make a python program using DIO Optimisation algo (Dholes-Inspired) used for hyper-parameters optimisation of random forest and feature selection at the same time, testing it on Breast Cancer Wisconsin (Diagnostic) dataset from scikit-learn.
+
+I think it should be a loop of first using the algo for feature selection then inside using it for parameters tunings on that selected features dataset or something like that.
+
+Search for the dio original implementation and import it here, if there's only matlab implementation make it in python.
+
+for feature selection:
+n_features entries [0,1] thresholded at 0.5 → selected/not selected.
+Fitness: 0.99 * ( 1 - acc) + 0.01 * (n_selected / n_features)
+
+You identify the ranges of the hyper-parameters...etc
