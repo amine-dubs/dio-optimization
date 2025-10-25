@@ -20,7 +20,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from dio import DIO
-from benchmark_functions import BenchmarkFunctions
+from benchmark_results.benchmark_functions import BenchmarkFunctions
 import time
 import json
 
