@@ -1,0 +1,25 @@
+{
+    "config": {
+        "n_dholes": 30,
+        "max_iterations": 500,
+        "num_runs": 30,
+        "test_functions": [
+            "F1",
+            "F2",
+            "F3",
+            "F4",
+            "F5",
+            "F6",
+            "F7",
+            "F8",
+            "F9",
+            "F10",
+            "F11",
+            "F12",
+            "F13",
+            "F14"
+        ]
+    },
+    "timestamp": "2025-10-25 17:18:47",
+    "note": "FULL PAPER SETTINGS - Results comparable to original DIO paper (Tables 6-9)."
+}
