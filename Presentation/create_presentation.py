@@ -8,9 +8,14 @@ from pptx.util import Inches, Pt
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 from pptx.dml.color import RGBColor
 import json
+import os
 
-# Load optimization results
-with open('optimization_results.json', 'r') as f:
+# Get the directory of this script
+script_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(script_dir)
+
+# Load optimization results from parent directory
+with open(os.path.join(parent_dir, 'optimization_results.json'), 'r') as f:
     opt_results = json.load(f)
 
 # Create presentation
@@ -403,16 +408,20 @@ p.font.size = Pt(16)
 # ============================================================================
 # SLIDE 13: KEY FINDINGS
 # ============================================================================
-slide = add_content_slide(prs, "Key Findings")
+slide = add_content_slide(prs, "Key Findings & Critical Insights")
 body_shape = slide.placeholders[1]
 tf = body_shape.text_frame
 add_bullet_points(tf, [
-    "✓ 94.72% ± 1.41% accuracy (7th rank overall)",
-    "✓ 73% feature reduction (30 → 8 features)",
-    "✓ Only 1.15% accuracy loss vs. full-feature RF",
+    "Primary Achievement: Feature Selection (73% reduction)",
+    "✓ 94.72% ± 1.41% accuracy with only 8 features",
     "✓ Significantly outperforms SVM (p<0.001) and KNN (p<0.001)",
-    "✓ Comparable to RF with same features (p=0.165)",
-    "✓ Low variance (1.41%) = excellent stability",
+    "",
+    "Critical Insight: Optimization Overfitting",
+    "⚠ Hyperparameters optimized on single split (random_state=42)",
+    "⚠ DIO-optimized: 94.72% vs RF defaults: 94.89% (p=0.165)",
+    "⚠ Feature selection was the real value, NOT hyperparameter tuning",
+    "",
+    "Lesson: Single-split optimization ≠ generalizable hyperparameters",
     "✓ Pareto-optimal: Best accuracy-complexity trade-off"
 ])
 
@@ -591,12 +600,15 @@ slide = add_content_slide(prs, "Limitations")
 body_shape = slide.placeholders[1]
 tf = body_shape.text_frame
 add_bullet_points(tf, [
-    "Single dataset evaluation (Breast Cancer Wisconsin only)",
-    "DIO optimization time not quantified or compared",
-    "Feature selection stability not assessed across multiple runs",
-    "Limited hyperparameter space (4 RF parameters)",
-    "No comparison with other metaheuristics (PSO, GA, ACO)",
-    "Domain-specific: 73% reduction may not generalize to all problems"
+    "⚠ Single-split hyperparameter optimization (random_state=42)",
+    "  → Led to 'optimization overfitting' - tuned params don't generalize",
+    "  → Future: Use k-fold CV during DIO optimization, not just evaluation",
+    "",
+    "• Single dataset evaluation (Breast Cancer Wisconsin only)",
+    "• DIO optimization time not quantified or compared",
+    "• Feature selection stability not assessed across multiple runs",
+    "• Limited hyperparameter space (4 RF parameters)",
+    "• No comparison with other metaheuristics (PSO, GA, ACO)"
 ])
 
 # ============================================================================
@@ -606,13 +618,15 @@ slide = add_content_slide(prs, "Future Research Directions")
 body_shape = slide.placeholders[1]
 tf = body_shape.text_frame
 add_bullet_points(tf, [
-    "Multi-dataset validation (lung cancer, diabetes, heart disease)",
-    "Benchmark against other metaheuristics (PSO, GA, ACO)",
-    "Extend to other classifiers (XGBoost, neural networks)",
-    "Feature selection stability analysis",
-    "Computational profiling and parallelization",
-    "Real-world clinical deployment and prospective validation",
-    "Hybrid approaches combining DIO with domain knowledge"
+    "1. Cross-validated hyperparameter optimization (PRIORITY)",
+    "  → Use k-fold CV within DIO fitness evaluation",
+    "  → Ensure hyperparameters generalize across data partitions",
+    "",
+    "2. Multi-dataset validation (lung cancer, diabetes, heart disease)",
+    "3. Benchmark against other metaheuristics (PSO, GA, ACO)",
+    "4. Extend to other classifiers (XGBoost, neural networks)",
+    "5. Feature selection stability analysis",
+    "6. Real-world clinical deployment and prospective validation"
 ])
 
 # ============================================================================
@@ -729,7 +743,7 @@ for i, info in enumerate(contact_info):
 # ============================================================================
 # SAVE PRESENTATION
 # ============================================================================
-output_file = "DIO_Research_Presentation.pptx"
+output_file = os.path.join(script_dir, "DIO_Research_Presentation.pptx")
 prs.save(output_file)
 print(f"✅ Presentation created successfully: {output_file}")
 print(f"📊 Total slides: {len(prs.slides)}")

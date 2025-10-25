@@ -396,6 +396,34 @@ When examining the full model landscape (Table \ref{tab:model_summary}), ensembl
 
 The comparison with XGBoost (Selected), which achieved 95.38\% using the same 8 features, reveals an opportunity for future work: applying DIO to optimize XGBoost or Gradient Boosting hyperparameters could potentially yield even better results within the reduced feature space.
 
+\subsection{Optimization Overfitting: A Critical Insight}
+A particularly noteworthy finding emerged when comparing DIO-Optimized RF (94.72\% $\pm$ 1.41\%) with RF Default (Selected) using the same 8 features (94.89\% $\pm$ 1.43\%). The statistically insignificant difference (p=0.165) reveals an important limitation in our methodology: \textbf{optimization overfitting to a single train/test split}.
+
+\subsubsection{The Phenomenon}
+During DIO optimization, we used a fixed random seed (random\_state=42) to create one specific 70/30 train-test partition. DIO then found hyperparameters that achieved 100\% accuracy on that particular test set. However, when we evaluated these "optimized" hyperparameters across 30 different data splits, performance averaged only 94.72\%—actually slightly \textit{worse} than Random Forest's default hyperparameters (94.89\%).
+
+This counterintuitive result demonstrates a form of \textbf{meta-overfitting}: the hyperparameters were tuned to excel on one specific data partition rather than to generalize across multiple partitions. Random Forest's default hyperparameters, designed to be robust across diverse datasets, performed marginally better when tested on varied data splits.
+
+\subsubsection{Why This Matters}
+This finding has three important implications:
+
+\begin{enumerate}
+    \item \textbf{Feature Selection is Primary:} The 73\% feature reduction (30→8) was the true contribution, not the hyperparameter tuning. Both DIO-optimized and default hyperparameters performed similarly when using the selected features.
+    
+    \item \textbf{Generalization vs. Specialization:} Hyperparameters optimized for a single split may not generalize well. Scikit-learn's defaults, tuned across thousands of datasets over years, may actually be more robust.
+    
+    \item \textbf{Methodology Limitation:} Single-split optimization is insufficient for hyperparameter tuning. Cross-validation during optimization (not just evaluation) is essential for finding generalizable hyperparameters.
+\end{enumerate}
+
+\subsubsection{Recommended Approach}
+Future implementations should employ \textbf{k-fold cross-validation within the DIO optimization loop}. Instead of evaluating fitness on a single train/test split, each candidate hyperparameter set should be evaluated using k-fold CV (e.g., k=5), with the average CV score serving as the fitness value. This ensures optimized hyperparameters generalize across multiple data partitions, not just one.
+
+\begin{equation}
+    F_{CV} = w_{acc} \times \left(1 - \frac{1}{k}\sum_{i=1}^{k} \text{Accuracy}_i\right) + w_{feat} \times \frac{N_{features}}{N_{total}}
+\end{equation}
+
+This modification would increase computational cost by a factor of k but should yield hyperparameters that generalize better across different data splits.
+
 \subsection{Robustness and Generalization}
 The standard deviation of 1.41\% across 30 independent runs demonstrates excellent stability. This low variance is particularly important in medical applications, where consistent performance across different patient cohorts is critical. The fact that DIO-Optimized RF exhibits variance comparable to (and even lower than) some full-feature models like XGBoost (1.52\%) and Gradient Boosting (1.65\%) suggests that feature reduction did not compromise generalization capability.
 
@@ -414,23 +442,38 @@ It is worth noting that our nested optimization approach, while comprehensive, i
 \subsection{Limitations}
 Despite the promising results, several limitations must be acknowledged:
 \begin{enumerate}
+    \item \textbf{Single-Split Hyperparameter Optimization:} The most critical limitation is that hyperparameters were optimized using a single fixed train/test split (random\_state=42). This led to "optimization overfitting" where the tuned hyperparameters achieved 100\% on that specific split but performed marginally worse than Random Forest defaults (94.72\% vs 94.89\%, p=0.165) when evaluated across 30 different splits. Future work must incorporate k-fold cross-validation within the DIO optimization loop to find hyperparameters that generalize across multiple data partitions.
+    
     \item \textbf{Single Dataset Evaluation:} Results are specific to the Breast Cancer Wisconsin dataset. Generalization to other cancer types or medical conditions requires further validation.
+    
     \item \textbf{Computational Cost Not Quantified:} While we report training time for the final model (mean: 0.63s), we did not measure the total DIO optimization time, which involves thousands of fitness evaluations across nested loops.
+    
     \item \textbf{Feature Selection Stability:} The current study did not assess whether DIO consistently selects the same 8 features across multiple independent optimization runs. Feature stability is important for reproducibility.
+    
     \item \textbf{Domain Specificity:} The 73\% feature reduction effectiveness may not generalize to all problem domains. Some datasets may require more features for adequate representation.
+    
     \item \textbf{Hyperparameter Space Limited:} We optimized only 4 Random Forest hyperparameters. Additional parameters (e.g., \texttt{max\_features}, \texttt{min\_weight\_fraction\_leaf}) were not explored.
+    
     \item \textbf{Comparison Scope:} We did not compare DIO against other metaheuristics (PSO, GA, ACO) for the same task, limiting our ability to claim superiority over alternative optimization approaches.
 \end{enumerate}
 
 \subsection{Future Work}
 Several promising research directions emerge from this study:
 \begin{enumerate}
+    \item \textbf{Cross-Validated Hyperparameter Optimization:} The most critical improvement is to replace single-split optimization with k-fold cross-validation within the DIO fitness evaluation. Each candidate hyperparameter set should be assessed using CV (e.g., k=5), with average CV score as fitness. This will yield hyperparameters that generalize across data partitions rather than overfitting to one specific split.
+    
     \item \textbf{Multi-Dataset Validation:} Apply DIO to diverse medical datasets (lung cancer, diabetes, heart disease) to assess generalizability.
+    
     \item \textbf{Algorithm Comparison:} Benchmark DIO against Particle Swarm Optimization (PSO), Genetic Algorithms (GA), and Ant Colony Optimization (ACO) on the same task.
+    
     \item \textbf{Alternative Classifiers:} Extend the nested optimization framework to XGBoost, Gradient Boosting, and neural networks.
+    
     \item \textbf{Feature Stability Analysis:} Conduct multiple independent DIO runs to assess the consistency of selected feature subsets.
+    
     \item \textbf{Computational Profiling:} Quantify and optimize the total computation time, exploring parallelization strategies.
+    
     \item \textbf{Real-World Deployment:} Integrate the DIO-optimized model into a clinical decision support system and evaluate performance on prospective patient data.
+    
     \item \textbf{Hybrid Approaches:} Investigate combining DIO with domain knowledge (e.g., physician-guided feature pre-selection) to further improve results.
 \end{enumerate}
 
@@ -452,7 +495,11 @@ Our research makes several key contributions to the field:
 \end{enumerate}
 
 \subsection{Key Findings}
-The final model, validated across 30 independent runs, yielded a mean accuracy of 94.72\% $\pm$ 1.41\% while using only 8 of the 30 available features—a 73\% reduction in dimensionality. This represents a Pareto-optimal solution, sacrificing merely 1.15\% accuracy compared to full-feature Random Forest while gaining substantial computational efficiency. Statistical analysis using Wilcoxon signed-rank tests confirmed that the DIO-optimized model significantly outperformed traditional machine learning methods such as SVM (p$<$0.001) and KNN (p$<$0.001), while performing comparably to Random Forest with default hyperparameters on the same selected features (p=0.165).
+The final model, validated across 30 independent runs, yielded a mean accuracy of 94.72\% $\pm$ 1.41\% while using only 8 of the 30 available features—a 73\% reduction in dimensionality. This represents a Pareto-optimal solution, sacrificing merely 1.15\% accuracy compared to full-feature Random Forest while gaining substantial computational efficiency. 
+
+Critically, statistical analysis revealed that DIO's primary contribution was \textbf{feature selection, not hyperparameter tuning}. The DIO-optimized hyperparameters performed comparably to Random Forest defaults when both used the same 8 selected features (94.72\% vs 94.89\%, p=0.165). This finding highlights an important methodological insight: hyperparameters optimized on a single train/test split may not generalize as well as carefully chosen defaults. However, the selected 8-feature subset proved robust across all 30 different data partitions, demonstrating that feature selection was the true value added by the DIO optimization process.
+
+Statistical tests using Wilcoxon signed-rank confirmed that the DIO-optimized model significantly outperformed traditional methods such as SVM (p$<$0.001) and KNN (p$<$0.001), validating the effectiveness of the feature reduction strategy.
 
 \subsection{Practical Impact}
 From a deployment perspective, the 73\% feature reduction translates to:
