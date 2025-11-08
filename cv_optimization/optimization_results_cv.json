@@ -1,0 +1,48 @@
+{
+    "method": "DIO with k-fold Cross-Validation",
+    "k_folds": 5,
+    "optimization_time_seconds": 28584.26062989235,
+    "best_hyperparameters": {
+        "n_estimators": 174,
+        "max_depth": 15,
+        "min_samples_split": 6,
+        "min_samples_leaf": 5
+    },
+    "selected_features": {
+        "count": 6,
+        "indices": [
+            6,
+            11,
+            17,
+            21,
+            23,
+            24
+        ],
+        "names": [
+            "mean concavity",
+            "texture error",
+            "concave points error",
+            "worst texture",
+            "worst area",
+            "worst smoothness"
+        ],
+        "reduction_percentage": 80.0
+    },
+    "performance": {
+        "cv_fitness": 0.019450316455696205,
+        "test_accuracy": 0.9590643274853801,
+        "test_f1_score": 0.9589983626587679,
+        "test_precision": 0.9590024443825612,
+        "test_recall": 0.9590643274853801
+    },
+    "dio_configuration": {
+        "outer_loop": {
+            "population": 5,
+            "iterations": 10
+        },
+        "inner_loop": {
+            "population": 10,
+            "iterations": 20
+        }
+    }
+}
