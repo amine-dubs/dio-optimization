@@ -189,7 +189,7 @@ To tackle the challenge of simultaneous optimization, we designed a nested DIO f
 \subsection{Nested Optimization Structure}
 The optimization process is split into two hierarchical loops:
 \begin{itemize}
-    \item \textbf{Outer Loop (Hyperparameter Tuning):} Each dhole in this population represents a complete set of Random Forest hyperparameters (e.g., `n_estimators`, `max_depth`).
+    \item \textbf{Outer Loop (Hyperparameter Tuning):} Each dhole in this population represents a complete set of Random Forest hyperparameters (e.g., \texttt{n\_estimators}, \texttt{max\_depth}).
     \item \textbf{Inner Loop (Feature Selection):} For each set of hyperparameters evaluated in the outer loop, a separate, inner DIO process is initiated. Each dhole in this inner population represents a binary mask corresponding to a subset of features.
 \end{itemize}
 This structure ensures that for every candidate set of hyperparameters, the best possible subset of features is identified.
@@ -300,7 +300,7 @@ For each model and run, we computed:
 Accuracy served as the primary metric due to the relatively balanced class distribution (357:212 ratio).
 
 \subsection{Optional Note: Hyper-Heuristics}
-An alternative approach, known as a hyper-heuristic, could also be considered. Instead of a nested loop, one could optimize a single, critical hyperparameter (e.g., `n_estimators`) first, fix its value, and then optimize the remaining parameters and features. While computationally faster, this sequential approach does not guarantee a globally optimal solution, as it ignores the complex interactions between parameters. Our simultaneous, nested approach is more comprehensive.
+An alternative approach, known as a hyper-heuristic, could also be considered. Instead of a nested loop, one could optimize a single, critical hyperparameter (e.g., \texttt{n\_estimators}) first, fix its value, and then optimize the remaining parameters and features. While computationally faster, this sequential approach does not guarantee a globally optimal solution, as it ignores the complex interactions between parameters. Our simultaneous, nested approach is more comprehensive.
 
 % ==============================================================================
 % 4. RESULTS AND DISCUSSION
@@ -360,8 +360,16 @@ Figure \ref{fig:main_viz} provides a comprehensive visual summary of the results
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{statistical_comparison_visualization.png}
-    \caption{Comprehensive 6-panel comparison of all 10 models across 30 runs.}
+    \caption{Comprehensive 6-panel comparison of all 10 models across 30 runs for single-split optimization approach.}
     \label{fig:main_viz}
+\end{figure}
+
+% --- Model Comparison Visualization ---
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{model_comparison_visualization.png}
+    \caption{Detailed model performance comparison visualization showing accuracy distributions and feature counts for all evaluated models in the single-split approach.}
+    \label{fig:model_comp}
 \end{figure}
 
 \subsection{Pareto-Optimal Solution}
@@ -444,6 +452,14 @@ The CV-based optimization identified a more compact feature subset and achieved 
     \item \textbf{Holdout Test Accuracy:} 95.91\% (vs. 100\% single-split overfitting)
 \end{itemize}
 
+% --- CV Optimization Visualization ---
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{cv_optimization/model_comparison_visualization_cv.png}
+    \caption{CV-based optimization convergence and model comparison visualization showing the optimization process across iterations.}
+    \label{fig:cv_opt_viz}
+\end{figure}
+
 \subsubsection{30-Run Statistical Validation}
 To assess the CV-optimized model's generalization capability, we conducted the same 30-run validation protocol with random states 42-71. Results are presented in Table \ref{tab:cv_results}.
 
@@ -483,6 +499,14 @@ The CV-optimized model achieved \textbf{96.26\% $\pm$ 1.33\%} across 30 runs—a
     \includegraphics[width=\textwidth]{cv_optimization/individual_model_trends_cv.png}
     \caption{Individual model performance trends across 30 independent runs for CV-optimized configuration. Each subplot shows accuracy (solid) and F1-score (dashed) trajectories, with red horizontal lines indicating mean accuracy.}
     \label{fig:cv_trends}
+\end{figure}
+
+% --- CV ROC Curves ---
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{cv_optimization/roc_curves_cv.png}
+    \caption{ROC curves for CV-optimized model showing excellent discrimination capability with AUC near 1.0, demonstrating strong classification performance on both classes.}
+    \label{fig:cv_roc}
 \end{figure}
 
 \subsubsection{Statistical Significance Analysis}
@@ -549,6 +573,14 @@ Using a fast single-split optimization (5 dholes, 10 iterations for both loops, 
     \item \textbf{Features Selected:} 17/30 (43.3\% reduction)
     \item \textbf{Selected Features:} Mean texture, perimeter, area, smoothness, compactness, concavity, concave points, symmetry; texture error, area error; concavity error, concave points error, symmetry error; worst radius, smoothness, symmetry
 \end{itemize}
+
+% --- XGBoost Optimization Visualization ---
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{xgboost_optimization_visualization.png}
+    \caption{XGBoost optimization convergence visualization showing fitness evolution and final model performance across the nested DIO optimization process.}
+    \label{fig:xgb_opt_viz}
+\end{figure}
 
 \subsubsection{30-Run Statistical Validation}
 The XGBoost-optimized model was evaluated using the same 30-run protocol (random states 42-71). Results are presented in Table \ref{tab:xgb_results}.

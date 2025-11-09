@@ -375,13 +375,13 @@ add_image_slide(
 )
 
 # ============================================================================
-# SLIDE 12: RESULTS - PERFORMANCE TABLE
+# SLIDE 12: RESULTS - THREE APPROACHES COMPARISON
 # ============================================================================
-slide = add_content_slide(prs, "Performance Rankings (Top 7)")
+slide = add_content_slide(prs, "Three Optimization Approaches Validated")
 
-left = Inches(0.8)
+left = Inches(0.5)
 top = Inches(2)
-width = Inches(8.4)
+width = Inches(9)
 height = Inches(4.5)
 
 textbox = slide.shapes.add_textbox(left, top, width, height)
@@ -389,15 +389,19 @@ text_frame = textbox.text_frame
 text_frame.word_wrap = True
 
 results_text = """
-Rank  Model                    Accuracy    Features
-────────────────────────────────────────────────────
-1     XGBoost (All)           96.24%      30
-2     RF Default (All)        95.87%      30
-3     Gradient Boosting       95.75%      30
-4     XGBoost (Selected)      95.38%      8
-5     Logistic Regression     94.91%      30
-6     RF Default (Selected)   94.89%      8
-7     DIO-Optimized RF        94.72%      8  ⭐
+Approach              Accuracy        Features  Opt.Time  Rank
+───────────────────────────────────────────────────────────────
+DIO-XGBoost          96.34% ±1.23%   17/30     54 sec    #1 🏆
+(Single-Split)       (43% reduction)
+
+DIO-RF-CV            96.26% ±1.33%   6/30      7.9 hrs   #3
+(CV-Based)           (80% reduction)
+
+DIO-RF-Single        94.72% ±1.41%   8/30      1 min     #7
+(Initial)            (73% reduction)
+───────────────────────────────────────────────────────────────
+
+Key Insight: XGBoost achieves BEST OVERALL performance!
 """
 
 p = text_frame.paragraphs[0]
@@ -406,33 +410,56 @@ p.font.name = 'Courier New'
 p.font.size = Pt(16)
 
 # ============================================================================
-# SLIDE 13: KEY FINDINGS
+# SLIDE 13: KEY FINDINGS - UPDATED WITH ALL APPROACHES
 # ============================================================================
-slide = add_content_slide(prs, "Key Findings & Critical Insights")
+slide = add_content_slide(prs, "Key Findings: Algorithm-Dependent Optimization")
 body_shape = slide.placeholders[1]
 tf = body_shape.text_frame
 add_bullet_points(tf, [
-    "Primary Achievement: Feature Selection (73% reduction)",
-    "✓ 94.72% ± 1.41% accuracy with only 8 features",
-    "✓ Significantly outperforms SVM (p<0.001) and KNN (p<0.001)",
+    "🏆 DIO-XGBoost: BEST OVERALL (96.34%, 17 features, Rank #1)",
+    "✓ Lowest standard deviation (1.23%) = Most stable",
+    "✓ 54-second optimization (526× faster than CV-RF!)",
+    "✓ Significantly better than defaults (p=0.0426)",
     "",
-    "Critical Insight: Optimization Overfitting",
-    "⚠ Hyperparameters optimized on single split (random_state=42)",
-    "⚠ DIO-optimized: 94.72% vs RF defaults: 94.89% (p=0.165)",
-    "⚠ Feature selection was the real value, NOT hyperparameter tuning",
+    "🥉 DIO-RF-CV: Best Interpretability (96.26%, 6 features, Rank #3)",
+    "✓ 80% feature reduction (highest among all)",
+    "✓ Significantly better than defaults (p=0.0084)",
+    "✓ Fixes optimization overfitting problem",
     "",
-    "Lesson: Single-split optimization ≠ generalizable hyperparameters",
-    "✓ Pareto-optimal: Best accuracy-complexity trade-off"
+    "💡 Critical Discovery: Optimization Overfitting is Algorithm-Dependent",
+    "• RF single-split suffered overfitting (100% → 94.72%)",
+    "• XGBoost single-split achieved top performance (98.83% → 96.34%)",
+    "• Gradient boosting's regularization enables single-split success!"
 ])
 
 # ============================================================================
-# SLIDE 14: STATISTICAL SIGNIFICANCE
+# SLIDE 14: CV-BASED OPTIMIZATION VISUALIZATION
 # ============================================================================
-slide = add_content_slide(prs, "Statistical Validation")
+add_image_slide(
+    prs,
+    "CV-Based Optimization: Fixing Overfitting",
+    os.path.join(parent_dir, "cv_optimization", "statistical_comparison_visualization_cv.png"),
+    "96.26% ± 1.33% with 6 features (80% reduction) - Rank #3"
+)
 
-left = Inches(1)
+# ============================================================================
+# SLIDE 15: XGBOOST OPTIMIZATION VISUALIZATION
+# ============================================================================
+add_image_slide(
+    prs,
+    "XGBoost Optimization: Best Overall Performance",
+    os.path.join(parent_dir, "xgboost_statistical_comparison_visualization.png"),
+    "96.34% ± 1.23% with 17 features (43% reduction) - Rank #1 🏆"
+)
+
+# ============================================================================
+# SLIDE 16: STATISTICAL SIGNIFICANCE - ALL APPROACHES
+# ============================================================================
+slide = add_content_slide(prs, "Statistical Validation: All Three Approaches")
+
+left = Inches(0.8)
 top = Inches(2)
-width = Inches(8)
+width = Inches(8.4)
 height = Inches(4.5)
 
 textbox = slide.shapes.add_textbox(left, top, width, height)
@@ -440,80 +467,90 @@ text_frame = textbox.text_frame
 
 p = text_frame.paragraphs[0]
 p.text = "Wilcoxon Signed-Rank Test Results:"
-p.font.size = Pt(24)
+p.font.size = Pt(22)
 p.font.bold = True
 
 test_results = [
     "",
-    "DIO-Optimized RF vs.:",
-    "  • SVM: +3.16% improvement (p < 0.001) ✓✓✓",
-    "  • KNN: +1.70% improvement (p < 0.001) ✓✓✓",
-    "  • RF Default (Selected): -0.17% (p = 0.165) ≈",
-    "  • Naive Bayes: +0.53% (p = 0.089) ≈",
+    "DIO-XGBoost-Optimized (BEST - Rank #1):",
+    "  • vs. XGBoost defaults: p=0.0426 (*) ✓",
+    "  • vs. XGBoost (All): p=0.5067 (ns) - equivalent with 43% fewer features!",
+    "  • vs. SVM/KNN/NB: p<0.001 (***) ✓✓✓",
     "",
-    "Legend: ✓✓✓ = Highly Significant | ≈ = Not Significant",
+    "DIO-RF-CV-Optimized (Rank #3):",
+    "  • vs. RF defaults (6 feat): p=0.0084 (**) ✓✓",
+    "  • vs. RF (All): p=0.0553 (ns) - comparable with 80% fewer features!",
+    "  • vs. SVM: p<0.001 (***) ✓✓✓",
     "",
-    "30 paired samples provide strong statistical power"
+    "DIO-RF-Single (Rank #7 - optimization overfitting issue):",
+    "  • vs. RF defaults (8 feat): p=0.165 (ns) - generalization problem",
+    "  • vs. SVM/KNN: p<0.001 (***) ✓✓✓"
 ]
 
 for result in test_results:
     p = text_frame.add_paragraph()
     p.text = result
-    p.font.size = Pt(18)
-    p.space_after = Pt(6)
+    p.font.size = Pt(15)
+    p.space_after = Pt(4)
 
 # ============================================================================
-# SLIDE 15: PARETO OPTIMALITY
+# SLIDE 17: PARETO FRONTIER - THREE MODELS
 # ============================================================================
-slide = add_content_slide(prs, "Pareto-Optimal Solution")
+slide = add_content_slide(prs, "Pareto Frontier: Three Validated Solutions")
 
-left = Inches(1)
+left = Inches(0.8)
 top = Inches(2)
-width = Inches(8)
+width = Inches(8.4)
 height = Inches(4.5)
 
 textbox = slide.shapes.add_textbox(left, top, width, height)
 text_frame = textbox.text_frame
 
 p = text_frame.paragraphs[0]
-p.text = "Why Rank 7 is Actually a Success:"
-p.font.size = Pt(28)
+p.text = "Three Pareto-Optimal Solutions for Different Priorities:"
+p.font.size = Pt(24)
 p.font.bold = True
 p.font.color.rgb = RGBColor(46, 204, 113)
 
 points = [
     "",
-    "Accuracy Loss: Only 1.5% vs. best model",
-    "Feature Reduction: 73% fewer features",
-    "Trade-off Ratio: 0.02% accuracy per 1% feature reduction",
+    "🏆 Maximum Accuracy: DIO-XGBoost (96.34%, 17 features)",
+    "  • Best overall performance across ALL experiments",
+    "  • Lowest variance (1.23%) = Most stable predictions",
+    "  • Fast optimization (54 seconds)",
+    "  • Choose when: Accuracy is paramount",
     "",
-    "Practical Benefits:",
-    "  • 73% faster inference time",
-    "  • Lower memory footprint",
-    "  • Better interpretability (8 vs 30 features)",
-    "  • Reduced overfitting risk",
-    "  • Suitable for resource-constrained deployment"
+    "🎯 Maximum Interpretability: DIO-RF-CV (96.26%, 6 features)",
+    "  • Highest feature reduction (80%)",
+    "  • Near-maximum accuracy with minimal complexity",
+    "  • Choose when: Clinical transparency critical",
+    "",
+    "⚡ Rapid Prototyping: DIO-RF-Single (94.72%, 8 features)",
+    "  • 1-minute optimization time",
+    "  • Demonstrates optimization overfitting issue",
+    "  • Choose when: Quick baseline needed"
 ]
 
 for point in points:
     p = text_frame.add_paragraph()
     p.text = point
-    p.font.size = Pt(18)
+    p.font.size = Pt(16)
     p.space_after = Pt(4)
 
 # ============================================================================
-# SLIDE 16: PRACTICAL IMPLICATIONS
+# SLIDE 18: PRACTICAL IMPLICATIONS - UPDATED
 # ============================================================================
-slide = add_content_slide(prs, "Clinical Deployment Advantages")
+slide = add_content_slide(prs, "Clinical Deployment: Choose Your Model")
 body_shape = slide.placeholders[1]
 tf = body_shape.text_frame
 add_bullet_points(tf, [
-    "Computational Efficiency:",
+    "🏆 Choose DIO-XGBoost (96.34%, 17 features) if:",
 ])
 
 sub_points = [
-    "73% fewer features = proportionally faster processing",
-    "Critical for high-throughput screening facilities"
+    "Maximum accuracy is critical (e.g., high-stakes screening)",
+    "Computational resources available",
+    "43% feature reduction still provides efficiency gains"
 ]
 for point in sub_points:
     p = tf.add_paragraph()
@@ -522,54 +559,69 @@ for point in sub_points:
     p.font.size = Pt(16)
 
 p = tf.add_paragraph()
-p.text = "Cost Reduction:"
+p.text = "🎯 Choose DIO-RF-CV (96.26%, 6 features) if:"
 p.level = 0
 p.font.size = Pt(18)
 p.font.bold = True
 
-p = tf.add_paragraph()
-p.text = "Fewer features may reduce laboratory measurements"
-p.level = 1
-p.font.size = Pt(16)
+sub_points = [
+    "Clinical interpretability paramount (only 6 measurements)",
+    "Resource-constrained environments (80% cost reduction)",
+    "Near-maximum accuracy (only 0.08% less than XGBoost)"
+]
+for point in sub_points:
+    p = tf.add_paragraph()
+    p.text = point
+    p.level = 1
+    p.font.size = Pt(16)
 
 p = tf.add_paragraph()
-p.text = "Interpretability:"
+p.text = "⚡ Choose DIO-RF-Single (94.72%, 8 features) if:"
 p.level = 0
 p.font.size = Pt(18)
 p.font.bold = True
 
-p = tf.add_paragraph()
-p.text = "Clinicians can understand and validate 8 features easier than 30"
-p.level = 1
-p.font.size = Pt(16)
-
-p = tf.add_paragraph()
-p.text = "Robustness:"
-p.level = 0
-p.font.size = Pt(18)
-p.font.bold = True
-
-p = tf.add_paragraph()
-p.text = "Less susceptible to missing or corrupted data"
-p.level = 1
-p.font.size = Pt(16)
+sub_points = [
+    "Rapid prototyping needed (1-minute optimization)",
+    "Lower accuracy acceptable for initial screening"
+]
+for point in sub_points:
+    p = tf.add_paragraph()
+    p.text = point
+    p.level = 1
+    p.font.size = Pt(16)
 
 # ============================================================================
-# SLIDE 17: ALGORITHM VALIDATION
+# SLIDE 19: ALGORITHM VALIDATION
 # ============================================================================
-slide = add_content_slide(prs, "Implementation Validation")
+slide = add_content_slide(prs, "Framework Generalizability Validated")
 body_shape = slide.placeholders[1]
 tf = body_shape.text_frame
 add_bullet_points(tf, [
-    "First Python implementation of DIO (original: MATLAB)",
+    "DIO Framework Successfully Applied to Multiple Algorithms:",
     "",
-    "Validated on 14 standard benchmark functions (F1-F14):",
+    "✓ Random Forest (Bagging ensemble)",
 ])
 
 sub_points = [
-    "Unimodal functions (F1-F7)",
-    "Multimodal functions (F8-F13)",
-    "Fixed-dimension multimodal (F14)"
+    "Single-split: 94.72% (suffered optimization overfitting)",
+    "CV-based: 96.26% (fixed overfitting, rank #3)"
+]
+for point in sub_points:
+    p = tf.add_paragraph()
+    p.text = point
+    p.level = 1
+    p.font.size = Pt(16)
+
+p = tf.add_paragraph()
+p.text = "✓ XGBoost (Gradient boosting)"
+p.level = 0
+p.font.size = Pt(18)
+p.font.bold = True
+
+sub_points = [
+    "Single-split: 96.34% (best overall, rank #1)",
+    "Inherent regularization prevents optimization overfitting!"
 ]
 for point in sub_points:
     p = tf.add_paragraph()
@@ -582,55 +634,58 @@ p.text = ""
 p.level = 0
 
 p = tf.add_paragraph()
-p.text = "Configuration: 30 population, 500 iterations, 30 runs"
-p.level = 0
-p.font.size = Pt(18)
-
-p = tf.add_paragraph()
-p.text = "Result: Near-zero convergence (F1: 7.6×10⁻²⁶)"
+p.text = "Key Discovery: Algorithm-dependent optimization behavior"
 p.level = 0
 p.font.size = Pt(18)
 p.font.bold = True
-p.font.color.rgb = RGBColor(46, 204, 113)
+p.font.color.rgb = RGBColor(231, 76, 60)
 
 # ============================================================================
-# SLIDE 18: LIMITATIONS
+# SLIDE 20: LIMITATIONS - UPDATED
 # ============================================================================
-slide = add_content_slide(prs, "Limitations")
+slide = add_content_slide(prs, "Limitations & Lessons Learned")
 body_shape = slide.placeholders[1]
 tf = body_shape.text_frame
 add_bullet_points(tf, [
-    "⚠ Single-split hyperparameter optimization (random_state=42)",
-    "  → Led to 'optimization overfitting' - tuned params don't generalize",
-    "  → Future: Use k-fold CV during DIO optimization, not just evaluation",
+    "✓ RESOLVED: Optimization overfitting in Random Forest",
+    "  → CV-based approach increased accuracy from 94.72% to 96.26%",
+    "  → Feature reduction improved from 73% to 80%",
     "",
+    "✓ DISCOVERY: Algorithm-dependent optimization behavior",
+    "  → XGBoost's regularization enables successful single-split optimization",
+    "  → Different algorithms require different validation strategies",
+    "",
+    "Remaining Limitations:",
     "• Single dataset evaluation (Breast Cancer Wisconsin only)",
-    "• DIO optimization time not quantified or compared",
-    "• Feature selection stability not assessed across multiple runs",
-    "• Limited hyperparameter space (4 RF parameters)",
-    "• No comparison with other metaheuristics (PSO, GA, ACO)"
+    "• Limited hyperparameter spaces (4 RF, 5 XGBoost parameters)",
+    "• No comparison with other metaheuristics (PSO, GA, ACO)",
+    "• Feature selection stability not assessed across multiple runs"
 ])
 
 # ============================================================================
-# SLIDE 19: FUTURE WORK
+# SLIDE 21: FUTURE WORK - UPDATED
 # ============================================================================
 slide = add_content_slide(prs, "Future Research Directions")
 body_shape = slide.placeholders[1]
 tf = body_shape.text_frame
 add_bullet_points(tf, [
-    "1. Cross-validated hyperparameter optimization (PRIORITY)",
-    "  → Use k-fold CV within DIO fitness evaluation",
-    "  → Ensure hyperparameters generalize across data partitions",
+    "1. Multi-dataset validation",
+    "  → Lung cancer, diabetes, heart disease datasets",
+    "  → Verify algorithm-dependent optimization findings",
     "",
-    "2. Multi-dataset validation (lung cancer, diabetes, heart disease)",
-    "3. Benchmark against other metaheuristics (PSO, GA, ACO)",
-    "4. Extend to other classifiers (XGBoost, neural networks)",
-    "5. Feature selection stability analysis",
-    "6. Real-world clinical deployment and prospective validation"
+    "2. CV-based XGBoost optimization",
+    "  → Can 96.34% accuracy be improved further with CV?",
+    "  → Compare single-split vs CV for gradient boosting",
+    "",
+    "3. Benchmark against other metaheuristics (PSO, GA, ACO, GWO)",
+    "4. Extend to deep learning (neural architecture search)",
+    "5. Feature selection stability analysis across multiple DIO runs",
+    "6. Real-world clinical deployment and prospective validation",
+    "7. Computational efficiency analysis and parallelization"
 ])
 
 # ============================================================================
-# SLIDE 20: CONTRIBUTIONS
+# SLIDE 22: CONTRIBUTIONS - UPDATED
 # ============================================================================
 slide = add_content_slide(prs, "Key Contributions")
 body_shape = slide.placeholders[1]
@@ -638,37 +693,41 @@ tf = body_shape.text_frame
 add_bullet_points(tf, [
     "✓ First Python implementation of DIO algorithm",
     "✓ Novel nested optimization framework for simultaneous tuning",
-    "✓ Rigorous statistical validation (30 independent runs)",
-    "✓ Pareto analysis emphasizing accuracy-complexity trade-off",
-    "✓ Comprehensive benchmark validation (14 test functions)",
+    "✓ Three validated optimization approaches with trade-off analysis",
+    "✓ Discovery of algorithm-dependent optimization overfitting",
+    "✓ Multi-algorithm validation (Random Forest + XGBoost)",
+    "✓ Rigorous statistical validation (30 independent runs per approach)",
+    "✓ Comprehensive Pareto analysis with deployment recommendations",
     "✓ Open-source implementation for reproducible research",
-    "✓ Practical methodology for medical AI deployment"
+    "✓ Best-in-class performance: 96.34% accuracy (Rank #1)"
 ])
 
 # ============================================================================
-# SLIDE 21: CONCLUSIONS
+# SLIDE 23: CONCLUSIONS - UPDATED
 # ============================================================================
 slide = add_content_slide(prs, "Conclusions")
 
-left = Inches(1)
+left = Inches(0.8)
 top = Inches(2)
-width = Inches(8)
+width = Inches(8.4)
 height = Inches(4.5)
 
 textbox = slide.shapes.add_textbox(left, top, width, height)
 text_frame = textbox.text_frame
 
 points = [
-    "DIO effectively optimizes Random Forest for breast cancer classification",
+    "DIO framework successfully optimizes multiple ML algorithms for breast cancer classification",
     "",
-    "Achieved Pareto-optimal solution:",
-    "  • 94.72% accuracy with only 8/30 features",
-    "  • 73% reduction in model complexity",
-    "  • Statistically validated across 30 runs",
+    "Three Pareto-optimal solutions achieved:",
+    "  🏆 DIO-XGBoost: 96.34% accuracy, 17 features (Rank #1 OVERALL)",
+    "  🥉 DIO-RF-CV: 96.26% accuracy, 6 features (Rank #3, best interpretability)",
+    "  ⚡ DIO-RF-Single: 94.72% accuracy, 8 features (Rank #7, rapid baseline)",
     "",
-    "Demonstrates practical viability for resource-constrained medical applications",
+    "Key Discovery: Optimization overfitting is algorithm-dependent",
+    "  • Gradient boosting's regularization enables single-split success",
+    "  • Bagging ensembles benefit from CV-based optimization",
     "",
-    "Provides foundation for applying nature-inspired optimization to medical AI"
+    "Provides validated framework for medical AI with flexible deployment options"
 ]
 
 for i, point in enumerate(points):
@@ -677,11 +736,11 @@ for i, point in enumerate(points):
     else:
         p = text_frame.add_paragraph()
     p.text = point
-    p.font.size = Pt(20)
-    p.space_after = Pt(8)
+    p.font.size = Pt(18)
+    p.space_after = Pt(6)
 
 # ============================================================================
-# SLIDE 22: THANK YOU / Q&A
+# SLIDE 24: THANK YOU / Q&A
 # ============================================================================
 slide_layout = prs.slide_layouts[6]  # Blank
 slide = prs.slides.add_slide(slide_layout)
@@ -701,23 +760,31 @@ p.font.bold = True
 p.alignment = PP_ALIGN.CENTER
 p.font.color.rgb = RGBColor(44, 62, 80)
 
-# Subtitle
+# Subtitle with achievement
 left = Inches(1)
-top = Inches(3.5)
+top = Inches(3.2)
 width = Inches(8)
-height = Inches(1)
+height = Inches(1.2)
 
 textbox = slide.shapes.add_textbox(left, top, width, height)
 text_frame = textbox.text_frame
 p = text_frame.paragraphs[0]
+p.text = "🏆 Best Overall Performance: 96.34% Accuracy"
+p.font.size = Pt(28)
+p.alignment = PP_ALIGN.CENTER
+p.font.color.rgb = RGBColor(46, 204, 113)
+p.font.bold = True
+
+p = text_frame.add_paragraph()
 p.text = "Questions & Discussion"
-p.font.size = Pt(36)
+p.font.size = Pt(32)
 p.alignment = PP_ALIGN.CENTER
 p.font.color.rgb = RGBColor(52, 152, 219)
+p.space_before = Pt(12)
 
 # Contact/Links
 left = Inches(1)
-top = Inches(5.5)
+top = Inches(5.8)
 width = Inches(8)
 height = Inches(1)
 
@@ -727,8 +794,8 @@ text_frame.word_wrap = True
 
 contact_info = [
     "GitHub: amine-dubs/dio-optimization",
-    "Email: your.email@university.edu",
-    "Dataset: UCI Machine Learning Repository"
+    "Results: 3 approaches validated | 90+ independent runs",
+    "Dataset: UCI Machine Learning Repository (Wisconsin Breast Cancer)"
 ]
 
 for i, info in enumerate(contact_info):
@@ -747,10 +814,14 @@ output_file = os.path.join(script_dir, "DIO_Research_Presentation.pptx")
 prs.save(output_file)
 print(f"✅ Presentation created successfully: {output_file}")
 print(f"📊 Total slides: {len(prs.slides)}")
-print(f"⏱️  Estimated presentation time: ~15 minutes")
-print(f"\n🎯 Next steps:")
+print(f"⏱️  Estimated presentation time: ~18 minutes")
+print(f"\n🎯 Highlights:")
+print(f"   🏆 DIO-XGBoost: 96.34% accuracy (Rank #1 OVERALL)")
+print(f"   🥉 DIO-RF-CV: 96.26% accuracy, 6 features (Rank #3)")
+print(f"   💡 Algorithm-dependent optimization overfitting discovered")
+print(f"\n📝 Next steps:")
 print(f"   1. Open {output_file} in PowerPoint")
-print(f"   2. Review and customize content")
+print(f"   2. Review three-approach comparison")
 print(f"   3. Add speaker notes if needed")
-print(f"   4. Practice timing (~40-45 seconds per slide)")
-print(f"   5. Ready to present!")
+print(f"   4. Practice timing (~45 seconds per slide)")
+print(f"   5. Ready to present with complete results!")
