@@ -1,11 +1,7 @@
 
 \documentclass[12pt, a4paper]{article}
 
-% ==============================================================================
-% PREAMBLE
-% ==============================================================================
-
-% --- Packages ---
+% Packages
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{graphicx}
@@ -20,7 +16,7 @@
 \usepackage{authblk}
 \usepackage{fancyhdr}
 
-% --- Page Geometry ---
+% Page Geometry
 \geometry{
     a4paper,
     left=2.5cm,
@@ -29,7 +25,7 @@
     bottom=2.5cm
 }
 
-% --- Hyperlink Setup ---
+% Hyperlink Setup
 \hypersetup{
     colorlinks=true,
     linkcolor=blue,
@@ -39,7 +35,7 @@
     pdfpagemode=FullScreen,
 }
 
-% --- Code Listing Style ---
+% Code Listing Style
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
@@ -65,34 +61,28 @@
 }
 \lstset{style=mystyle}
 
-% --- Header and Footer ---
+% Header and Footer
 \pagestyle{fancy}
 \fancyhf{}
 \lhead{DIO for RF Optimization}
 \rhead{\today}
 \cfoot{\thepage}
 
-% ==============================================================================
-% DOCUMENT START
-% ==============================================================================
-
 \begin{document}
 
-% --- Title and Author ---
-\title{
-    \textbf{Dholes-Inspired Optimization (DIO) for Simultaneous Feature Selection and Hyperparameter Tuning of Random Forest Classifiers}
-}
-\author[1]{Bellatreche Mohamed Amine}
-\author[2]{Cherif Ghizlane}
-\affil[1]{Usto university/Affiliation}
-\affil[2]{Cs department/Affiliation}
+% Title and Author Information
+\title{Dholes-Inspired Optimization for Simultaneous Feature Selection and Hyperparameter Tuning of Random Forest Classifiers}
+
+\author[1]{Mohamed Amine Bellatreche}
+\author[2]{Ghizlane Cherif}
+\affil[1]{Department of Computer Science, University of Science and Technology of Oran Mohamed Boudiaf (USTO-MB), Oran, Algeria}
+\affil[2]{Data Science speciality}
 \date{\today}
 \maketitle
 \thispagestyle{empty}
 
 \newpage
 
-% --- Abstract ---
 \begin{abstract}
 \noindent This study presents a novel application of the Dholes-Inspired Optimization (DIO) algorithm for simultaneous feature selection and hyperparameter optimization in breast cancer classification. Using a nested optimization structure, we optimized a Random Forest classifier on the Wisconsin Diagnostic Breast Cancer dataset. Through 30 independent runs, DIO achieved a mean classification accuracy of 94.72\% $\pm$ 1.41\% while reducing feature dimensionality by 73\% (from 30 to 8 features). Statistical analysis using Wilcoxon signed-rank tests demonstrated that DIO-optimized models significantly outperformed SVM (p$<$0.001) and KNN (p$<$0.001), while achieving comparable performance to a default Random Forest with the same selected features (p=0.165). The results demonstrate DIO's effectiveness in identifying Pareto-optimal solutions in the accuracy-complexity trade-off space, making it suitable for resource-constrained medical diagnostic applications.
 \end{abstract}
@@ -100,9 +90,6 @@
 \tableofcontents
 \newpage
 
-% ==============================================================================
-% 1. INTRODUCTION
-% ==============================================================================
 \section{Introduction}
 
 The diagnosis of breast cancer, a leading cause of mortality worldwide, heavily relies on the analysis of complex, high-dimensional data. Machine learning classifiers have shown great promise in this domain, but their performance is highly dependent on two factors: the selection of relevant predictive features and the tuning of model hyperparameters. Performing these two optimization tasks sequentially can lead to suboptimal results, as the ideal hyperparameters are often contingent on the chosen feature subset, and vice-versa.
