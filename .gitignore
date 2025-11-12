@@ -136,6 +136,10 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 
+# Large data files (CIFAR-10 features, images, etc.)
+*.npz
+data/*.npz
+
 # Generated output files (optional - uncomment if you don't want to track these)
 # model_comparison_results.csv
 # optimization_results.json
