@@ -140,6 +140,15 @@ Desktop.ini
 *.npz
 data/*.npz
 
+# LaTeX build artifacts only (allow PDFs to be tracked)
+*.aux
+*.out
+*.toc
+*.log
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+
 # Generated output files (optional - uncomment if you don't want to track these)
 # model_comparison_results.csv
 # optimization_results.json
