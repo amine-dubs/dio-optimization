@@ -112,7 +112,7 @@ def add_image_slide(prs, title, image_path, caption=""):
 add_title_slide(
     prs,
     "Dholes-Inspired Optimization (DIO)\nfor Feature Selection & Hyperparameter Tuning",
-    "Breast Cancer Classification using Random Forest\n\nYour Name | Your University | October 2025"
+    "Cross-Domain Validation: From Medical Diagnostics to Computer Vision\n\nYour Name | Your University | November 2025"
 )
 
 # ============================================================================
@@ -137,15 +137,15 @@ add_bullet_points(tf, [
 # ============================================================================
 # SLIDE 3: PROBLEM STATEMENT
 # ============================================================================
-slide = add_content_slide(prs, "Problem Statement")
+slide = add_content_slide(prs, "The Challenge We Faced")
 body_shape = slide.placeholders[1]
 tf = body_shape.text_frame
 add_bullet_points(tf, [
-    "Breast cancer: Leading cause of mortality in women",
+    "Breast cancer: Leading cause of mortality in women worldwide",
     "Machine learning for diagnosis: High-dimensional data (30 features)",
-    "Challenge: Optimal feature selection + hyperparameter tuning",
-    "Traditional approach: Sequential optimization → Suboptimal results",
-    "Our solution: Simultaneous optimization using nature-inspired DIO algorithm"
+    "The dilemma: Optimal feature selection + hyperparameter tuning simultaneously",
+    "Traditional sequential optimization → Suboptimal, misses feature-parameter interactions",
+    "Our approach: Simultaneous optimization using DIO (nature-inspired algorithm)"
 ])
 
 # ============================================================================
@@ -196,6 +196,16 @@ add_bullet_points(tf, [
 ])
 
 # ============================================================================
+# SLIDE 5B: DIO ALGORITHM FLOWCHART
+# ============================================================================
+add_image_slide(
+    prs,
+    "DIO Algorithm Flowchart",
+    os.path.join(parent_dir, "schemas and snippets", "dio_flowchart.png"),
+    "Complete algorithmic flow: initialization, fitness evaluation, three hunting strategies, convergence"
+)
+
+# ============================================================================
 # SLIDE 6: NESTED OPTIMIZATION FRAMEWORK
 # ============================================================================
 slide = add_content_slide(prs, "Novel Nested Optimization Framework")
@@ -238,6 +248,16 @@ for point in sub_points:
     p.font.size = Pt(16)
 
 # ============================================================================
+# SLIDE 6B: NESTED STRUCTURE VISUALIZATION
+# ============================================================================
+add_image_slide(
+    prs,
+    "Nested Optimization Architecture",
+    os.path.join(parent_dir, "schemas and snippets", "shema4 (1).png"),
+    "Two-level hierarchical structure: Outer loop (hyperparameters) + Inner loop (feature selection)"
+)
+
+# ============================================================================
 # SLIDE 7: FITNESS FUNCTION
 # ============================================================================
 slide = add_content_slide(prs, "Multi-Objective Fitness Function")
@@ -270,6 +290,16 @@ add_bullet_points(text_frame, [
     "Encourages Pareto-optimal solutions",
     "Favors fewer features when accuracy is comparable"
 ])
+
+# ============================================================================
+# SLIDE 7B: FITNESS FUNCTION SCHEMA
+# ============================================================================
+add_image_slide(
+    prs,
+    "Fitness Function: Balancing Accuracy and Complexity",
+    os.path.join(parent_dir, "schemas and snippets", "shema5 (1).PNG"),
+    "Multi-objective optimization: 99% accuracy weight + 1% feature reduction penalty"
+)
 
 # ============================================================================
 # SLIDE 8: DATASET & EXPERIMENTAL SETUP
@@ -350,6 +380,46 @@ p.font.bold = True
 p.font.color.rgb = RGBColor(46, 204, 113)
 
 # ============================================================================
+# SLIDE 9B: CODE SNIPPET - DIO OPTIMIZE FUNCTION
+# ============================================================================
+add_image_slide(
+    prs,
+    "Implementation: DIO Optimize Function",
+    os.path.join(parent_dir, "schemas and snippets", "dio_optimise_snippet.png"),
+    "Core optimization loop with fitness evaluation and position updates"
+)
+
+# ============================================================================
+# SLIDE 9C: CODE SNIPPET - FEATURE SELECTION OBJECTIVE
+# ============================================================================
+add_image_slide(
+    prs,
+    "Feature Selection Objective Function (RF)",
+    os.path.join(parent_dir, "schemas and snippets", "feature_selection_objective_func_rf.png"),
+    "Inner loop: Evaluates each feature subset with cross-validation"
+)
+
+# ============================================================================
+# SLIDE 9D: CODE SNIPPET - HYPERPARAMETER OBJECTIVE
+# ============================================================================
+add_image_slide(
+    prs,
+    "Hyperparameter Objective Function (RF)",
+    os.path.join(parent_dir, "schemas and snippets", "hyperparameter_objective_func_rf.png"),
+    "Outer loop: Optimizes hyperparameters while calling feature selection"
+)
+
+# ============================================================================
+# SLIDE 9E: CODE SNIPPET - OUTER OPTIMIZATION
+# ============================================================================
+add_image_slide(
+    prs,
+    "Outer Optimization Loop & Results Retrieval",
+    os.path.join(parent_dir, "schemas and snippets", "outer_optimization_and_retreiving_results.png"),
+    "Main execution: Runs nested optimization and extracts best configuration"
+)
+
+# ============================================================================
 # SLIDE 10: SELECTED FEATURES
 # ============================================================================
 slide = add_content_slide(prs, "8 Selected Features")
@@ -366,7 +436,17 @@ p.font.italic = True
 p.font.color.rgb = RGBColor(52, 152, 219)
 
 # ============================================================================
-# SLIDE 11: RESULTS - VISUALIZATION
+# SLIDE 11: OPTIMIZATION OVERFITTING DISCOVERY
+# ============================================================================
+add_image_slide(
+    prs,
+    "Major Discovery: Optimization Overfitting",
+    os.path.join(parent_dir, "schemas and snippets", "Shema2 (1).png"),
+    "Single-split optimization achieves 100% on one partition but generalizes poorly (94.72%). CV-based fixes this (96.26%)."
+)
+
+# ============================================================================
+# SLIDE 12: RESULTS - VISUALIZATION
 # ============================================================================
 add_image_slide(
     prs,
@@ -413,24 +493,24 @@ p.font.size = Pt(16)
 # ============================================================================
 # SLIDE 13: KEY FINDINGS - UPDATED WITH ALL APPROACHES
 # ============================================================================
-slide = add_content_slide(prs, "Key Findings: Algorithm-Dependent Optimization")
+slide = add_content_slide(prs, "What We Discovered: Algorithm-Dependent Behavior")
 body_shape = slide.placeholders[1]
 tf = body_shape.text_frame
 add_bullet_points(tf, [
     "🏆 DIO-XGBoost: BEST OVERALL (96.34%, 17 features, Rank #1)",
-    "✓ Lowest standard deviation (1.23%) = Most stable",
-    "✓ 54-second optimization (526× faster than CV-RF!)",
+    "✓ Lowest standard deviation (1.23%) = Most stable across data partitions",
+    "✓ Remarkably fast: 54-second optimization (526× faster than CV-RF!)",
     "✓ Significantly better than defaults (p=0.0426)",
     "",
-    "🥉 DIO-RF-CV: Best Interpretability (96.26%, 6 features, Rank #3)",
-    "✓ 80% feature reduction (highest among all)",
+    "🥉 DIO-RF-CV: Maximum Interpretability (96.26%, 6 features, Rank #3)",
+    "✓ 80% feature reduction—highest among all configurations",
     "✓ Significantly better than defaults (p=0.0084)",
-    "✓ Fixes optimization overfitting problem",
+    "✓ Successfully addresses optimization overfitting",
     "",
-    "💡 Critical Discovery: Optimization Overfitting is Algorithm-Dependent",
-    "• RF single-split suffered overfitting (100% → 94.72%)",
+    "💡 Unexpected Finding: Optimization Overfitting is Algorithm-Specific",
+    "• RF single-split suffered overfitting (100% train → 94.72% generalization)",
     "• XGBoost single-split achieved top performance (98.83% → 96.34%)",
-    "• Gradient boosting's regularization enables single-split success!"
+    "• Gradient boosting's built-in regularization eliminates need for expensive CV!"
 ])
 
 # ============================================================================
@@ -451,6 +531,16 @@ add_image_slide(
     "XGBoost Optimization: Best Overall Performance",
     os.path.join(parent_dir, "xgboost_statistical_comparison_visualization.png"),
     "96.34% ± 1.23% with 17 features (43% reduction) - Rank #1 🏆"
+)
+
+# ============================================================================
+# SLIDE 15B: XGBOOST HYPERPARAMETER SEARCH SPACE (CANCER)
+# ============================================================================
+add_image_slide(
+    prs,
+    "XGBoost Hyperparameter Search Space (Medical)",
+    os.path.join(parent_dir, "schemas and snippets", "xgboost_hyperparameters_search_space_cancer.png"),
+    "5-dimensional search space: n_estimators, max_depth, learning_rate, subsample, colsample_bytree"
 )
 
 # ============================================================================
@@ -595,23 +685,23 @@ for point in sub_points:
 # ============================================================================
 # SLIDE 19: EXTENSION TO COMPUTER VISION - CIFAR-10
 # ============================================================================
-slide = add_content_slide(prs, "Extension to Computer Vision: CIFAR-10")
+slide = add_content_slide(prs, "Pushing the Limits: Can DIO Scale to Computer Vision?")
 body_shape = slide.placeholders[1]
 tf = body_shape.text_frame
 add_bullet_points(tf, [
-    "🎯 Goal: Validate DIO generalizability across domains",
+    "🎯 Question: Does DIO work beyond medical tabular data?",
     "",
     "Dataset: CIFAR-10 (60K images, 10 classes)",
     "  • Full dataset: 50K train, 10K test",
     "  • Optimization subset: 2K train, 500 test (stratified)",
     "",
     "Feature Extraction: ResNet50 (pre-trained ImageNet)",
-    "  • 2048-D deep learning features (68× larger than medical data)",
+    "  • 2048-D deep learning features (68× larger than medical data!)",
     "  • Google Colab GPU extraction (~15 min)",
     "",
-    "Challenge: High-dimensional optimization (30-D → 2048-D)",
-    "  • Test DIO scalability",
-    "  • Validate algorithm selection methodology"
+    "The challenge: High-dimensional optimization (30-D → 2048-D)",
+    "  • Tests DIO scalability limits",
+    "  • Validates algorithm selection methodology across domains"
 ])
 
 # ============================================================================
@@ -732,31 +822,51 @@ p.font.name = 'Courier New'
 p.font.size = Pt(14)
 
 # ============================================================================
+# SLIDE 22B: CROSS-DOMAIN FRAMEWORK SCHEMA
+# ============================================================================
+add_image_slide(
+    prs,
+    "Cross-Domain Validation Framework",
+    os.path.join(parent_dir, "schemas and snippets", "shema1 (1).png"),
+    "DIO framework validated across medical (30-D) and vision (2048-D) domains—68× dimensionality increase"
+)
+
+# ============================================================================
+# SLIDE 22C: CROSS-DOMAIN RESULTS SCHEMA
+# ============================================================================
+add_image_slide(
+    prs,
+    "Cross-Domain Performance Summary",
+    os.path.join(parent_dir, "schemas and snippets", "shema3 (1).png"),
+    "Consistent improvement patterns: 58-80% feature reduction while maintaining/improving accuracy"
+)
+
+# ============================================================================
 # SLIDE 23: CIFAR-10 PRACTICAL IMPLICATIONS
 # ============================================================================
-slide = add_content_slide(prs, "Computer Vision: Practical Impact")
+slide = add_content_slide(prs, "Real-World Impact: Why This Matters for Vision AI")
 body_shape = slide.placeholders[1]
 tf = body_shape.text_frame
 add_bullet_points(tf, [
-    "🚀 Transfer Learning Optimization:",
-    "  • Optimize frozen deep features without retraining CNNs",
-    "  • 58.35% feature reduction while improving accuracy",
+    "🚀 Transfer Learning Made Better:",
+    "  • Optimize frozen deep features without expensive CNN retraining",
+    "  • 58.35% feature reduction while gaining +2.8% accuracy",
     "",
-    "⚡ Real-Time Edge Deployment:",
+    "⚡ Edge Deployment Enabled:",
     "  • 2.4× faster inference (2048 → 853 features)",
-    "  • Enables smartphones, IoT devices, embedded systems",
+    "  • Makes AI practical for smartphones, IoT devices, embedded systems",
     "",
-    "💰 Cost-Effective Development:",
+    "💰 Cost-Effective for Startups:",
     "  • Only 4% of data needed (2K/50K samples)",
-    "  • Valuable for limited annotation budgets",
+    "  • Valuable when annotation budgets are limited",
     "",
-    "🔍 Feature Redundancy Discovery:",
-    "  • 58% of ResNet50 features redundant",
-    "  • Motivates efficient architecture design",
+    "🔍 Surprising Discovery:",
+    "  • 58% of ResNet50 features are redundant!",
+    "  • Suggests efficient architecture design opportunities",
     "",
-    "✅ Framework Transferability Validated:",
-    "  • Medical (30-D) → Vision (2048-D)",
-    "  • Binary → Multi-class classification"
+    "✅ Framework Transferability Proven:",
+    "  • Medical (30-D) → Vision (2048-D) seamlessly",
+    "  • Binary → Multi-class classification works"
 ])
 
 # ============================================================================
@@ -807,6 +917,16 @@ p.level = 0
 p.font.size = Pt(18)
 p.font.bold = True
 p.font.color.rgb = RGBColor(231, 76, 60)
+
+# ============================================================================
+# SLIDE 19B: EVOLUTION OF OPTIMIZATION APPROACHES
+# ============================================================================
+add_image_slide(
+    prs,
+    "Evolution of Optimization Strategies",
+    os.path.join(parent_dir, "schemas and snippets", "Shema6 (1).PNG"),
+    "Three approaches tested: Single-split RF → CV-based RF → Single-split XGBoost (best overall)"
+)
 
 # ============================================================================
 # SLIDE 20: LIMITATIONS - UPDATED
@@ -873,7 +993,7 @@ add_bullet_points(tf, [
 # ============================================================================
 # SLIDE 23: CONCLUSIONS - UPDATED
 # ============================================================================
-slide = add_content_slide(prs, "Conclusions")
+slide = add_content_slide(prs, "What We Learned")
 
 left = Inches(0.8)
 top = Inches(2)
@@ -884,10 +1004,10 @@ textbox = slide.shapes.add_textbox(left, top, width, height)
 text_frame = textbox.text_frame
 
 points = [
-    "DIO framework successfully validated across TWO domains:",
+    "DIO framework successfully validated across TWO distinct domains:",
     "",
     "🏥 Medical Classification (Breast Cancer):",
-    "  🏆 DIO-XGBoost: 96.34% accuracy, 17 features (Rank #1 OVERALL)",
+    "  🏆 DIO-XGBoost: 96.34% accuracy, 17 features (Rank #1 BEST OVERALL)",
     "  🥉 DIO-RF-CV: 96.26% accuracy, 6 features (80% reduction)",
     "",
     "🖼️ Computer Vision (CIFAR-10 Images):",
@@ -895,12 +1015,12 @@ points = [
     "  • DIO optimized: 83.6% on subset (+2.8%, 58.35% reduction)",
     "  • 2.4× inference speedup for edge deployment",
     "",
-    "🔑 Key Discoveries:",
-    "  • Optimization overfitting is algorithm-dependent",
-    "  • DIO scales from 30-D to 2048-D (68× increase)",
-    "  • Substantial feature reduction even in deep learning features",
+    "🔑 Unexpected Discoveries:",
+    "  • Optimization overfitting is algorithm-dependent (not universal!)",
+    "  • DIO scales remarkably: 30-D → 2048-D (68× increase)",
+    "  • Even deep learning features have massive redundancy (58%)",
     "",
-    "✅ Multi-domain framework validated for medical AI & computer vision"
+    "✅ Multi-domain framework proven for medical AI & computer vision"
 ]
 
 for i, point in enumerate(points):

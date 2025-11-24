@@ -1,55 +1,68 @@
-\contentsline {section}{\numberline {1}Introduction}{4}{section.1}%
-\contentsline {section}{\numberline {2}Background and Methodology}{4}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Dholes-Inspired Optimization (DIO) Algorithm}{4}{subsection.2.1}%
-\contentsline {subsubsection}{\numberline {2.1.1}Algorithm Validation}{5}{subsubsection.2.1.1}%
-\contentsline {subsection}{\numberline {2.2}Random Forest Architecture}{5}{subsection.2.2}%
-\contentsline {subsection}{\numberline {2.3}Modeling DIO: From MATLAB to Python}{6}{subsection.2.3}%
-\contentsline {section}{\numberline {3}Proposed Optimization Framework}{6}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Nested Optimization Structure}{6}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}Fitness Function}{7}{subsection.3.2}%
-\contentsline {subsection}{\numberline {3.3}Experimental Setup}{7}{subsection.3.3}%
-\contentsline {subsubsection}{\numberline {3.3.1}Dataset Selection and Characteristics}{7}{subsubsection.3.3.1}%
-\contentsline {subsubsection}{\numberline {3.3.2}DIO Configuration}{8}{subsubsection.3.3.2}%
-\contentsline {subsubsection}{\numberline {3.3.3}Validation Strategy}{8}{subsubsection.3.3.3}%
-\contentsline {subsubsection}{\numberline {3.3.4}Baseline Models}{9}{subsubsection.3.3.4}%
-\contentsline {subsubsection}{\numberline {3.3.5}Statistical Analysis}{9}{subsubsection.3.3.5}%
-\contentsline {subsubsection}{\numberline {3.3.6}Performance Metrics}{10}{subsubsection.3.3.6}%
-\contentsline {subsection}{\numberline {3.4}Optional Note: Hyper-Heuristics}{10}{subsection.3.4}%
-\contentsline {section}{\numberline {4}Results and Discussion}{10}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Overall Model Performance}{10}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}Statistical Significance}{11}{subsection.4.2}%
-\contentsline {subsection}{\numberline {4.3}Visual Analysis}{11}{subsection.4.3}%
-\contentsline {subsection}{\numberline {4.4}Pareto-Optimal Solution}{12}{subsection.4.4}%
-\contentsline {subsection}{\numberline {4.5}Feature Selection Analysis}{13}{subsection.4.5}%
-\contentsline {subsection}{\numberline {4.6}Detailed Performance Comparison}{13}{subsection.4.6}%
-\contentsline {subsection}{\numberline {4.7}Optimization Overfitting: A Critical Insight}{14}{subsection.4.7}%
-\contentsline {subsubsection}{\numberline {4.7.1}The Phenomenon}{14}{subsubsection.4.7.1}%
-\contentsline {subsubsection}{\numberline {4.7.2}Why This Matters}{14}{subsubsection.4.7.2}%
-\contentsline {subsubsection}{\numberline {4.7.3}Recommended Approach}{14}{subsubsection.4.7.3}%
-\contentsline {subsection}{\numberline {4.8}CV-Based Optimization: Validating the Solution}{15}{subsection.4.8}%
-\contentsline {subsubsection}{\numberline {4.8.1}CV-Optimized Configuration}{15}{subsubsection.4.8.1}%
-\contentsline {subsubsection}{\numberline {4.8.2}30-Run Statistical Validation}{16}{subsubsection.4.8.2}%
-\contentsline {subsubsection}{\numberline {4.8.3}Statistical Significance Analysis}{18}{subsubsection.4.8.3}%
-\contentsline {subsubsection}{\numberline {4.8.4}Comparison: Single-Split vs. CV-Based}{18}{subsubsection.4.8.4}%
-\contentsline {subsubsection}{\numberline {4.8.5}Key Insights}{19}{subsubsection.4.8.5}%
-\contentsline {subsection}{\numberline {4.9}Robustness and Generalization}{19}{subsection.4.9}%
-\contentsline {subsection}{\numberline {4.10}XGBoost Optimization: Exploring Gradient Boosting}{19}{subsection.4.10}%
-\contentsline {subsubsection}{\numberline {4.10.1}XGBoost-Optimized Configuration}{19}{subsubsection.4.10.1}%
-\contentsline {subsubsection}{\numberline {4.10.2}30-Run Statistical Validation}{20}{subsubsection.4.10.2}%
-\contentsline {subsubsection}{\numberline {4.10.3}Statistical Significance Analysis}{21}{subsubsection.4.10.3}%
-\contentsline {subsubsection}{\numberline {4.10.4}Comparison: XGBoost vs. Random Forest Optimization}{22}{subsubsection.4.10.4}%
-\contentsline {subsubsection}{\numberline {4.10.5}Clinical Deployment Recommendation}{22}{subsubsection.4.10.5}%
-\contentsline {subsection}{\numberline {4.11}Robustness and Generalization}{23}{subsection.4.11}%
-\contentsline {subsection}{\numberline {4.12}Practical Implications for Medical Diagnostics}{23}{subsection.4.12}%
-\contentsline {subsection}{\numberline {4.13}Comparison with Hyper-Heuristic Approach}{24}{subsection.4.13}%
-\contentsline {subsection}{\numberline {4.14}Limitations}{24}{subsection.4.14}%
-\contentsline {subsection}{\numberline {4.15}Future Work}{25}{subsection.4.15}%
-\contentsline {section}{\numberline {5}Conclusion}{26}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Summary of Contributions}{26}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}Key Findings}{27}{subsection.5.2}%
-\contentsline {subsection}{\numberline {5.3}Practical Impact}{27}{subsection.5.3}%
-\contentsline {subsection}{\numberline {5.4}Broader Implications}{28}{subsection.5.4}%
-\contentsline {subsection}{\numberline {5.5}Final Remarks}{28}{subsection.5.5}%
-\contentsline {section}{\numberline {A}Appendix A: DIO Algorithm Pseudocode}{30}{appendix.A}%
-\contentsline {section}{\numberline {B}Appendix B: Selected Features Details}{30}{appendix.B}%
-\contentsline {section}{\numberline {C}Appendix C: Optimized Hyperparameters}{31}{appendix.C}%
+\contentsline {section}{\numberline {1}Introduction}{5}{section.1}%
+\contentsline {section}{\numberline {2}Background and Methodology}{7}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Dholes-Inspired Optimization (DIO) Algorithm}{7}{subsection.2.1}%
+\contentsline {subsubsection}{\numberline {2.1.1}Algorithm Validation}{8}{subsubsection.2.1.1}%
+\contentsline {subsubsection}{\numberline {2.1.2}Benchmark Comparison with Other Metaheuristics}{9}{subsubsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.2}Random Forest Architecture}{10}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Modeling DIO: From MATLAB to Python}{11}{subsection.2.3}%
+\contentsline {section}{\numberline {3}Proposed Optimization Framework}{13}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Nested Optimization Structure}{13}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Fitness Function}{14}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Experimental Setup}{19}{subsection.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.1}Dataset Selection and Characteristics}{19}{subsubsection.3.3.1}%
+\contentsline {subsubsection}{\numberline {3.3.2}DIO Configuration}{19}{subsubsection.3.3.2}%
+\contentsline {subsubsection}{\numberline {3.3.3}Validation Strategy}{22}{subsubsection.3.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.4}Baseline Models}{22}{subsubsection.3.3.4}%
+\contentsline {subsubsection}{\numberline {3.3.5}Statistical Analysis}{22}{subsubsection.3.3.5}%
+\contentsline {subsubsection}{\numberline {3.3.6}Performance Metrics}{23}{subsubsection.3.3.6}%
+\contentsline {subsection}{\numberline {3.4}Optional Note: Hyper-Heuristics}{23}{subsection.3.4}%
+\contentsline {section}{\numberline {4}Results and Discussion}{23}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Overall Model Performance}{23}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Statistical Significance}{24}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Visual Analysis}{24}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Pareto-Optimal Solution}{26}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Feature Selection Analysis}{26}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}Detailed Performance Comparison}{26}{subsection.4.6}%
+\contentsline {subsection}{\numberline {4.7}Optimization Overfitting: A Critical Insight}{27}{subsection.4.7}%
+\contentsline {subsubsection}{\numberline {4.7.1}The Phenomenon}{27}{subsubsection.4.7.1}%
+\contentsline {subsubsection}{\numberline {4.7.2}Why This Matters}{27}{subsubsection.4.7.2}%
+\contentsline {subsubsection}{\numberline {4.7.3}Recommended Approach}{28}{subsubsection.4.7.3}%
+\contentsline {subsection}{\numberline {4.8}CV-Based Optimization: Validating the Solution}{28}{subsection.4.8}%
+\contentsline {subsubsection}{\numberline {4.8.1}CV-Optimized Configuration}{28}{subsubsection.4.8.1}%
+\contentsline {subsubsection}{\numberline {4.8.2}30-Run Statistical Validation}{29}{subsubsection.4.8.2}%
+\contentsline {subsubsection}{\numberline {4.8.3}Statistical Significance Analysis}{31}{subsubsection.4.8.3}%
+\contentsline {paragraph}{A Remaining Question}{31}{section*.21}%
+\contentsline {subsubsection}{\numberline {4.8.4}Comparison: Single-Split vs. CV-Based}{32}{subsubsection.4.8.4}%
+\contentsline {subsubsection}{\numberline {4.8.5}Key Insights}{32}{subsubsection.4.8.5}%
+\contentsline {subsection}{\numberline {4.9}Robustness and Generalization}{32}{subsection.4.9}%
+\contentsline {subsection}{\numberline {4.10}XGBoost Optimization: Exploring Gradient Boosting}{32}{subsection.4.10}%
+\contentsline {subsubsection}{\numberline {4.10.1}XGBoost-Optimized Configuration}{33}{subsubsection.4.10.1}%
+\contentsline {subsubsection}{\numberline {4.10.2}30-Run Statistical Validation}{35}{subsubsection.4.10.2}%
+\contentsline {subsubsection}{\numberline {4.10.3}Statistical Significance Analysis}{36}{subsubsection.4.10.3}%
+\contentsline {subsubsection}{\numberline {4.10.4}Comparison: XGBoost vs. Random Forest Optimization}{37}{subsubsection.4.10.4}%
+\contentsline {subsubsection}{\numberline {4.10.5}Clinical Deployment Recommendation}{37}{subsubsection.4.10.5}%
+\contentsline {subsection}{\numberline {4.11}Robustness and Generalization}{38}{subsection.4.11}%
+\contentsline {subsection}{\numberline {4.12}Clinical Deployment Recommendations}{38}{subsection.4.12}%
+\contentsline {subsection}{\numberline {4.13}Comparison with Hyper-Heuristic Approach}{39}{subsection.4.13}%
+\contentsline {subsection}{\numberline {4.14}Limitations}{39}{subsection.4.14}%
+\contentsline {subsection}{\numberline {4.15}Future Work}{40}{subsection.4.15}%
+\contentsline {section}{\numberline {5}Extension to Image Classification: CIFAR-10 Deep Learning Features}{41}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Motivation for Dataset Extension}{41}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Dataset and Feature Extraction}{41}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Model Selection: Comparison Phase}{42}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}DIO Optimization Configuration}{44}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}Optimization Results}{45}{subsection.5.5}%
+\contentsline {subsection}{\numberline {5.6}Visualization and Interpretation}{47}{subsection.5.6}%
+\contentsline {subsection}{\numberline {5.7}Comparative Analysis: Medical vs. Image Data}{48}{subsection.5.7}%
+\contentsline {subsection}{\numberline {5.8}Real-World Applications for Vision Tasks}{48}{subsection.5.8}%
+\contentsline {subsection}{\numberline {5.9}Limitations and Future Work}{49}{subsection.5.9}%
+\contentsline {subsection}{\numberline {5.10}Summary of Image Classification Extension}{50}{subsection.5.10}%
+\contentsline {section}{\numberline {6}Conclusion}{50}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Summary of Contributions}{50}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Key Findings Across Domains}{52}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Practical Impact Across Domains}{55}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Broader Implications}{55}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}Final Remarks}{56}{subsection.6.5}%
+\contentsline {section}{\numberline {A}Appendix A: DIO Algorithm Pseudocode}{59}{appendix.A}%
+\contentsline {section}{\numberline {B}Appendix B: Selected Features Details}{59}{appendix.B}%
+\contentsline {section}{\numberline {C}Appendix C: Optimized Hyperparameters}{60}{appendix.C}%
