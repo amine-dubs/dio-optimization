@@ -274,19 +274,34 @@ add_bullet_points(tf, [
 ])
 
 # ============================================================================
-# SLIDE 5A: DIO Key Equations & Biological Meaning
+# SLIDE 5A: KEY MATHEMATICAL COMPONENTS
 # ============================================================================
-slide = add_content_slide(prs, "DIO: Key Equations & Biological Meaning")
+slide = add_content_slide(prs, "DIO: Key Mathematical Components")
 body_shape = slide.placeholders[1]
 tf = body_shape.text_frame
 add_bullet_points(tf, [
-    "V(t) = 2 - (2*t/MaxIter): Vocalization influence (explore→exploit)",
-    "B = V × r²: Movement scaling (aggressive→refined)",
-    "C = r × sin(r): Sinusoidal oscillation (stochasticity)",
-    "D_lead = C × (LeadVocalizer_pos - X)^2 + X^2: Adaptive distance",
-    "X_new = LeadVocalizer_pos - B × sqrt(D_lead): Position update",
-    "Boundary: If out of bounds, random reposition (territorial)",
-    "Lead update: If fitness(X) > fitness(Lead), Lead = X (dynamic leadership)"
+    "A. Vocalization Influence (Eq. 1): V(t) = 2 - (2*t / MaxIter)",
+    "- t = current iteration; MaxIter = maximum iterations",
+    "- Starts high (exploration), decreases (exploitation)",
+    "- Mimics dholes shifting from vocal to direct coordination",
+    "",
+    "B. Movement Scaling Factor (Eq. 2): B = V × r² (r ∈ [0,1])",
+    "- Controls movement intensity: large B = exploration, small B = exploitation",
+    "",
+    "C. Sinusoidal Oscillation (Eq. 3): C = r × sin(r)",
+    "- Adds controlled randomness, helps escape local optima",
+    "",
+    "D. Distance to Lead Vocalizer (Eq. 4): D_lead = C × (LeadVocalizer_pos - Current_pos)² + Current_pos²",
+    "- Adaptive distance, C modulates attraction to leader",
+    "",
+    "E. Position Update (Eq. 5): X_new = LeadVocalizer_pos - B × √(D_lead)",
+    "- Smooths movement, prevents erratic jumps",
+    "",
+    "F. Boundary Constraints (Eq. 6): If D_i < lower_bound OR D_i > upper_bound: D_i = lower_bound + (upper_bound - lower_bound) × rand()",
+    "- Ensures solutions stay feasible, models territorial instincts",
+    "",
+    "G. Lead Vocalizer Update (Eq. 7): If fitness(D_i) > fitness(LeadVocalizer): LeadVocalizer = D_i",
+    "- Dynamic leadership: best solution becomes new leader"
 ])
 
 # ============================================================================
