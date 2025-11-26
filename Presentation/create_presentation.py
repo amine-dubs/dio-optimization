@@ -106,14 +106,72 @@ def add_image_slide(prs, title, image_path, caption=""):
     
     return slide
 
+
 # ============================================================================
 # SLIDE 1: TITLE SLIDE
 # ============================================================================
 add_title_slide(
     prs,
     "Dholes-Inspired Optimization (DIO)\nfor Feature Selection & Hyperparameter Tuning",
-    "Cross-Domain Validation: From Medical Diagnostics to Computer Vision\n\nYour Name | Your University | November 2025"
+    "Cross-Domain Validation: From Medical Diagnostics to Computer Vision\n\nUSTO-MB | Computer Science | Data Science | Nov 2025"
 )
+
+# ============================================================================
+# SLIDE 1A: DIO Authorship, Publication & Code
+# ============================================================================
+slide = add_content_slide(prs, "Who Created DIO? (Authorship & Code)")
+body_shape = slide.placeholders[1]
+tf = body_shape.text_frame
+add_bullet_points(tf, [
+    "DIO created by:",
+    "- Ali El Romeh (Centre for AI Research & Optimization, Torrens University Australia)",
+    "- Seyedali Mirjalili (Lead researcher, Torrens University Australia)",
+    "- Václav Šnel (VSB-Technical University of Ostrava, Czech Republic)",
+    "",
+    "Publication: Cluster Computing (Springer), 2025",
+    "- DOI: 10.1007/s10586-025-05543-2",
+    "- Received: Jan 27, 2025 | Accepted: May 12, 2025",
+    "- High-tier peer-reviewed journal",
+    "",
+    "Code availability:",
+    "- GitHub: github.com/AlyromehDholes-Inspired-Optimization-DIO",
+    "- MathWorks File Exchange (MATLAB version)"
+])
+
+# ============================================================================
+# SLIDE 1B: INTRO SLIDE (Names, University, Department, etc.)
+# ============================================================================
+slide = add_content_slide(prs, "Introduction & Team")
+body_shape = slide.placeholders[1]
+tf = body_shape.text_frame
+add_bullet_points(tf, [
+    "Names: Bellatreche Mohamed Amine, Iman Cherif Ghizlane",
+    "University: USTO-MB (Université des Sciences et de la Technologie d'Oran Mohamed-Boudiaf)",
+    "Department: Computer Science",
+    "Specialty: Data Science",
+    "Course: Statistics in Data Science",
+    "Professor: Dr. Neggaz Nabil"
+])
+
+# ============================================================================
+# SLIDE 1C: CONTENT PAGE (Table of Contents)
+# ============================================================================
+slide = add_content_slide(prs, "Contents")
+body_shape = slide.placeholders[1]
+tf = body_shape.text_frame
+add_bullet_points(tf, [
+    "Introduction & Motivation",
+    "DIO Algorithm Overview",
+    "Methodology: Nested Optimization",
+    "Medical Classification Results (Breast Cancer)",
+    "Extension to Computer Vision (CIFAR-10)",
+    "Cross-Domain Analysis",
+    "Statistical Validation",
+    "Practical Implications",
+    "Limitations & Future Work",
+    "Conclusions",
+    "References"
+])
 
 # ============================================================================
 # SLIDE 2: AGENDA
@@ -160,6 +218,26 @@ add_bullet_points(tf, [
     "Three cooperative hunting strategies:",
 ])
 
+# ============================================================================
+# SLIDE 4A: Dhole Animal & Behavior Mapping
+# ============================================================================
+slide = add_content_slide(prs, "Dholes: Animal Inspiration & Algorithm Mapping")
+body_shape = slide.placeholders[1]
+tf = body_shape.text_frame
+add_bullet_points(tf, [
+    "Dhole (Cuon alpinus): Asiatic wild dog",
+    "- Habitat: Forests/grasslands of Central, East, SE Asia",
+    "- Packs: 5-40, complex social structure, vocal communication",
+    "- Cooperative hunting, hierarchical leadership",
+    "",
+    "How DIO maps dhole behavior to algorithm:",
+    "- Lead vocalizer → Best solution guides search (leadership/exploitation)",
+    "- Vocal signals → Vocalization influence (V) decays (explore→exploit)",
+    "- Cooperative hunting → Pack adjusts together (avoid local optima)",
+    "- Territorial instincts → Boundary constraints (feasible space)",
+    "- Pack hierarchy → Multi-stage leadership transitions (adaptation)"
+])
+
 # Add sub-bullets
 sub_points = [
     "Chase Alpha: Follow best hunter (exploitation)",
@@ -173,7 +251,7 @@ for point in sub_points:
     p.font.size = Pt(16)
 
 p = tf.add_paragraph()
-p.text = "Published 2023 by Dehghani et al. in Scientific Reports"
+p.text = "Reference: El Romeh, Mirjalili, Šnel, Cluster Computing (2025), DOI: 10.1007/s10586-025-05543-2"
 p.level = 0
 p.font.size = Pt(18)
 
@@ -196,6 +274,22 @@ add_bullet_points(tf, [
 ])
 
 # ============================================================================
+# SLIDE 5A: DIO Key Equations & Biological Meaning
+# ============================================================================
+slide = add_content_slide(prs, "DIO: Key Equations & Biological Meaning")
+body_shape = slide.placeholders[1]
+tf = body_shape.text_frame
+add_bullet_points(tf, [
+    "V(t) = 2 - (2*t/MaxIter): Vocalization influence (explore→exploit)",
+    "B = V × r²: Movement scaling (aggressive→refined)",
+    "C = r × sin(r): Sinusoidal oscillation (stochasticity)",
+    "D_lead = C × (LeadVocalizer_pos - X)^2 + X^2: Adaptive distance",
+    "X_new = LeadVocalizer_pos - B × sqrt(D_lead): Position update",
+    "Boundary: If out of bounds, random reposition (territorial)",
+    "Lead update: If fitness(X) > fitness(Lead), Lead = X (dynamic leadership)"
+])
+
+# ============================================================================
 # SLIDE 5B: DIO ALGORITHM FLOWCHART
 # ============================================================================
 add_image_slide(
@@ -204,6 +298,108 @@ add_image_slide(
     os.path.join(parent_dir, "schemas and snippets", "dio_flowchart.png"),
     "Complete algorithmic flow: initialization, fitness evaluation, three hunting strategies, convergence"
 )
+
+# ============================================================================
+# SLIDE 5C: DIO ADVANTAGES
+# ============================================================================
+slide = add_content_slide(prs, "DIO: Key Advantages")
+body_shape = slide.placeholders[1]
+tf = body_shape.text_frame
+add_bullet_points(tf, [
+    "✅ Superior convergence speed (esp. unimodal functions): 15-20% faster than PSO, GWO",
+    "✅ Excellent exploration-exploitation balance: avoids premature convergence",
+    "✅ Outstanding local minima avoidance (multimodal functions)",
+    "✅ Robust across problem types: unimodal, multimodal, composite, high-dimensional",
+    "✅ Low variance, high stability: consistent results across 30 runs",
+    "✅ Scalability: linear complexity, suitable for high-dimensional problems",
+    "✅ Real-world engineering success: best results on welded beam & pressure vessel design",
+    "✅ Biologically meaningful: genuine dhole pack inspiration, not just parameter tweaks",
+    "✅ Easy implementation: straightforward, open-source code (GitHub, MATLAB)",
+    "✅ Multi-stage leadership: dynamic adaptation, better than static GWO/PSO"
+])
+
+# ============================================================================
+# SLIDE 5D: DIO LIMITATIONS
+#+ ============================================================================
+# SLIDE 5E: DIO vs. PSO, GWO, DE (Comparison)
+# ============================================================================
+slide = add_content_slide(prs, "DIO vs. PSO, GWO, DE: Comparison")
+body_shape = slide.placeholders[1]
+tf = body_shape.text_frame
+add_bullet_points(tf, [
+    "DIO vs. PSO:",
+    "- Inspiration: Dhole pack vs. bird flock",
+    "- Leadership: Dynamic (multi-stage) vs. static (global best)",
+    "- Parameter control: Vocalization (adaptive) vs. inertia (fixed)",
+    "- Convergence: DIO faster, better balance; PSO can stagnate",
+    "- Local minima: DIO excellent, PSO poor",
+    "",
+    "DIO vs. GWO:",
+    "- Inspiration: Dhole vs. wolf pack",
+    "- Leadership: Dynamic vs. static hierarchy",
+    "- Movement: Sinusoidal+distance vs. linear encircling",
+    "- Exploration: Vocalization decay vs. linear alpha",
+    "- Boundary: Random reposition vs. clipping",
+    "- Results: DIO better on F9 (2.2e-11 vs 0.31)",
+    "",
+    "DIO vs. DE:",
+    "- Inspiration: Biological vs. mathematical",
+    "- Mechanism: Cooperative vs. mutation/crossover",
+    "- Parameter tuning: Moderate vs. high",
+    "- Speed: DIO very fast, DE medium",
+    "- Stability: DIO good, DE sometimes better",
+    "- Head-to-head: DIO wins ~60% of tests, DE ~35%"
+])
+# ============================================================================
+# SLIDE 5F: DIO Real-World Applications
+# ============================================================================
+slide = add_content_slide(prs, "DIO: Real-World Applications")
+body_shape = slide.placeholders[1]
+tf = body_shape.text_frame
+add_bullet_points(tf, [
+    "Engineering: Welded beam & pressure vessel design (cost reduction, safety)",
+    "Machine learning: Hyperparameter tuning, feature selection (e.g., breast cancer diagnosis)",
+    "Neural network weight optimization",
+    "Resource allocation in networks",
+    "Facility location, portfolio optimization",
+    "Drug discovery, power systems, supply chain management",
+    "Potential for any high-dimensional, single-objective optimization"
+])
+# ============================================================================
+# SLIDE 5G: DIO Algorithm Pseudocode
+# ============================================================================
+slide = add_content_slide(prs, "DIO Algorithm: Pseudocode")
+body_shape = slide.placeholders[1]
+tf = body_shape.text_frame
+add_bullet_points(tf, [
+    "1. Initialize population D with random solutions",
+    "2. Evaluate fitness of all solutions",
+    "3. For each iteration:",
+    "   - Update vocalization influence: V = 2 - (2*iter/MaxIter)",
+    "   - Find lead vocalizer (best solution)",
+    "   - For each agent:",
+    "       * r = random(0,1); B = V*r^2; C = r*sin(r)",
+    "       * D_lead = C*(lead-X)^2 + X^2",
+    "       * X_new = lead - B*sqrt(D_lead)",
+    "       * If out of bounds: random reposition",
+    "       * If fitness(X_new) > fitness(X): X = X_new",
+    "   - If no improvement in N iters: break",
+    "4. Return best solution found"
+])
+# ============================================================================
+slide = add_content_slide(prs, "DIO: Key Limitations")
+body_shape = slide.placeholders[1]
+tf = body_shape.text_frame
+add_bullet_points(tf, [
+    "⚠️ No formal theoretical convergence proof (empirical only)",
+    "⚠️ Parameter sensitivity: requires tuning for V, C; not self-adaptive",
+    "⚠️ Sometimes outperformed by Differential Evolution (DE) on some functions",
+    "⚠️ Higher computational overhead per iteration (distance, sinusoidal calculations)",
+    "⚠️ Population-based: not for single-solution or memory-constrained problems",
+    "⚠️ Limited to single-objective optimization (no multi-objective support yet)",
+    "⚠️ Tested mainly on benchmarks + 2 engineering problems; needs more real-world validation",
+    "⚠️ Variable convergence on some fixed-dimension multimodal functions"
+])
 
 # ============================================================================
 # SLIDE 6: NESTED OPTIMIZATION FRAMEWORK
@@ -1032,6 +1228,7 @@ for i, point in enumerate(points):
     p.font.size = Pt(18)
     p.space_after = Pt(6)
 
+
 # ============================================================================
 # SLIDE 24: THANK YOU / Q&A
 # ============================================================================
@@ -1106,6 +1303,22 @@ for i, info in enumerate(contact_info):
     p.text = info
     p.font.size = Pt(18)
     p.alignment = PP_ALIGN.CENTER
+
+# ============================================================================
+# SLIDE 25: REFERENCES
+# ============================================================================
+slide = add_content_slide(prs, "References")
+body_shape = slide.placeholders[1]
+tf = body_shape.text_frame
+add_bullet_points(tf, [
+    "[1] El Romeh, A., Mirjalili, S., Šnel, V. (2025). Dholes-Inspired Optimization (DIO). Cluster Computing, Springer. DOI: 10.1007/s10586-025-05543-2. Open-source: github.com/AlyromehDholes-Inspired-Optimization-DIO, MathWorks File Exchange. https://link.springer.com/article/10.1007/s10586-025-05543-2",
+    "[2] UCI Machine Learning Repository: Breast Cancer Wisconsin (Diagnostic) Data Set.",
+    "[3] Krizhevsky, A. (2009). CIFAR-10 Dataset.",
+    "[4] Chen, T., & Guestrin, C. (2016). XGBoost: A Scalable Tree Boosting System.",
+    "[5] Breiman, L. (2001). Random Forests. Machine Learning.",
+    "[6] scikit-learn: Machine Learning in Python.",
+    "[7] python-pptx documentation."
+])
 
 # ============================================================================
 # SAVE PRESENTATION
