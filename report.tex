@@ -74,10 +74,11 @@
 % Title and Author Information
 \title{Dholes-Inspired Optimization for Simultaneous Feature Selection and Hyperparameter Tuning of Random Forest Classifiers}
 
-\author[1]{Mohamed Amine Bellatreche}
-\author[2]{Ghizlane Cherif}
-\affil[1]{Department of Computer Science, University of Science and Technology of Oran Mohamed Boudiaf (USTO-MB), Oran, Algeria}
-\affil[2]{Data Science speciality}
+\author[1]{\href{mailto:aminebellatreche5@gmail.com}{Mohamed Amine Bellatreche}}
+\author[1]{\href{mailto:cherifiman22@gmail.com}{Ghizlane Cherif}}
+\affil[1]{Department of Computer Science, Data Science speciality, University of Science and Technology of Oran Mohamed Boudiaf (USTO-MB), Oran, Algeria}
+\affil[ ]{Course Professor: \href{mailto:nabil.neggaz@univ-usto.dz}{Dr. Nabil Neggaz}}
+\affil[ ]{Project Repository: \url{https://github.com/amine-dubs/dio-optimization}}
 \date{\today}
 \maketitle
 \thispagestyle{empty}
@@ -123,7 +124,7 @@ This research bridges the gap by implementing DIO in Python (from its original M
 \section{Background and Methodology}
 
 \subsection{Dholes-Inspired Optimization (DIO) Algorithm}
-DIO was created by Ali El Romeh (Centre for Artificial Intelligence Research and Optimization, Torrens University Australia), Seyedali Mirjalili (Lead researcher, Torrens University Australia), and Václav Šnel (VSB-Technical University of Ostrava, Czech Republic). The algorithm was published in Cluster Computing (2025, Springer, DOI: 10.1007/s10586-025-05543-2), a high-tier peer-reviewed venue. Open-source code is available on GitHub (\url{https://github.com/AlyromehDholes-Inspired-Optimization-DIO}) and on MathWorks File Exchange for MATLAB users.
+DIO was created by Ali El Romeh (Centre for Artificial Intelligence Research and Optimization, Torrens University Australia), Václav Snášel (VSB-Technical University of Ostrava, Czech Republic), and Seyedali Mirjalili (Lead researcher, Torrens University Australia) [1]. The algorithm was published in Cluster Computing (2025, Springer, DOI: 10.1007/s10586-025-05543-2), a high-tier peer-reviewed venue. Open-source code is available on GitHub (\url{https://github.com/Alyromeh/Dholes-Inspired-Optimization-DIO}) and on MathWorks File Exchange for MATLAB users.
 
 The DIO algorithm is a population-based metaheuristic inspired by the pack hunting behavior of dholes (\textit{Cuon alpinus}), also known as Asiatic wild dogs. Dholes are highly social canids native to Central, South, and Southeast Asia, renowned for their sophisticated cooperative hunting strategies. Unlike solitary predators, dholes hunt in coordinated packs, employing multiple strategies simultaneously to increase their success rate.
 
@@ -163,7 +164,7 @@ To ensure correctness of our Python implementation, we validated DIO on 14 stand
     \centering
     \includegraphics[width=0.95\textwidth]{schemas and snippets/dio_flowchart.png}
     \caption{
-    	extbf{DIO Algorithm Flowchart:} Complete algorithmic flow showing initialization, fitness evaluation, three hunting strategies (chase alpha, scavenge, random movement), position updates, and convergence criteria. Source: El Romeh, Mirjalili, Šnel (2025) \cite{elromeh2025dio}. This flowchart illustrates the core mechanism adapted in our Python implementation for machine learning optimization.
+    	extbf{DIO Algorithm Flowchart:} Complete algorithmic flow showing initialization, fitness evaluation, three hunting strategies (chase alpha, scavenge, random movement), position updates, and convergence criteria. Source: El Romeh, Snášel, Mirjalili (2025) [1]. This flowchart illustrates the core mechanism adapted in our Python implementation for machine learning optimization.
     }
     \label{fig:dio_flowchart}
 \end{figure}
@@ -175,7 +176,7 @@ To further validate DIO's competitive performance, we present results from the o
     \centering
     \includegraphics[width=0.95\textwidth]{schemas and snippets/comparaison_table_of_results_for_pressure_vessel_design_problem_between_dio_and_other_algos.png}
     \caption{
-    	extbf{DIO Performance on Engineering Benchmark:} Comparison of DIO with state-of-the-art metaheuristic algorithms (Genetic Algorithm, Particle Swarm Optimization, Differential Evolution, Grey Wolf Optimizer, Whale Optimization Algorithm, and others) on the Pressure Vessel Design Problem. DIO demonstrates competitive performance with best/mean/worst cost values comparable to or better than established methods. Source: El Romeh, Mirjalili, Šnel (2025) \cite{elromeh2025dio}. This benchmark validation supports our selection of DIO for machine learning hyperparameter optimization tasks.
+    	extbf{DIO Performance on Engineering Benchmark:} Comparison of DIO with state-of-the-art metaheuristic algorithms (Genetic Algorithm, Particle Swarm Optimization, Differential Evolution, Grey Wolf Optimizer, Whale Optimization Algorithm, and others) on the Pressure Vessel Design Problem. DIO demonstrates competitive performance with best/mean/worst cost values comparable to or better than established methods. Source: El Romeh, Snášel, Mirjalili (2025) [1]. This benchmark validation supports our selection of DIO for machine learning hyperparameter optimization tasks.
     }
     \label{fig:dio_comparison}
 \end{figure}
@@ -1274,7 +1275,7 @@ This work establishes DIO as a versatile, practical optimization framework for m
 % ==============================================================================
 \section*{Acknowledgments}
 \addcontentsline{toc}{section}{Acknowledgments}
-We acknowledge the developers of the original DIO algorithm, Ali El Romeh, Seyedali Mirjalili, and Václav Šnel, for their innovative work on nature-inspired optimization (Cluster Computing, 2025, Springer, DOI: 10.1007/s10586-025-05543-2, GitHub: \url{https://github.com/AlyromehDholes-Inspired-Optimization-DIO}, MathWorks File Exchange), \url{https://link.springer.com/article/10.1007/s10586-025-05543-2}. We also thank the UCI Machine Learning Repository for maintaining the Breast Cancer Wisconsin dataset, and the open-source communities behind Python, Scikit-learn, XGBoost, and related libraries that made this research possible.
+We acknowledge the developers of the original DIO algorithm, Ali El Romeh, Václav Snášel, and Seyedali Mirjalili, for their innovative work on nature-inspired optimization (Cluster Computing, 2025, Springer, DOI: 10.1007/s10586-025-05543-2, GitHub: \url{https://github.com/Alyromeh/Dholes-Inspired-Optimization-DIO}, MathWorks File Exchange), \url{https://link.springer.com/article/10.1007/s10586-025-05543-2}. We also thank the UCI Machine Learning Repository for maintaining the Breast Cancer Wisconsin dataset, and the open-source communities behind Python, Scikit-learn, XGBoost, and related libraries that made this research possible.
 
 % ==============================================================================
 % 7. REFERENCES
@@ -1282,7 +1283,7 @@ We acknowledge the developers of the original DIO algorithm, Ali El Romeh, Seyed
 \section*{References}
 \addcontentsline{toc}{section}{References}
 \begin{enumerate}
-    \item El Romeh, A., Mirjalili, S., \& Šnel, V. (2025). Dholes-Inspired Optimization (DIO). \textit{Cluster Computing} (Springer). DOI: 10.1007/s10586-025-05543-2. Open-source: \url{https://link.springer.com/article/10.1007/s10586-025-05543-2}, MathWorks File Exchange.
+    \item El Romeh, A., Snášel, V., \& Mirjalili, S. (2025). Dholes-Inspired Optimization (DIO). \textit{Cluster Computing} (Springer). DOI: 10.1007/s10586-025-05543-2. Open-source: \url{https://github.com/Alyromeh/Dholes-Inspired-Optimization-DIO}, \url{https://link.springer.com/article/10.1007/s10586-025-05543-2}, MathWorks File Exchange.
     
     \item Breiman, L. (2001). Random Forests. \textit{Machine Learning, 45}(1), 5-32. \url{https://doi.org/10.1023/A:1010933404324}
     
@@ -1396,3 +1397,5 @@ The DIO algorithm identified the following optimal Random Forest hyperparameters
 These values reflect a moderately deep ensemble (193 trees, max depth 13) with minimal leaf constraints, suitable for the breast cancer dataset's complexity.
 
 \end{document}
+
+

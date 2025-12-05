@@ -38,7 +38,7 @@ The DIO algorithm is a nature-inspired metaheuristic optimization algorithm base
 - Discovered optimization overfitting in single-split RF tuning
 - Validated CV-based solution (1.54% accuracy improvement)
 - Demonstrated XGBoost's natural protection against optimization overfitting
-- Published 31-page research paper with complete methodology
+- Published +60-page research paper with complete methodology
 
 ### 🌐 **Cross-Domain Validation**
 - **Medical:** 96.34% accuracy, 43% feature reduction (30D → 17D)
@@ -199,7 +199,7 @@ Dio_expose/
 ├── benchmark_functions.py              # Standard benchmark test functions (F1-F14)
 ├── run_benchmarks.py                   # Benchmark testing script
 ├── README.md                           # This file (updated with all results)
-├── report.tex                          # Comprehensive LaTeX research paper (31 pages)
+├── report.tex                          # Comprehensive LaTeX research paper (+60 pages)
 ├── requirements.txt                    # Python dependencies
 ├── LICENSE                             # MIT License
 ├── .gitignore                          # Git ignore file
@@ -650,7 +650,7 @@ This implementation is based on the DIO algorithm. For the original research pap
 
 This repository includes comprehensive research documentation:
 
-1. **`report.tex`**: Full LaTeX research paper (31 pages, ~1000 lines) with:
+1. **`report.tex`**: Full LaTeX research paper (+60 pages, +1000 lines) with:
    - Complete methodology and experimental design for all approaches
    - Medical domain: RF single-split, RF CV-based, and XGBoost optimization
    - Vision domain: CIFAR-10 with ResNet50 features (2048D)
