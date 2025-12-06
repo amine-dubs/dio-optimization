@@ -136,9 +136,9 @@ The algorithm's efficacy stems from its mathematical framework, which models the
 \begin{itemize}
     \item \textbf{Vocalization Influence (Eq. 1):} A variable that decreases linearly from 2 to 0 over the course of iterations, simulating the diminishing influence of the lead vocalizer as the hunt progresses.
     \begin{equation}
-        V = 2 - t \times \left( \frac{2}{\text{Max\_iter}} \right)
+        V(t) = 2 - (2 \times t / \text{MaxIter})
     \end{equation}
-    where $t$ is the current iteration and $\text{Max\_iter}$ is the maximum number of iterations.
+    where $t$ is the current iteration and $\text{MaxIter}$ is the maximum number of iterations.
 
     \item \textbf{Movement Scaling Factor (Eq. 2):} This factor scales the movement of the dholes.
     \begin{equation}
@@ -146,20 +146,39 @@ The algorithm's efficacy stems from its mathematical framework, which models the
     \end{equation}
     where $r$ is a random number.
 
-    \item \textbf{Oscillation Coefficient (Eq. 3):} This coefficient adds a controlled stochastic element to the movement.
+    \item \textbf{Sinusoidal Oscillation (Eq. 3):} This coefficient adds a controlled stochastic element to the movement.
     \begin{equation}
         C = r + \sin(r \times \pi)
     \end{equation}
 
-    \item \textbf{Adjusted Distance to Leader (Eq. 4):} Calculates the adjusted distance to the leader.
+    \item \textbf{Distance to Lead Vocalizer (Eq. 4):} Calculates the adjusted distance to the leader.
     \begin{equation}
-        \vec{D}_{\text{lead}} = |C \times \vec{\text{lead\_vocalizer\_pos}}^2 - \vec{D}_i^2|
+        \vec{D}_{\text{lead}} = |C \times (\text{LeadVocalizer\_pos})^2 - (\text{dhole})^2|
     \end{equation}
-    where $\vec{\text{lead\_vocalizer\_pos}}$ is the position of the lead dhole and $\vec{D}_i$ is the position of the current dhole.
+    where $\text{LeadVocalizer\_pos}$ is the position of the lead dhole and $\text{dhole}$ is the position of the current dhole.
 
-    \item \textbf{New Position Update (Eq. 5):} The new position of a dhole is calculated based on the leader's position and the adjusted distance.
+    \item \textbf{Position Update (Eq. 5):} The new position of a dhole is calculated based on the leader's position and the adjusted distance.
     \begin{equation}
-        \vec{X}_{\text{lead}} = \vec{\text{lead\_vocalizer\_pos}} + B \times \sqrt{\vec{D}_{\text{lead}}}
+        \vec{X}_{\text{new}} = \text{LeadVocalizer\_pos} + B \times \sqrt{\vec{D}_{\text{lead}}}
+    \end{equation}
+    
+    \item \textbf{Boundary Constraints (Eq. 6):} Solutions that go beyond the search space are brought back within bounds.
+    \begin{equation}
+        D_i = 
+        \begin{cases} 
+            \text{lower\_bound} + r \times (\text{upper\_bound} - \text{lower\_bound}) & \text{if } D_i \notin [\text{lower\_bound, upper\_bound}] \\
+            D_i & \text{otherwise}
+        \end{cases}
+    \end{equation}
+    where $r$ is a random number in [0, 1].
+
+    \item \textbf{Lead Vocalizer Update (Eq. 7):} The leader is updated if a dhole finds a better position.
+    \begin{equation}
+        \text{LeadVocalizer} = 
+        \begin{cases} 
+            D_i & \text{if fitness}(D_i) < \text{fitness}(\text{LeadVocalizer}) \\
+            \text{LeadVocalizer} & \text{otherwise}
+        \end{cases}
     \end{equation}
 \end{itemize}
 
@@ -167,25 +186,44 @@ After position updates, boundary constraints are enforced to ensure solutions re
 
 \subsubsection{DIO Pseudocode}
 The complete DIO algorithm is summarized in the following pseudocode:
-\begin{lstlisting}[language=Python, caption={DIO Algorithm Pseudocode}, label={lst:dio_pseudocode}]
-Algorithm DIO()
-1. Initialize population of dholes D randomly
-2. Evaluate fitness of each dhole
-3. Set lead_vocalizer = best dhole
-4. while t < Max_iter do
-5.     Update vocalization influence V (Eq. 1)
-6.     for i = 1 to N do
-7.         Calculate B = V * r (Eq. 2)
-8.         Calculate C = r + sin(r * pi) (Eq. 3)
-9.         Calculate D_lead = |C * lead_pos^2 - D_i^2| (Eq. 4)
-10.        Update position X_lead = lead_pos + B * sqrt(D_lead) (Eq. 5)
-11.        Apply boundary constraints (Eq. 6)
-12.        Evaluate new fitness
-13.        if fitness(D_i) < fitness(lead): update leader (Eq. 7)
-14.    end for
-15.    t = t + 1
-16. end while
-17. Return lead_vocalizer as best solution
+\begin{lstlisting}[language=Python, caption={Dhole-Inspired Optimization (DIO) Algorithm}, label={lst:dio_pseudocode}]
+Algorithm: Dhole-Inspired Optimization (DIO)
+Input: Population size, Max_iter, lb, ub
+Output: Best solution
+
+Initialize the population of dholes D with random positions within [lb, ub]
+Evaluate the fitness of each dhole in D
+Set the lead_vocalizer to the dhole with the best fitness
+
+for t = 1 to Max_iter do
+    Calculate V using the vocalization influence equation (Eq. 1)
+    Determine phase (0 for exploration, 1 for exploitation)
+
+    for each dhole D_i in D do
+        if phase == 0 then
+            if rand() < 0.5 then
+                % Randomly explore
+                D_i = lb + rand(1, dim) * (ub - lb)
+            else
+                % Follow lead vocalizer with added noise
+                Calculate B and C using their respective equations (Eqs. 2 and 3)
+                Calculate D_lead using the cooperative hunting equation (Eq. 4)
+                Update the position of D_i using X_lead (Eq. 5)
+            end if
+        else
+            % Exploitation phase
+            Calculate B and C using their respective equations (Eqs. 2 and 3)
+            Calculate D_lead using the cooperative hunting equation (Eq. 4)
+            Update the position of D_i using X_lead (Eq. 5)
+        end if
+
+        Apply the boundary check for D_i (Eq. 8)
+        Evaluate the fitness of D_i
+        Update the lead_vocalizer if D_i has better fitness (Eq. 9)
+    end for
+end for
+
+Return the position of lead_vocalizer as the best solution
 \end{lstlisting}
 
 \subsubsection{Algorithm Validation}
