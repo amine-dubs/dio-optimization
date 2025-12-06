@@ -16,6 +16,7 @@
 \usepackage{caption}
 \usepackage{authblk}
 \usepackage{fancyhdr}
+\usepackage{xurl}
 
 % Page Geometry
 \geometry{
@@ -25,6 +26,8 @@
     top=2.5cm,
     bottom=2.5cm
 }
+
+\setlength{\headheight}{15pt}
 
 % Hyperlink Setup
 \hypersetup{
@@ -128,34 +131,62 @@ DIO was created by Ali El Romeh (Centre for Artificial Intelligence Research and
 
 The DIO algorithm is a population-based metaheuristic inspired by the pack hunting behavior of dholes (\textit{Cuon alpinus}), also known as Asiatic wild dogs. Dholes are highly social canids native to Central, South, and Southeast Asia, renowned for their sophisticated cooperative hunting strategies. Unlike solitary predators, dholes hunt in coordinated packs, employing multiple strategies simultaneously to increase their success rate.
 
-The algorithm's efficacy stems from its three primary movement strategies, which allow it to effectively balance exploration (searching new regions of the solution space) and exploitation (refining promising solutions):
+The algorithm's efficacy stems from its mathematical framework, which models the dholes' vocalization and hunting coordination to balance exploration and exploitation. The core equations are defined as follows:
 
 \begin{itemize}
-    \item \textbf{Chasing the Alpha (Exploitation):} Dholes follow the pack's best hunter—the alpha—representing the best solution found so far. Mathematically, this is modeled as:
+    \item \textbf{Vocalization Influence (Eq. 1):} A variable that decreases linearly from 2 to 0 over the course of iterations, simulating the diminishing influence of the lead vocalizer as the hunt progresses.
     \begin{equation}
-        X_{chase} = X_{alpha} + r_1 \times (X_{alpha} - X_i)
+        V = 2 - t \times \left( \frac{2}{\text{Max\_iter}} \right)
     \end{equation}
-    where $X_{alpha}$ is the alpha's position, $X_i$ is the current dhole's position, and $r_1$ is a random number in [0,1]. This strategy promotes exploitation by directing search agents toward the current best solution.
-    
-    \item \textbf{Scavenging Behavior (Cooperation):} Dholes move based on the average position of the entire pack, representing collective intelligence. This is formulated as:
+    where $t$ is the current iteration and $\text{Max\_iter}$ is the maximum number of iterations.
+
+    \item \textbf{Movement Scaling Factor (Eq. 2):} This factor scales the movement of the dholes.
     \begin{equation}
-        X_{scavenge} = X_{mean} + r_2 \times (X_{mean} - X_i)
+        B = V \times r
     \end{equation}
-    where $X_{mean} = \frac{1}{N}\sum_{j=1}^{N} X_j$ is the centroid of all dholes, and $r_2 \in [0,1]$. This helps maintain population diversity and prevents premature convergence.
-    
-    \item \textbf{Chasing Prey Randomly (Exploration):} Dholes may chase a random prey, modeled by moving towards a randomly selected dhole in the pack:
+    where $r$ is a random number.
+
+    \item \textbf{Oscillation Coefficient (Eq. 3):} This coefficient adds a controlled stochastic element to the movement.
     \begin{equation}
-        X_{random} = X_r + r_3 \times (X_r - X_i)
+        C = r + \sin(r \times \pi)
     \end{equation}
-    where $X_r$ is a randomly selected dhole's position, and $r_3 \in [0,1]$. This enhances exploration by introducing stochastic perturbations.
+
+    \item \textbf{Adjusted Distance to Leader (Eq. 4):} Calculates the adjusted distance to the leader.
+    \begin{equation}
+        \vec{D}_{\text{lead}} = |C \times \vec{\text{lead\_vocalizer\_pos}}^2 - \vec{D}_i^2|
+    \end{equation}
+    where $\vec{\text{lead\_vocalizer\_pos}}$ is the position of the lead dhole and $\vec{D}_i$ is the position of the current dhole.
+
+    \item \textbf{New Position Update (Eq. 5):} The new position of a dhole is calculated based on the leader's position and the adjusted distance.
+    \begin{equation}
+        \vec{X}_{\text{lead}} = \vec{\text{lead\_vocalizer\_pos}} + B \times \sqrt{\vec{D}_{\text{lead}}}
+    \end{equation}
 \end{itemize}
 
-The position of each dhole is updated based on the average of these three movement vectors, creating a balanced search dynamic:
-\begin{equation}
-    X_{new} = \frac{X_{chase} + X_{scavenge} + X_{random}}{3}
-\end{equation}
+After position updates, boundary constraints are enforced to ensure solutions remain within the feasible search space, and the leader is updated if a better solution is found. The algorithm iterates for a predefined number of generations, continuously updating the alpha (best solution) and guiding the pack toward optimal regions.
 
-After position updates, boundary constraints are enforced to ensure solutions remain within the feasible search space. The algorithm iterates for a predefined number of generations, continuously updating the alpha (best solution) and guiding the pack toward optimal regions.
+\subsubsection{DIO Pseudocode}
+The complete DIO algorithm is summarized in the following pseudocode:
+\begin{lstlisting}[language=Python, caption={DIO Algorithm Pseudocode}, label={lst:dio_pseudocode}]
+Algorithm DIO()
+1. Initialize population of dholes D randomly
+2. Evaluate fitness of each dhole
+3. Set lead_vocalizer = best dhole
+4. while t < Max_iter do
+5.     Update vocalization influence V (Eq. 1)
+6.     for i = 1 to N do
+7.         Calculate B = V * r (Eq. 2)
+8.         Calculate C = r + sin(r * pi) (Eq. 3)
+9.         Calculate D_lead = |C * lead_pos^2 - D_i^2| (Eq. 4)
+10.        Update position X_lead = lead_pos + B * sqrt(D_lead) (Eq. 5)
+11.        Apply boundary constraints (Eq. 6)
+12.        Evaluate new fitness
+13.        if fitness(D_i) < fitness(lead): update leader (Eq. 7)
+14.    end for
+15.    t = t + 1
+16. end while
+17. Return lead_vocalizer as best solution
+\end{lstlisting}
 
 \subsubsection{Algorithm Validation}
 To ensure correctness of our Python implementation, we validated DIO on 14 standard benchmark functions (F1-F14), including unimodal functions (F1-F7), multimodal functions (F8-F13), and fixed-dimension multimodal functions (F14). Using the full paper configuration (population size = 30, iterations = 500, runs = 30), our implementation achieved near-zero convergence on 8 functions (e.g., F1: $7.6 \times 10^{-26}$), matching expected DIO performance characteristics. This validation confirms that our implementation is mathematically sound and suitable for production optimization tasks.
