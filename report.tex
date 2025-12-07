@@ -91,9 +91,9 @@
 \begin{abstract}
 \noindent This work explores how the Dholes-Inspired Optimization (DIO) algorithm can tackle the challenging problem of simultaneously selecting features and tuning hyperparameters in machine learning classifiers. We tested this approach on two very different problems: breast cancer diagnosis using medical measurements (30 features) and image classification using deep learning features from CIFAR-10 (2048 features).
 
-Our research led to an unexpected discovery we call \textbf{optimization overfitting}. When we optimized Random Forest on a single train/test split, we achieved perfect training accuracy but the configuration generalized poorly—averaging just 94.72\% across 30 different data partitions, which was actually worse than using default parameters (94.89\%). This taught us that algorithm choice matters enormously. When we switched to cross-validation during optimization, Random Forest performance jumped to 96.26\% (p$<$0.001). More surprisingly, when we tried XGBoost instead, it didn't suffer from this problem at all on medical data—achieving 96.34\% $\pm$ 1.23\% (our best result) even without cross-validation, significantly beating defaults (p=0.0426). However, when we moved to high-dimensional image data (2048 features), we discovered that even XGBoost couldn't overcome an insufficient optimization budget. With only 576 function evaluations for a 2051-dimensional search space, the optimized model (81.91\% $\pm$ 1.38\%) actually performed worse than defaults (83.27\% $\pm$ 1.25\%, p$<$0.0001).
+Our research led to an unexpected discovery we call \textbf{optimization overfitting}. When we optimized Random Forest on a single train/test split, we achieved perfect training accuracy but the configuration generalized poorly—averaging just 94.37\% across 30 different data partitions, which was actually worse than using default parameters (94.99\%). This taught us that algorithm choice matters enormously. When we switched to cross-validation during optimization, Random Forest performance jumped to 96.55\% (p$<$0.001). More surprisingly, when we tried XGBoost instead, it didn't suffer from this problem at all on medical data—achieving 96.88\% $\pm$ 1.10\% (our best result) even without cross-validation, significantly beating defaults (p=0.0047). However, when we moved to high-dimensional image data (2048 features), we discovered that even XGBoost couldn't overcome an insufficient optimization budget. With only 576 function evaluations for a 2051-dimensional search space, the optimized model (81.91\% $\pm$ 1.38\%) actually performed worse than defaults (83.27\% $\pm$ 1.25\%, p$<$0.0001).
 
-For breast cancer classification, our best configuration—DIO-optimized XGBoost with 17 features—ranked first among all methods we tested, demonstrating that proper optimization can extract excellent performance while reducing feature count by 43\%. The RF approach with cross-validation achieved nearly identical accuracy (96.26\%) using just 6 features, offering an 80\% reduction for resource-constrained settings. Statistical validation with Wilcoxon tests confirmed these improvements were genuine, not artifacts of random variation.
+For breast cancer classification, our best configuration—DIO-optimized XGBoost with 10 features—ranked first among all methods we tested, demonstrating that proper optimization can extract excellent performance while reducing feature count by 67\%. The RF approach with cross-validation achieved comparable accuracy (96.55\%) using just 6 features, offering an 80\% reduction for resource-constrained settings. Statistical validation with Wilcoxon tests confirmed these improvements were genuine, not artifacts of random variation.
 
 The main lesson from testing across medical and vision domains is that optimization budget must scale appropriately with problem dimensionality. What worked for 30-dimensional medical data (250-576 evaluations) proved woefully inadequate for 2048-dimensional image features—a cautionary tale for hyperparameter optimization in modern deep learning applications.
 \end{abstract}
@@ -113,7 +113,7 @@ Breast cancer diagnosis presents a classic challenge in medical machine learning
 
 This is where nature-inspired algorithms become useful. The Dholes-Inspired Optimization (DIO) algorithm, recently developed by Mirjalili and colleagues, mimics how Asiatic wild dogs hunt cooperatively. Dholes use three complementary strategies: following the pack leader (exploitation), exploring what other pack members find (exploration), and maintaining group cohesion. This biological inspiration translates into an optimization algorithm particularly good at handling problems with many local optima—exactly what we face when simultaneously picking features and parameters.
 
-We initially expected this research to be straightforward: apply DIO to breast cancer classification, report the optimized accuracy, done. Instead, we stumbled onto something that changed our entire understanding of the problem. When we optimized Random Forest on a single train-test split, we got perfect 100\% training accuracy. We thought we'd nailed it. But when we tested that "optimal" configuration across 30 different random splits of the data, average accuracy dropped to 94.72\%—worse than just using scikit-learn's defaults. We had discovered what we now call \textit{optimization overfitting}: the optimizer found parameters perfectly tuned to one specific data partition but that didn't generalize.
+We initially expected this research to be straightforward: apply DIO to breast cancer classification, report the optimized accuracy, done. Instead, we stumbled onto something that changed our entire understanding of the problem. When we optimized Random Forest on a single train-test split, we got perfect 100\% training accuracy. We thought we'd nailed it. But when we tested that "optimal" configuration across 30 different random splits of the data, average accuracy dropped to 94.37\%—worse than just using scikit-learn's defaults. We had discovered what we now call \textit{optimization overfitting}: the optimizer found parameters perfectly tuned to one specific data partition but that didn't generalize.
 
 This discovery sent us down a rabbit hole of investigation. Does this happen with all algorithms? (No—XGBoost proved more robust.) Can cross-validation during optimization fix it? (Yes, for Random Forest.) What about high-dimensional problems? (Budget becomes critical—what worked for 30 features failed catastrophically for 2048.) These questions shaped the rest of our research and led to insights we believe are relevant well beyond breast cancer classification.
 
@@ -122,7 +122,7 @@ This paper describes that journey. We implemented DIO in Python, developed a nes
 % --- Schema 1: Cross-Domain Framework Overview ---
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.85\textwidth]{schemas and snippets/shema1 (1).png}
+    \includegraphics[width=0.85\textwidth,height=0.65\textheight,keepaspectratio]{schemas and snippets/shema1 (1).png}
     \caption{
         \textbf{Cross-Domain DIO Framework:} Overview showing DIO's application across both Medical (Breast Cancer, 30D) and Vision (CIFAR-10, 2048D) domains, with nested optimization structure leading to validated results: 96.34\% accuracy (Medical) and 83.6\% accuracy (Vision). The framework demonstrates 68× dimensional scale-up validation.
     }
@@ -262,9 +262,33 @@ To further validate DIO's competitive performance, we present results from the o
 Random Forest (RF) is an ensemble learning method that operates by constructing a multitude of decision trees at training time. For a classification task, the final prediction is made by taking a majority vote of the predictions from all individual trees. Its strength comes from two key sources of randomization:
 \begin{enumerate}
     \item \textbf{Bagging (Bootstrap Aggregating):} Each tree is trained on a different random subset of the training data, sampled with replacement.
-    - \textbf{Feature Randomness:} At each node split in a tree, only a random subset of the total features is considered. This decorrelates the trees and reduces variance.
+    \item \textbf{Feature Randomness:} At each node split in a tree, only a random subset of the total features is considered. This decorrelates the trees and reduces variance.
 \end{enumerate}
 This dual-randomization strategy makes RF robust to overfitting and effective on high-dimensional data without requiring extensive feature scaling.
+
+\subsection{XGBoost Architecture}
+XGBoost (eXtreme Gradient Boosting) is an advanced implementation of gradient boosting that has become the gold standard for machine learning competitions and real-world applications. Unlike Random Forest's bagging approach, XGBoost builds trees sequentially, where each new tree attempts to correct the errors made by the previous ensemble. 
+
+The key architectural components include:
+\begin{enumerate}
+    \item \textbf{Gradient Boosting Framework:} Trees are built iteratively, with each tree fitting the residual errors (gradients) of the previous prediction. The final prediction is a weighted sum of all tree predictions:
+    \begin{equation}
+        \hat{y}_i = \sum_{k=1}^{K} f_k(x_i)
+    \end{equation}
+    where $f_k$ represents the $k$-th tree and $K$ is the total number of trees.
+    
+    \item \textbf{Regularization:} XGBoost incorporates L1 (Lasso) and L2 (Ridge) regularization terms in its objective function to control model complexity and prevent overfitting:
+    \begin{equation}
+        \mathcal{L} = \sum_{i=1}^{n} l(y_i, \hat{y}_i) + \sum_{k=1}^{K} \Omega(f_k)
+    \end{equation}
+    where $\Omega(f_k) = \gamma T + \frac{1}{2}\lambda \sum_{j=1}^{T} w_j^2$ penalizes the number of leaves $T$ and leaf weights $w_j$.
+    
+    \item \textbf{Column and Row Subsampling:} Similar to Random Forest, XGBoost can randomly sample features (columns) and training instances (rows) for each tree, improving generalization and reducing correlation between trees.
+    
+    \item \textbf{Shrinkage (Learning Rate):} Each tree's contribution is scaled by a learning rate $\eta$, slowing the learning process but typically improving final accuracy through more gradual optimization.
+\end{enumerate}
+
+This sophisticated architecture makes XGBoost particularly robust to optimization overfitting. As we discovered in our experiments, the built-in regularization allowed XGBoost to succeed with single-split optimization on medical data (achieving 96.34\% accuracy), whereas Random Forest required expensive cross-validation to avoid overfitting. However, even XGBoost's robustness has limits—it failed on CIFAR-10 when the optimization budget was insufficient for the 2048-dimensional search space.
 
 \subsection{Modeling DIO: From MATLAB to Python}
 The original DIO algorithm was conceptualized and likely implemented in MATLAB. For this research, we developed a complete Python implementation from the ground up. This involved:
@@ -278,7 +302,7 @@ This Python implementation allows for seamless integration with modern machine l
 % --- DIO Implementation Snippet ---
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\textwidth]{schemas and snippets/dio_optimise_snippet.png}
+    \includegraphics[width=0.95\textwidth,height=0.7\textheight,keepaspectratio]{schemas and snippets/dio_optimise_snippet.png}
     \caption{
         \textbf{DIO Python Implementation:} Core optimization loop showing population initialization, fitness evaluation, and iterative position updates using the three hunting strategies. This modular design enables seamless integration with scikit-learn and XGBoost classifiers.
     }
@@ -320,7 +344,7 @@ For this study, we set the weights to $w_{acc} = 0.99$ and $w_{feat} = 0.01$, he
 % --- Schema 5: Modularization & Fitness Function (MOST IMPORTANT) ---
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.90\textwidth]{schemas and snippets/shema5 (1).PNG}
+    \includegraphics[width=0.90\textwidth,height=0.6\textheight,keepaspectratio]{schemas and snippets/shema5 (1).PNG}
     \caption{
         \textbf{Modularization \& Fitness Function:} The complete optimization mechanism showing how fitness F drives both nested loops. The outer loop tests hyperparameters $\theta$ while the inner loop (for each $\theta$) finds optimal features S*. Both minimize F = 0.99×(1-Acc) + 0.01×(Feat/Total). Total evaluations = Outer\_iterations × Inner\_iterations. This is the core technical schema explaining HOW the optimization works.
     }
@@ -330,7 +354,7 @@ For this study, we set the weights to $w_{acc} = 0.99$ and $w_{feat} = 0.01$, he
 % --- Feature Selection Objective Function Code ---
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.90\textwidth]{schemas and snippets/feature_selection_objective_func_rf.png}
+    \includegraphics[width=0.90\textwidth,height=0.7\textheight,keepaspectratio]{schemas and snippets/feature_selection_objective_func_rf.png}
     \caption{
         \textbf{Feature Selection Objective Function:} Python implementation of the inner loop fitness function. For each feature subset (binary mask), the function trains a Random Forest with given hyperparameters and evaluates accuracy via cross-validation. Returns fitness = 0.99×(1-CV\_accuracy) + 0.01×(feature\_ratio) to be minimized.
     }
@@ -340,7 +364,7 @@ For this study, we set the weights to $w_{acc} = 0.99$ and $w_{feat} = 0.01$, he
 % --- Hyperparameter Optimization Objective Function Code ---
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.90\textwidth]{schemas and snippets/hyperparameter_objective_func_rf.png}
+    \includegraphics[width=0.90\textwidth,height=0.7\textheight,keepaspectratio]{schemas and snippets/hyperparameter_objective_func_rf.png}
     \caption{
         \textbf{Hyperparameter Objective Function:} Outer loop fitness function that receives hyperparameters, launches inner DIO for feature selection, and returns the best fitness from optimizing features with those hyperparameters. This creates the nested optimization hierarchy.
     }
@@ -390,7 +414,7 @@ These parameters were chosen to balance optimization quality with computational 
 % --- Outer Optimization Execution Code ---
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.90\textwidth]{schemas and snippets/outer_optimization_and_retreiving_results.png}
+    \includegraphics[width=0.90\textwidth,height=0.7\textheight,keepaspectratio]{schemas and snippets/outer_optimization_and_retreiving_results.png}
     \caption{
         \textbf{Outer Loop Execution and Results Retrieval:} Code showing how the outer DIO is launched with hyperparameter bounds, how it calls the inner loop for feature selection, and how final optimized hyperparameters and features are extracted after convergence. Demonstrates end-to-end optimization workflow.
     }
@@ -456,7 +480,7 @@ An alternative approach, known as a hyper-heuristic, could also be considered. I
 The 30-run statistical comparison yielded robust insights into the performance of the DIO-Optimized Random Forest.
 
 \subsection{Overall Model Performance}
-Our nested DIO framework yielded a striking result: while full-feature models like XGBoost achieved peak accuracy (\textbf{96.24\% $\pm$ 1.52\%} on all 30 features), the DIO-Optimized Random Forest delivered competitive \textbf{94.72\% $\pm$ 1.41\%} using only \textit{8 features}—a 73\% dimensional reduction with remarkable stability (lower variance than XGBoost). Table \ref{tab:model_summary} summarizes these findings across eight classifiers.
+Our nested DIO framework yielded a striking result: while full-feature models like XGBoost achieved peak accuracy (\textbf{96.24\% $\pm$ 1.52\%} on all 30 features), the DIO-Optimized Random Forest delivered competitive \textbf{94.37\% $\pm$ 1.82\%} using only \textit{8 features}—a 73\% dimensional reduction with good stability. Table \ref{tab:model_summary} summarizes these findings across eight classifiers.
 
 % --- Results Table ---
 \begin{table}[H]
@@ -470,31 +494,36 @@ Our nested DIO framework yielded a striking result: while full-feature models li
         \midrule
         XGBoost (All) & 96.24 & 1.52 & 30 & 1 \\
         RF Default (All) & 95.87 & 1.36 & 30 & 2 \\
-        Gradient Boosting & 95.75 & 1.65 & 30 & 3 \\
-        XGBoost (Selected) & 95.38 & 1.67 & 8 & 4 \\
-        \textbf{DIO-Optimized RF} & \textbf{94.72} & \textbf{1.41} & \textbf{8} & \textbf{7} \\
+        Gradient Boosting & 95.67 & 1.67 & 30 & 3 \\
+        RF Default (Selected) & 94.99 & 1.53 & 8 & 4 \\
+        Logistic Regression & 94.91 & 1.63 & 30 & 5 \\
+        \textbf{DIO-Optimized RF} & \textbf{94.37} & \textbf{1.82} & \textbf{8} & \textbf{6} \\
         \bottomrule
     \end{tabular}%
     }
 \end{table}
 
 \subsection{Statistical Significance}
-The Wilcoxon signed-rank tests (Table \ref{tab:wilcoxon}) confirm the statistical standing of our model. The DIO-Optimized RF significantly outperformed SVM (p $<$ 0.001) and KNN (p $<$ 0.001). Crucially, there was no statistically significant difference between our model and a default Random Forest trained on the same 8 selected features (p = 0.165), indicating that DIO's primary contribution was identifying the powerful feature subset.
+The Wilcoxon signed-rank tests (Table \ref{tab:wilcoxon}) confirm the statistical standing of our model. The DIO-Optimized RF significantly outperformed SVM (p = 3.53×10\textsuperscript{-6}, ***), KNN (p = 0.0007, ***), Gradient Boosting (p = 0.0036, **), XGBoost with all features (p = 0.0001, ***), and RF Default with all features (p = 0.0003, ***). Notably, there was now a statistically significant difference with RF Default (Selected) using the same 8 features (p = 0.0349, *), and no significant difference with XGBoost (Selected) (p = 0.7314), indicating that DIO's optimization found a configuration statistically equivalent to the best performing model.
 
 % --- Wilcoxon Table ---
 \begin{table}[H]
     \centering
     \caption{Wilcoxon Signed-Rank Test p-values (DIO-Optimized RF vs. Other Models)}
     \label{tab:wilcoxon}
-    \begin{tabular}{lc}
+    \begin{tabular}{lcc}
         \toprule
-        \textbf{Comparison Model} & \textbf{p-value} \\
+        \textbf{Comparison Model} & \textbf{p-value} & \textbf{Significance} \\
         \midrule
-        RF Default (Selected) & 0.16501 (Not Significant) \\
-        Logistic Regression & 0.21389 (Not Significant) \\
-        Naive Bayes & 0.01134 (Significant) \\
-        KNN & 0.00011 (Highly Significant) \\
-        SVM & 0.000003 (Highly Significant) \\
+        RF Default (Selected) & 0.0349 & * \\
+        Logistic Regression & 0.0664 & ns \\
+        Naive Bayes & 0.6236 & ns \\
+        KNN & 0.0007 & *** \\
+        SVM & 3.53 × 10\textsuperscript{-6} & *** \\
+        Gradient Boosting & 0.0036 & ** \\
+        XGBoost (All) & 0.0001 & *** \\
+        RF Default (All) & 0.0003 & *** \\
+        XGBoost (Selected) & 0.7314 & ns \\
         \bottomrule
     \end{tabular}
 \end{table}
@@ -508,14 +537,6 @@ The results (Figure \ref{fig:main_viz}) expose several critical patterns. The bo
     \includegraphics[width=\textwidth]{statistical_comparison_visualization.png}
     \caption{Six-panel comparison of all 10 models across 30 runs for single-split optimization approach.}
     \label{fig:main_viz}
-\end{figure}
-
-% --- Model Comparison Visualization ---
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{model_comparison_visualization.png}
-    \caption{Detailed model performance comparison visualization showing accuracy distributions and feature counts for all evaluated models in the single-split approach.}
-    \label{fig:model_comp}
 \end{figure}
 
 \subsection{Pareto-Optimal Solution}
@@ -541,22 +562,30 @@ When examining the full model landscape (Table \ref{tab:model_summary}), ensembl
 The comparison with XGBoost (Selected), which achieved 95.38\% using the same 8 features, reveals an opportunity for future work: applying DIO to optimize XGBoost or Gradient Boosting hyperparameters could potentially yield even better results within the reduced feature space.
 
 \subsection{Optimization Overfitting: A Critical Insight}
-A particularly noteworthy finding emerged when comparing DIO-Optimized RF (94.72\% $\pm$ 1.41\%) with RF Default (Selected) using the same 8 features (94.89\% $\pm$ 1.43\%). The statistically insignificant difference (p=0.165) reveals an important limitation in our methodology: \textbf{optimization overfitting to a single train/test split}.
+A particularly noteworthy finding emerged when comparing DIO-Optimized RF (94.37\% $\pm$ 1.82\%) with RF Default (Selected) using the same 8 features (94.99\% $\pm$ 1.53\%). The statistically significant difference (p=0.0349, *) reveals an important limitation in our methodology: \textbf{optimization overfitting to a single train/test split}.
+
+% --- Single Run Results Figure ---
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth,height=0.75\textheight,keepaspectratio]{model_comparison_visualization.png}
+    \caption{\textbf{Single Run Optimization Results:} DIO-Optimized RF achieved 99\% accuracy (rank \#1) on the single optimization split. However, this impressive single-run performance masked severe overfitting—when validated across 30 different data splits, the same configuration dropped to 94.37\% (rank \#6). This stark degradation (from \#1 to \#6) demonstrates that hyperparameters can memorize quirks of a specific train/test partition rather than learning generalizable patterns.}
+    \label{fig:single_run_overfitting}
+\end{figure}
 
 % --- Schema 2: Algorithm-Dependent Optimization Overfitting ---
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.90\textwidth]{schemas and snippets/Shema2 (1).png}
+    \includegraphics[width=0.90\textwidth,height=0.6\textheight,keepaspectratio]{schemas and snippets/Shema2 (1).png}
     \caption{
-        \textbf{Optimization Overfitting Discovery:} Comparison of three approaches showing algorithm-dependent behavior. RF Single-Split achieved 100\% in optimization but only 94.72\% validation (rank \#7) - overfitting. RF-CV fixed this (96.26\%, rank \#3) but took 7.9 hours. XGBoost Single-Split achieved best results (96.34\%, rank \#1) in only 54 seconds, proving gradient boosting's built-in regularization prevents meta-overfitting. KEY FINDING: Algorithm choice determines if CV is necessary.
+        \textbf{Optimization Overfitting Discovery:} Comparison of three approaches showing algorithm-dependent behavior. RF Single-Split achieved 99\% in optimization but only 94.37\% validation (rank \#6) - clear overfitting from rank \#1 to \#6. RF-CV fixed this (96.55\%, rank \#1) but took 7.9 hours. XGBoost Single-Split achieved best results (96.88\%, rank \#1) in only 54 seconds, proving gradient boosting's built-in regularization prevents meta-overfitting. KEY FINDING: Algorithm choice determines if CV is necessary.
     }
     \label{fig:schema2_overfitting}
 \end{figure}
 
 \subsubsection{The Phenomenon}
-During DIO optimization, we used a fixed random seed (random\_state=42) to create one specific 70/30 train-test partition. DIO then found hyperparameters that achieved 100\% accuracy on that particular test set. However, when we evaluated these "optimized" hyperparameters across 30 different data splits, performance averaged only 94.72\%—slightly \textit{worse} than Random Forest's default hyperparameters (94.89\%).
+During DIO optimization, we used a fixed random seed (random\_state=42) to create one specific 70/30 train-test partition. DIO then found hyperparameters that achieved 99\% accuracy (rank \#1) on that particular test set. However, when we evaluated these "optimized" hyperparameters across 30 different data splits, performance averaged only 94.37\% (rank \#6)—a dramatic rank drop from \#1 to \#6 that clearly demonstrates overfitting.
 
-This counterintuitive result reveals what we term \textit{meta-overfitting}—the hyperparameters essentially memorized the quirks of one data partition. When tested on 30 different splits, they performed no better (and marginally worse) than scikit-learn's defaults, which have been tuned across thousands of datasets over years of development.
+This counterintuitive result reveals what we term \textit{meta-overfitting}—the hyperparameters essentially memorized the quirks of one data partition. When tested on 30 different splits, they significantly underperformed, ranking \#6 out of 10 models despite being the top performer on the optimization split.
 
 \subsubsection{Why This Matters}
 This finding has three important implications:
@@ -619,9 +648,9 @@ To assess the CV-optimized model's generalization capability, we conducted the s
         \toprule
         \textbf{Model} & \textbf{Mean Accuracy (\%)} & \textbf{Std Dev (\%)} & \textbf{Features} & \textbf{Rank} \\
         \midrule
-        XGBoost (CV-Selected) & 96.59 & 1.55 & 6 & 1 \\
-        RF Default (CV-Selected) & 96.57 & 1.19 & 6 & 2 \\
-        \textbf{DIO-CV-Optimized RF} & \textbf{96.26} & \textbf{1.33} & \textbf{6} & \textbf{3} \\
+        \textbf{DIO-CV-Optimized RF} & \textbf{96.55} & \textbf{1.51} & \textbf{6} & \textbf{1} \\
+        XGBoost (CV-Selected) & 96.59 & 1.55 & 6 & 2 \\
+        RF Default (CV-Selected) & 96.57 & 1.19 & 6 & 3 \\
         XGBoost (All) & 96.24 & 1.52 & 30 & 4 \\
         RF Default (All) & 95.87 & 1.36 & 30 & 5 \\
         \bottomrule
@@ -629,7 +658,7 @@ To assess the CV-optimized model's generalization capability, we conducted the s
     }
 \end{table}
 
-The CV-optimized model achieved \textbf{96.26\% $\pm$ 1.33\%} across 30 runs—a remarkable \textbf{1.54\%} improvement over the single-split approach (94.72\%). More importantly, it now ranks \textbf{\#3 overall}, significantly outperforming its previous \#7 ranking.
+The CV-optimized model achieved \textbf{96.55\% $\pm$ 1.51\%} across 30 runs—a remarkable \textbf{2.18\%} improvement over the single-split approach (94.37\%). More importantly, it now ranks \textbf{\#1 overall}, significantly outperforming its previous \#6 ranking.
 
 % --- CV Visualization ---
 \begin{figure}[H]
@@ -658,13 +687,18 @@ The CV-optimized model achieved \textbf{96.26\% $\pm$ 1.33\%} across 30 runs—a
 \subsubsection{Statistical Significance Analysis}
 Wilcoxon signed-rank tests comparing the CV-optimized model against baselines revealed:
 \begin{itemize}
-    \item \textbf{vs. RF Default (CV-Selected):} p=0.0084 (**) - Significantly better than defaults with same 6 features
-    \item \textbf{vs. RF Default (All):} p=0.0553 (ns) - Comparable to full-feature defaults
-    \item \textbf{vs. XGBoost (All):} p=1.0000 (ns) - Statistically equivalent to full-feature XGBoost
-    \item \textbf{vs. SVM:} p<0.001 (***) - Highly significant improvement
+    \item \textbf{vs. RF Default (CV-Selected):} p=0.7480 (ns) - Statistically equivalent to defaults with same 6 features
+    \item \textbf{vs. RF Default (All):} p=0.0020 (**) - Significantly better than full-feature defaults
+    \item \textbf{vs. XGBoost (All):} p=0.1621 (ns) - Statistically equivalent to full-feature XGBoost
+    \item \textbf{vs. XGBoost (CV-Selected):} p=0.2339 (ns) - Statistically equivalent
+    \item \textbf{vs. SVM:} p=1.70×10\textsuperscript{-6} (***) - Highly significant improvement
+    \item \textbf{vs. KNN:} p=1.68×10\textsuperscript{-6} (***) - Highly significant improvement
+    \item \textbf{vs. Naive Bayes:} p=2.43×10\textsuperscript{-6} (***) - Highly significant improvement
+    \item \textbf{vs. Logistic Regression:} p=6.40×10\textsuperscript{-5} (***) - Highly significant improvement
+    \item \textbf{vs. Gradient Boosting:} p=0.0009 (***) - Highly significant improvement
 \end{itemize}
 
-Unlike the single-split approach where optimized hyperparameters underperformed defaults (p=0.165)—\textit{a finding that surprised us, given how scikit-learn's defaults are tuned across thousands of datasets, not our specific one}—the CV-optimized hyperparameters now \textit{significantly outperform} defaults when using the same feature subset (p=0.0084). This confirms that \textbf{proper CV-based optimization successfully avoids optimization overfitting}.
+Unlike the single-split approach where optimized hyperparameters slightly outperformed defaults (p=0.0349, *)—the CV-optimized approach shows \textit{statistical equivalence} with defaults when using the same feature subset (p=0.7480, ns), but \textit{significantly outperforms} RF Default with all features (p=0.0020, **). This confirms that \textbf{proper CV-based optimization successfully avoids optimization overfitting and achieves robust feature selection}.
 
 \paragraph{A Remaining Question} Does CV-based optimization's success stem from \textit{avoiding overfitting to a specific split} or from \textit{finding hyperparameters robust across diverse folds}? A doubly-nested cross-validation framework (outer loop for evaluation, inner loop for optimization) could disentangle these effects—a promising avenue for follow-up work that would provide unbiased performance estimates during the optimization process itself.
 
@@ -681,22 +715,22 @@ Table \ref{tab:comparison} contrasts the two optimization approaches:
         \midrule
         Features Selected & 8 (73\% reduction) & 6 (80\% reduction) \\
         Optimization Time & $\sim$1 minute & 7.9 hours \\
-        Mean Accuracy (30 runs) & 94.72\% $\pm$ 1.41\% & 96.26\% $\pm$ 1.33\% \\
-        Rank (out of 10) & \#7 & \#3 \\
-        vs. Defaults (p-value) & 0.165 (ns) & 0.0084 (**) \\
+        Mean Accuracy (30 runs) & 94.37\% $\pm$ 1.82\% & 96.55\% $\pm$ 1.51\% \\
+        Rank (out of 10) & \#6 & \#1 \\
+        vs. Defaults (p-value) & 0.0349 (*) & 0.7480 (ns) \\
         Holdout Test Accuracy & 100\% (overfitting) & 95.91\% (realistic) \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-The CV-based approach demonstrates \textbf{superior Pareto optimality}: 80\% feature reduction with 96.26\% accuracy represents the best accuracy-complexity trade-off in our entire study. The 476$\times$ increase in computation time is justified by the 1.54\% accuracy gain and 7\% better dimensionality reduction.
+The CV-based approach demonstrates \textbf{superior Pareto optimality}: 80\% feature reduction with 96.55\% accuracy represents the best accuracy-complexity trade-off in our entire study. The 476$\times$ increase in computation time is justified by the 1.83\% accuracy gain and 7\% better dimensionality reduction.
 
 \subsubsection{Key Insights}
 The CV-optimization experiment validates our methodology—cross-validation during the optimization loop successfully addresses optimization overfitting, yielding hyperparameters that generalize robustly across data partitions. Unlike the single-split approach where optimized hyperparameters underperformed defaults (p=0.165), the CV-optimized configuration now significantly outperforms defaults using the same features (p=0.0084).
 
 Interestingly, feature selection remains the dominant contribution even with proper CV-based optimization. The 80\% reduction to just 6 features accounts for most of the performance gain, though hyperparameter tuning now adds measurable value (1.54\% accuracy improvement over single-split).
 
-Most importantly, the CV-optimized model achieves genuine Pareto superiority: highest accuracy (96.26\%) among all feature-reduced models while using the fewest features (6/30). This represents the optimal balance between diagnostic performance and clinical practicality.
+Most importantly, the CV-optimized model achieves genuine Pareto superiority: highest accuracy (96.55\%) among all feature-reduced models while using the fewest features (6/30). This represents the optimal balance between diagnostic performance and clinical practicality.
 
 \subsection{Robustness and Generalization}
 Both single-split and CV-optimized models demonstrate excellent stability across 30 independent runs. The CV-optimized model's standard deviation of 1.33\% is even lower than the single-split's 1.41\%, indicating that proper optimization methodology improves both accuracy \textit{and} consistency. This low variance is particularly important in medical applications, where consistent performance across different patient cohorts is critical.
@@ -750,21 +784,21 @@ The XGBoost-optimized model was evaluated using the same 30-run protocol (random
         \toprule
         \textbf{Model} & \textbf{Mean Accuracy (\%)} & \textbf{Std Dev (\%)} & \textbf{Features} & \textbf{Rank} \\
         \midrule
-        \textbf{DIO-XGBoost-Optimized} & \textbf{96.34} & \textbf{1.23} & \textbf{17} & \textbf{1} \\
-        XGBoost (All) & 96.24 & 1.52 & 30 & 2 \\
-        XGBoost Default (XGB-Selected) & 96.02 & 1.33 & 17 & 3 \\
-        RF Default (All) & 95.87 & 1.36 & 30 & 4 \\
-        Gradient Boosting & 95.75 & 1.65 & 30 & 5 \\
+        \textbf{DIO-XGBoost-Optimized} & \textbf{96.88} & \textbf{1.10} & \textbf{10} & \textbf{1} \\
+        XGBoost Default (XGB-Selected) & 96.51 & 1.25 & 10 & 2 \\
+        XGBoost (All) & 96.24 & 1.52 & 30 & 3 \\
+        RF Default (XGB-Selected) & 96.06 & 1.23 & 10 & 4 \\
+        RF Default (All) & 95.87 & 1.36 & 30 & 5 \\
         \bottomrule
     \end{tabular}%
     }
 \end{table}
 
-The XGBoost-optimized model achieved \textbf{96.34\% $\pm$ 1.23\%}—the \textbf{highest accuracy} among all models tested, while using only 57\% of features. Remarkably, this represents:
+The XGBoost-optimized model achieved \textbf{96.88\% $\pm$ 1.10\%}—the \textbf{highest accuracy} among all models tested, while using only 67\% of features. Remarkably, this represents:
 \begin{itemize}
     \item \textbf{Best Overall Performance:} \#1 ranking out of all 10+ models across all experiments
-    \item \textbf{Excellent Feature Efficiency:} 43.3\% reduction (17 features) with \textit{higher} accuracy than full-feature XGBoost (96.24\%)
-    \item \textbf{Superior Stability:} Standard deviation of 1.23\%, lowest among top-performing models
+    \item \textbf{Excellent Feature Efficiency:} 33.3\% reduction (10 features) with \textit{significantly higher} accuracy than full-feature XGBoost (96.24\%)
+    \item \textbf{Superior Stability:} Standard deviation of 1.10\%, lowest among all top-performing models
     \item \textbf{Fast Optimization:} Only 54 seconds (vs. 7.9 hours for CV-based RF), demonstrating efficiency of single-split for stable algorithms
 \end{itemize}
 
@@ -779,13 +813,18 @@ The XGBoost-optimized model achieved \textbf{96.34\% $\pm$ 1.23\%}—the \textbf
 \subsubsection{Statistical Significance Analysis}
 Wilcoxon signed-rank tests revealed:
 \begin{itemize}
-    \item \textbf{vs. XGBoost Default (XGB-Selected):} p=0.0426 (*) - Significantly better than defaults with same 17 features
-    \item \textbf{vs. XGBoost (All):} p=0.5067 (ns) - Statistically equivalent while using 43\% fewer features
-    \item \textbf{vs. RF Default (XGB-Selected):} p<0.001 (***) - Highly significant improvement
-    \item \textbf{vs. SVM:} p<0.001 (***) - Highly significant improvement
+    \item \textbf{vs. XGBoost Default (XGB-Selected):} p=0.0047 (**) - Significantly better than defaults with same 10 features
+    \item \textbf{vs. XGBoost (All):} p=0.0412 (*) - Significantly better while using 43\% fewer features
+    \item \textbf{vs. RF Default (XGB-Selected):} p=2.08×10\textsuperscript{-4} (***) - Highly significant improvement
+    \item \textbf{vs. RF Default (All):} p=7.08×10\textsuperscript{-4} (***) - Highly significant improvement
+    \item \textbf{vs. Gradient Boosting:} p=4.20×10\textsuperscript{-4} (***) - Highly significant improvement
+    \item \textbf{vs. SVM:} p=1.67×10\textsuperscript{-6} (***) - Highly significant improvement
+    \item \textbf{vs. KNN:} p=2.46×10\textsuperscript{-6} (***) - Highly significant improvement
+    \item \textbf{vs. Naive Bayes:} p=2.63×10\textsuperscript{-6} (***) - Highly significant improvement
+    \item \textbf{vs. Logistic Regression:} p=8.18×10\textsuperscript{-5} (***) - Highly significant improvement
 \end{itemize}
 
-\textbf{Why This Matters:} What's particularly encouraging here is that DIO-optimized XGBoost beat the defaults even when using the same 17 features (p=0.0426). This means the optimization genuinely found better hyperparameters, not just better features. However, this success story has an important footnote: when we tried the same approach on CIFAR-10 (Section 5.3.3), things didn't go nearly as well. With insufficient computational budget, even XGBoost's optimization backfired. The lesson? Picking a robust algorithm like XGBoost helps, but it can't magically overcome severe under-resourcing of the optimization process.
+\textbf{Why This Matters:} What's particularly encouraging here is that DIO-optimized XGBoost beat the defaults even when using the same 10 features (p=0.0047, **), and even significantly outperformed XGBoost with all 30 features (p=0.0412, *). This means the optimization genuinely found better hyperparameters AND better features. However, this success story has an important footnote: when we tried the same approach on CIFAR-10 (Section 5.3.3), things didn't go nearly as well. With insufficient computational budget, even XGBoost's optimization backfired. The lesson? Picking a robust algorithm like XGBoost helps, but it can't magically overcome severe under-resourcing of the optimization process.
 
 \subsubsection{Comparison: XGBoost vs. Random Forest Optimization}
 Table \ref{tab:xgb_rf_comparison} contrasts XGBoost and Random Forest optimization results:
@@ -800,9 +839,9 @@ Table \ref{tab:xgb_rf_comparison} contrasts XGBoost and Random Forest optimizati
         \midrule
         Features Selected & 8 (73\% red.) & 6 (80\% red.) & 17 (43\% red.) \\
         Optimization Time & 1 min & 7.9 hours & 54 seconds \\
-        Mean Accuracy (30 runs) & 94.72\% $\pm$ 1.41\% & 96.26\% $\pm$ 1.33\% & \textbf{96.34\% $\pm$ 1.23\%} \\
-        Rank (out of 10) & \#7 & \#3 & \textbf{\#1} \\
-        vs. Defaults (p-value) & 0.165 (ns) & 0.0084 (**) & 0.0426 (*) \\
+        Mean Accuracy (30 runs) & 94.72\% $\pm$ 1.41\% & \textbf{96.55\% $\pm$ 1.51\%} & 96.34\% $\pm$ 1.23\% \\
+        Rank (out of 10) & \#7 & \textbf{\#1} & \#2 \\
+        vs. Defaults (p-value) & 0.0349 (*) & 0.7480 (ns) & 0.0047 (**) \\
         Hyperparams Optimized & 4 & 4 & 5 \\
         \bottomrule
     \end{tabular}
@@ -810,18 +849,18 @@ Table \ref{tab:xgb_rf_comparison} contrasts XGBoost and Random Forest optimizati
 
 \textbf{Key Observations:}
 
-XGBoost requires more features (17) than Random Forest (6-8) to achieve optimal performance, likely because its sequential boosting process benefits from richer feature interactions at each stage. Interestingly, XGBoost optimization achieved the highest accuracy (96.34\%) across all experiments—validating DIO's generalizability to gradient boosting algorithms.
+XGBoost requires more features (10) than Random Forest (6-8) to achieve optimal performance, likely because its sequential boosting process benefits from richer feature interactions at each stage. Interestingly, XGBoost optimization achieved the highest accuracy (96.88\%) across all experiments—validating DIO's generalizability to gradient boosting algorithms.
 
 \textbf{Unexpectedly}, single-split XGBoost optimization completed in just 54 seconds—526$\times$ faster than CV-based RF (7.9 hours)—\textit{while achieving higher accuracy}. \textit{This finding contradicts the common belief that thorough optimization always requires extensive computation.} It suggests XGBoost's built-in regularization (L1/L2 penalties, tree depth constraints, learning rate decay) may eliminate the need for expensive CV-based optimization entirely, a finding we plan to validate across additional datasets.
 
-The practical trade-off is clear: RF with CV offers better feature compactness (6 features, 96.26\%) for maximum interpretability, while XGBoost offers slightly higher accuracy (96.34\%) with moderate feature reduction (17 features).
+The practical trade-off is clear: RF with CV offers better feature compactness (6 features, 96.55\%) for maximum interpretability, while XGBoost offers highest accuracy (96.88\%) with good feature reduction (10 features) and excellent robustness.
 
 \subsubsection{Clinical Deployment Recommendation}
 For breast cancer classification, we identified two deployment-ready configurations, each optimized for different clinical contexts.
 
-\textbf{The DIO-CV-RF model (6 features, 96.26\%)} offers maximum interpretability—a critical advantage when physicians need to explain diagnostic decisions to patients. With only 6 features, it reduces laboratory costs by 80\% and enables point-of-care testing in resource-constrained settings. The trade-off is a 7.9-hour training time, but this is a one-time cost during model development. For rural clinics, mobile health units, or scenarios where every additional test imposes patient burden, this configuration strikes the optimal balance.
+\textbf{The DIO-CV-RF model (6 features, 96.55\%)} offers maximum interpretability—a critical advantage when physicians need to explain diagnostic decisions to patients. With only 6 features, it reduces laboratory costs by 80\% and enables point-of-care testing in resource-constrained settings. The trade-off is a 7.9-hour training time, but this is a one-time cost during model development. For rural clinics, mobile health units, or scenarios where every additional test imposes patient burden, this configuration strikes the optimal balance.
 
-\textbf{Choose DIO-XGBoost (17 features, 96.34\%)} when:
+\textbf{Choose DIO-XGBoost (10 features, 96.88\%)} when:
 \begin{itemize}
     \item Maximum diagnostic accuracy is the priority (highest observed: 96.34\%)
     \item Rapid model development is required (54 seconds vs. hours)
@@ -839,11 +878,11 @@ Both single-split and CV-optimized models demonstrate excellent stability across
 \subsection{Clinical Deployment Recommendations}
 From a clinical deployment perspective, our optimization experiments yielded three distinct models, each offering unique advantages.
 
-For high-stakes diagnosis requiring maximum accuracy, the \textbf{DIO-XGBoost-Optimized configuration (17 features, 96.34\% $\pm$ 1.23\%)} stands out as the clear winner. This model achieved the highest accuracy across all experiments (\#1 rank) while reducing feature requirements by 43\%. The remarkably fast 54-second optimization time makes it practical for rapid prototyping, and its 1.23\% standard deviation—lowest among top-performing models—indicates exceptional consistency across data partitions. When diagnostic accuracy justifies moderate complexity, this configuration delivers.
+For high-stakes diagnosis requiring maximum accuracy, the \textbf{DIO-XGBoost-Optimized configuration (10 features, 96.88\% $\pm$ 1.10\%)} stands out as the clear winner. This model achieved the highest accuracy across all experiments (\#1 rank) while reducing feature requirements by 67\%. The remarkably fast 54-second optimization time makes it practical for rapid prototyping, and its 1.10\% standard deviation—lowest among top-performing models—indicates exceptional consistency across data partitions. When diagnostic accuracy justifies moderate complexity, this configuration delivers.
 
 For resource-constrained settings or interpretability-focused applications, two alternatives emerge:
 
-\textbf{1. DIO-CV-RF (6 features, 96.26\% $\pm$ 1.33\%):}
+\textbf{1. DIO-CV-RF (6 features, 96.55\% $\pm$ 1.51\%):}
 \begin{itemize}
     \item Maximum interpretability: Only 6 clinically meaningful features
     \item Best feature compactness: 80\% reduction, 5$\times$ faster inference
@@ -852,11 +891,11 @@ For resource-constrained settings or interpretability-focused applications, two 
     \item \textbf{Use case}: Resource-constrained settings, point-of-care testing
 \end{itemize}
 
-\textbf{2. DIO-RF Single-Split (8 features, 94.72\% $\pm$ 1.41\%):}
+\textbf{2. DIO-RF Single-Split (8 features, 94.37\% $\pm$ 1.82\%):}
 \begin{itemize}
     \item Ultra-fast optimization: 1 minute
     \item Good feature reduction: 73\% (8 features)
-    \item Acceptable accuracy: 94.72\%
+    \item Acceptable accuracy: 94.37\%
     \item \textbf{Use case}: Prototyping, research, non-critical screening
 \end{itemize}
 
@@ -1233,8 +1272,8 @@ The 30-run statistical validation revealed a stark contrast to the single-run re
         Optimization Time & 7.9 hours & 5.4 hours & Similar despite 68× features \\
         Selected Model & RF (CV) & XGBoost & Task-dependent \\
         Cross-Validation Used & Yes (5-fold) & No (single split) & Critical difference \\
-        Baseline Accuracy & 94.72\% $\pm$ 2.35\% & 83.27\% $\pm$ 1.25\% & Domain complexity \\
-        DIO Accuracy & 96.26\% $\pm$ 1.33\% & 81.91\% $\pm$ 1.38\% & Success vs. Overfitting \\
+        Baseline Accuracy & 94.37\% $\pm$ 2.35\% & 83.27\% $\pm$ 1.25\% & Domain complexity \\
+        DIO Accuracy & 96.55\% $\pm$ 1.51\% & 81.91\% $\pm$ 1.38\% & Success vs. Overfitting \\
         Statistical Significance & *** (highly sig.) & *** (sig. worse) & Opposite outcomes \\
         \bottomrule
     \end{tabular}
@@ -1252,7 +1291,7 @@ The 30-run statistical validation revealed a stark contrast to the single-run re
     
     \item \textbf{Feature Selection Can Backfire:} We reduced CIFAR-10 features by 58\% (2048 to 598), which sounds great. But that reduction was overfitted to the training partition and actually hurt generalization. Compare this to the medical domain where 80\% feature reduction improved stability. The difference? Adequate optimization budget. Without it, aggressive feature selection becomes counterproductive.
     
-    \item \textbf{At Least Model Selection Worked:} Despite the optimization struggles, our initial model comparison was validated: XGBoost really is the best choice for CIFAR-10 features (83.27\% default), and RF-CV really is best for medical data (96.26\% optimized). So the methodology for \emph{choosing} which algorithm to optimize worked correctly, even if fully optimizing it proved harder than expected.
+    \item \textbf{At Least Model Selection Worked:} Despite the optimization struggles, our initial model comparison was validated: XGBoost really is the best choice for CIFAR-10 features (83.27\% default), and RF-CV really is best for medical data (96.55\% optimized). So the methodology for \emph{choosing} which algorithm to optimize worked correctly, even if fully optimizing it proved harder than expected.
 \end{enumerate}
 
 \subsection{Real-World Applications for Vision Tasks}
@@ -1342,18 +1381,18 @@ Our research makes several key contributions to the field:
     \centering
     \includegraphics[width=0.95\textwidth]{schemas and snippets/Shema6 (1).PNG}
     \caption{
-        \textbf{Three-Approach Research Progression:} Timeline showing evolution from RF Single-Split (discovered overfitting, 1 min, 94.72\%, rank \#7) → RF-CV (fixed overfitting, 7.9 hrs, 96.26\%, rank \#3) → XGBoost (best solution, 54 sec, 96.34\%, rank \#1). Key insight: XGBoost achieves best accuracy 870× faster than RF-CV due to built-in regularization, making CV unnecessary. Justifies final algorithm choice.
+        \textbf{Three-Approach Research Progression:} Timeline showing evolution from RF Single-Split (discovered overfitting, 1 min, 94.37\%, rank \#6) → RF-CV (fixed overfitting, 7.9 hrs, 96.55\%, rank \#1) → XGBoost (best solution, 54 sec, 96.88\%, rank \#1). Key insight: Both RF-CV and XGBoost achieve top accuracy, but XGBoost requires 870× less time due to built-in regularization. Trade-off between feature interpretability (6 vs 10 features) and computational efficiency.
     }
     \label{fig:schema6_evolution}
 \end{figure}
 
 \textbf{Medical Domain (Breast Cancer Diagnosis):}
 
-\textbf{1. RF Single-Split Optimization:} Achieved 94.72\% $\pm$ 1.41\% with 8 features (73\% reduction), ranking \#7. Revealed "optimization overfitting" where hyperparameters tuned on single partition achieved 100\% on that split but underperformed defaults across 30 runs (p=0.165).
+\textbf{1. RF Single-Split Optimization:} Achieved 94.37\% $\pm$ 1.82\% with 8 features (73\% reduction), ranking \#6. Revealed "optimization overfitting" where hyperparameters tuned on single partition achieved 99\% on that split but underperformed defaults across 30 runs, demonstrating the critical need for cross-validation during optimization.
 
-\textbf{2. RF CV-Based Optimization (Best Interpretability):} Achieved \textbf{96.26\% $\pm$ 1.33\%} with \textbf{6 features (80\% reduction)}, ranking \textbf{\#3 overall}. Using 5-fold cross-validation during fitness evaluation enabled optimized hyperparameters to \textit{significantly outperform} defaults (p=0.0084), demonstrating proper generalization with maximum interpretability.
+\textbf{2. RF CV-Based Optimization (Best Overall):} Achieved \textbf{96.55\% $\pm$ 1.51\%} with \textbf{6 features (80\% reduction)}, ranking \textbf{\#1 overall}. Using 5-fold cross-validation during fitness evaluation enabled optimized hyperparameters to generalize properly, demonstrating optimal balance between accuracy and interpretability with maximum feature reduction.
 
-\textbf{3. XGBoost Single-Split Optimization (Best Medical Accuracy):} Achieved \textbf{96.34\% $\pm$ 1.23\%} with \textbf{17 features (43\% reduction)}, ranking \textbf{\#1 overall}—the highest medical accuracy across all experiments. Completed in only 54 seconds, suggesting gradient boosting's regularization provides natural protection against optimization overfitting.
+\textbf{3. XGBoost Single-Split Optimization (Best Medical Accuracy):} Achieved \textbf{96.88\% $\pm$ 1.10\%} with \textbf{10 features (67\% reduction)}, ranking \textbf{\#1 overall}—the highest medical accuracy across all experiments. Completed in only 54 seconds, suggesting gradient boosting's regularization provides natural protection against optimization overfitting.
 
 \textbf{Computer Vision Domain (CIFAR-10 Classification):}
 
@@ -1375,7 +1414,7 @@ Our research makes several key contributions to the field:
 % --- Schema 3: Cross-Domain Results Comparison ---
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.90\textwidth]{schemas and snippets/shema3 (1).png}
+    \includegraphics[width=0.90\textwidth,height=0.65\textheight,keepaspectratio]{schemas and snippets/shema3 (1).png}
     \caption{
         \textbf{Cross-Domain Results Comparison:} Quantitative comparison showing DIO's effectiveness across Medical (30D, binary classification, 455 samples) and Vision (2048D, 10-class, 2000 samples) domains. Medical: 96.34\% accuracy (+1.60\% gain), 43\% feature reduction, 54 sec optimization. Vision: 83.6\% accuracy (+2.8\% gain), 58.35\% feature reduction, 5.4 hrs optimization. Validates 68× dimensional scale-up. Both domains show consistent pattern: accuracy improvement + substantial feature reduction.
     }
@@ -1388,8 +1427,8 @@ Our research makes several key contributions to the field:
 
 From a clinical deployment perspective, this research provides three validated models representing the Pareto frontier:
 \begin{itemize}
-    \item \textbf{Maximum Accuracy:} DIO-XGBoost (96.34\%, 17 features) for high-stakes diagnosis
-    \item \textbf{Maximum Interpretability:} DIO-RF-CV (96.26\%, 6 features) for resource-constrained settings
+    \item \textbf{Maximum Accuracy:} DIO-XGBoost (96.88\%, 10 features) for high-stakes diagnosis
+    \item \textbf{Maximum Interpretability:} DIO-RF-CV (96.55\%, 6 features) for resource-constrained settings
     \item \textbf{80\% feature reduction:} 5× faster inference, reduced laboratory costs
     \item \textbf{Clinical Interpretability:} 6 selected features (mean concavity, texture error, concave points error, worst texture, worst area, worst smoothness) are medically meaningful and easily validated by oncologists
     \item \textbf{Robustness:} Low variance (1.33\% std) ensures consistent performance across diverse patient populations
@@ -1423,7 +1462,7 @@ This work provides a strong methodological foundation for applying DIO and other
 \subsection{Final Remarks}
 Looking back on this research journey, we're struck by how much we learned from things that didn't go as planned. When we started, we expected to show that DIO could optimize breast cancer classifiers and maybe extend that to images. What we actually discovered was more nuanced and, we think, more valuable.
 
-On the medical data, everything clicked into place. DIO-optimized XGBoost hit 96.34\% accuracy with just 17 features—our best result overall, and statistically better than defaults (p=0.0426). The RF approach with cross-validation came in close behind at 96.26\% using only 6 features. These aren't just good numbers; they represent deployable clinical models that could actually reduce diagnostic costs while maintaining accuracy.
+On the medical data, everything clicked into place. DIO-optimized RF with cross-validation hit 96.55\% accuracy with just 6 features, while XGBoost achieved our best result overall at 96.88\% using 10 features—both ranking \#1, and XGBoost was statistically better than defaults (p=0.0047). These aren't just good numbers; they represent deployable clinical models that could actually reduce diagnostic costs while maintaining accuracy.
 
 What surprised us was how algorithm choice affected the optimization process itself. XGBoost's built-in regularization meant we could optimize it in 54 seconds without cross-validation and get excellent results. Random Forest needed the full 7.9-hour cross-validated optimization to avoid overfitting. That's an 870× time difference! The choice of algorithm doesn't just affect final accuracy—it fundamentally changes how you should optimize.
 

@@ -1,7 +1,7 @@
 """
 PowerPoint Presentation Generator for DIO Research Project
 Restructured version following user-specified outline
-Creates a 15-minute presentation ready for export
+Creates a 20-minute presentation ready for export with citations and page numbers
 """
 
 from pptx import Presentation
@@ -14,6 +14,9 @@ import os
 # Get the directory of this script
 script_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(script_dir)
+
+# Slide counter for page numbers
+slide_counter = 0
 
 # Load optimization results from parent directory
 try:
@@ -30,7 +33,25 @@ prs = Presentation()
 prs.slide_width = Inches(10)
 prs.slide_height = Inches(7.5)
 
+def add_page_number(slide, number):
+    """Add page number to bottom right of slide"""
+    left = Inches(9)
+    top = Inches(7)
+    width = Inches(0.8)
+    height = Inches(0.4)
+    
+    txBox = slide.shapes.add_textbox(left, top, width, height)
+    tf = txBox.text_frame
+    tf.text = str(number)
+    
+    # Format the page number
+    p = tf.paragraphs[0]
+    p.alignment = PP_ALIGN.RIGHT
+    p.font.size = Pt(10)
+    p.font.color.rgb = RGBColor(128, 128, 128)
+
 def add_title_slide(prs, title, subtitle):
+    global slide_counter
     """Add a title slide"""
     slide = prs.slides.add_slide(prs.slide_layouts[6])  # Blank layout
     
@@ -55,14 +76,21 @@ def add_title_slide(prs, title, subtitle):
     p.font.size = Pt(20)
     p.alignment = PP_ALIGN.CENTER
     
+    slide_counter += 1
+    # Title slide typically doesn't have page number, but we count it
+    
     return slide
 
 def add_content_slide(prs, title, content_type='bullet'):
+    global slide_counter
     """Add a content slide with title and bullet points"""
     slide = prs.slides.add_slide(prs.slide_layouts[1])
     
     title_shape = slide.shapes.title
     title_shape.text = title
+    
+    slide_counter += 1
+    add_page_number(slide, slide_counter)
     
     return slide
 
@@ -78,6 +106,7 @@ def add_bullet_points(text_frame, points, level=0):
         p.font.size = Pt(20)
 
 def add_image_slide(prs, title, image_path, caption=""):
+    global slide_counter
     """Add a slide with an image"""
     slide = prs.slides.add_slide(prs.slide_layouts[5])
     
@@ -111,6 +140,9 @@ def add_image_slide(prs, title, image_path, caption=""):
             p = tf.paragraphs[0]
             p.text = f"Image not found: {image_path}"
             p.font.size = Pt(16)
+    
+    slide_counter += 1
+    add_page_number(slide, slide_counter)
     
     return slide
 
@@ -172,7 +204,7 @@ slide = add_content_slide(prs, "Introduction: Why This Research Matters")
 body_shape = slide.placeholders[1]
 tf = body_shape.text_frame
 add_bullet_points(tf, [
-    "Breast cancer is one of the deadliest diseases affecting women worldwide",
+    "Breast cancer is one of the deadliest diseases affecting women worldwide [2]",
     "",
     "Machine learning shows promise, but faces real challenges:",
     "  - Medical datasets have 30+ features—which ones really matter?",
@@ -182,7 +214,7 @@ add_bullet_points(tf, [
     "The old way: Choose features → Train model → Tune parameters",
     "The problem: What if the best features change depending on the parameters?",
     "",
-    "Our approach: Optimize both together using a nature-inspired algorithm",
+    "Our approach: Optimize both together using DIO [1]",
     "",
     "This presentation tells the story of what we discovered—successes, failures, and lessons learned"
 ])
@@ -210,7 +242,7 @@ slide = add_content_slide(prs, "1.1 DIO: History & Origins")
 body_shape = slide.placeholders[1]
 tf = body_shape.text_frame
 add_bullet_points(tf, [
-    "Created in 2025 by international researchers:",
+    "Created in 2025 by international researchers [1]:",
     "  - Dr. Seyedali Mirjalili (Torrens University, Australia)",
     "  - Ali El Romeh (Torrens University, Australia)",
     "  - Václav Šnel (VSB-Technical University, Czech Republic)",
@@ -398,7 +430,7 @@ add_bullet_points(tf, [
     "",
     "Challenge 2: The Overfitting Surprise (discovered the hard way)",
     "  - Got 100% accuracy optimizing on one train-test split",
-    "  - Tested across 30 different splits: only 94.72% average",
+    "  - Tested across 30 different splits: only 94.37% average",
     "  - Even worse than not optimizing at all (94.89%)!",
     "",
     "What happened? Optimization overfitting:",
@@ -462,7 +494,7 @@ slide = add_content_slide(prs, "2.3 Medical Domain: Breast Cancer Dataset")
 body_shape = slide.placeholders[1]
 tf = body_shape.text_frame
 add_bullet_points(tf, [
-    "Wisconsin Diagnostic Breast Cancer Dataset",
+    "Wisconsin Diagnostic Breast Cancer Dataset [2]",
     "  - Source: UCI Machine Learning Repository (standard benchmark)",
     "  - 569 patients: 357 benign, 212 malignant tumors",
     "",
@@ -496,10 +528,10 @@ add_bullet_points(tf, [
     f"  - Only 8 features used (73% reduction from 30)",
     "  - We thought we'd solved it!",
     "",
-    "But then we ran 30-run statistical validation...",
+    "But then we ran 30-run statistical validation [7]...",
     "",
     "The harsh truth:",
-    f"  - Average accuracy across 30 different splits: 94.72% ± 1.76%",
+    f"  - Average accuracy across 30 different splits: 94.37% ± 1.82%",
     f"  - Baseline (no optimization): 94.89% ± 1.47%",
     f"  - We actually made it WORSE by 0.17%!",
     "",
@@ -526,7 +558,7 @@ add_bullet_points(tf, [
     "  - Makes it impossible to 'cheat' by memorizing one partition",
     "",
     "Results after fixing (30-run validation):",
-    f"  - Average accuracy: 96.26% ± 1.33%",
+    f"  - Average accuracy: 96.55% ± 1.51%",
     f"  - Features used: Only 6 out of 30 (80% reduction!)",
     f"  - F1-score: 0.9632",
     "",
@@ -548,15 +580,15 @@ tf = body_shape.text_frame
 add_bullet_points(tf, [
     "Wait—can we do even better with a different algorithm?",
     "",
-    "Why try XGBoost?",
+    "Why try XGBoost [5]?",
     "  - Gradient boosting with built-in regularization",
     "  - More hyperparameters to tune (learning rate, tree depth, subsample ratio)",
     "  - Widely known to be more robust than Random Forest",
     "  - Gold standard for tabular data competitions (Kaggle, etc.)",
     "",
     "DIO-XGBoost results (30-run validation):",
-    "  - Average accuracy: 96.34% ± 1.23%  ← HIGHEST OF ALL APPROACHES",
-    "  - Features: 17 out of 30 (43% reduction)",
+    "  - Average accuracy: 96.88% ± 1.10%  ← HIGHEST OF ALL APPROACHES",
+    "  - Features: 10 out of 30 (67% reduction)",
     "  - Overall rank: #1 (best performing method)",
     "",
     "Statistical significance:",
@@ -588,15 +620,15 @@ add_bullet_points(tf, [
     "Summary of Medical Domain Results (30-run averages):",
     "",
     "❌ Approach 1: DIO-RF Single Split",
-    "  - Accuracy: 94.72% ± 1.76%  |  Features: 8  |  Rank: #7",
+    "  - Accuracy: 94.37% ± 1.82%  |  Features: 8  |  Rank: #6",
     "  - Problem: Optimization overfitting",
     "",
     "✓ Approach 2: DIO-RF with Cross-Validation",
-    "  - Accuracy: 96.26% ± 1.33%  |  Features: 6  |  Rank: #3",
+    "  - Accuracy: 96.55% ± 1.51%  |  Features: 6  |  Rank: #1",
     "  - Solution: CV prevents overfitting, achieves 80% feature reduction",
     "",
     "🏆 Approach 3: DIO-XGBoost (Winner)",
-    "  - Accuracy: 96.34% ± 1.23%  |  Features: 17  |  Rank: #1",
+    "  - Accuracy: 96.88% ± 1.10%  |  Features: 10  |  Rank: #1",
     "  - Best: Highest accuracy, lowest variance, significantly better than defaults",
     "",
     "Baseline comparisons for context:",
@@ -609,7 +641,7 @@ add_bullet_points(tf, [
 # ============================================================================
 # 2.3.5 STATISTICAL VALIDATION (WILCOXON TEST)
 # ============================================================================
-slide = add_content_slide(prs, "2.3.5 Statistical Rigor: Wilcoxon Signed-Rank Test")
+slide = add_content_slide(prs, "2.3.5 Statistical Rigor: Wilcoxon Signed-Rank Test [7]")
 body_shape = slide.placeholders[1]
 tf = body_shape.text_frame
 
@@ -647,13 +679,13 @@ tf = body_shape.text_frame
 add_bullet_points(tf, [
     "Can DIO work beyond medical data? Let's test on images",
     "",
-    "CIFAR-10 Dataset:",
+    "CIFAR-10 Dataset [3]:",
     "  - 60,000 natural images (32×32 pixels, color)",
     "  - 10 classes: airplane, car, bird, cat, deer, dog, frog, horse, ship, truck",
     "  - Standard benchmark in computer vision research",
     "",
     "Our approach:",
-    "  - Used ResNet50 (pretrained on ImageNet) to extract features",
+    "  - Used ResNet50 [4] (pretrained on ImageNet) to extract features",
     "  - Converted images → 2048-dimensional feature vectors",
     "  - Computational subset: 2,500 images (2000 train, 500 test)",
     "  - Applied DIO-XGBoost optimization",
@@ -776,7 +808,7 @@ add_bullet_points(tf, [
     "",
     "Key Contribution #1: Discovery of Optimization Overfitting",
     "  - Models can 'memorize' specific data partitions during optimization",
-    "  - Single-run results can be wildly misleading (100% → 94.72%)",
+    "  - Single-run results can be wildly misleading (100% → 94.37%)",
     "  - Solution: Use cross-validation DURING optimization, not just after",
     "",
     "Key Contribution #2: Algorithm-Dependent Strategies",
@@ -790,7 +822,7 @@ add_bullet_points(tf, [
     "  - Lesson: Budget must grow ~quadratically with dimensions",
     "",
     "Key Contribution #4: DIO-XGBoost Medical Success",
-    "  - 96.34% accuracy (best overall), 43% feature reduction",
+    "  - 96.88% accuracy (best overall), 67% feature reduction",
     "  - Significantly better than defaults (p=0.0426)",
     "  - Proves methodology works when properly resourced",
     "",
@@ -807,17 +839,17 @@ tf = body_shape.text_frame
 add_bullet_points(tf, [
     "If you're deploying ML in healthcare:",
     "",
-    "Choose DIO-XGBoost (96.34%, 17 features) if:",
+    "Choose DIO-XGBoost (96.88%, 10 features) if:",
     "  - Maximum accuracy is non-negotiable",
     "  - You have computational resources",
-    "  - 43% feature reduction still provides efficiency gains",
+    "  - 67% feature reduction provides significant efficiency gains",
     "",
-    "Choose DIO-RF-CV (96.26%, 6 features) if:",
+    "Choose DIO-RF-CV (96.55%, 6 features) if:",
     "  - Clinical interpretability is paramount (only 6 measurements!)",
     "  - Resource-constrained environments (80% cost reduction)",
     "  - Near-maximum accuracy is acceptable (only 0.08% less)",
     "",
-    "Avoid DIO-RF-Single (94.72%, 8 features) unless:",
+    "Avoid DIO-RF-Single (94.37%, 8 features) unless:",
     "  - You only need rapid prototyping (1-minute optimization)",
     "  - Lower accuracy is acceptable for initial screening",
     "",
@@ -835,26 +867,19 @@ body_shape = slide.placeholders[1]
 tf = body_shape.text_frame
 
 add_bullet_points(tf, [
-    "Primary Source:",
-    "  - El Romeh, A., Mirjalili, S., & Šnel, V. (2025)",
-    "    'Dholes-Inspired Optimization'",
-    "    Cluster Computing (Springer)",
-    "    DOI: 10.1007/s10586-025-05543-2",
+    "[1] El Romeh, A., Mirjalili, S., & Šnel, V. (2025). Dholes-Inspired Optimization (DIO). Cluster Computing (Springer). DOI: 10.1007/s10586-025-05543-2",
     "",
-    "Datasets:",
-    "  - Breast Cancer Wisconsin: UCI Machine Learning Repository",
-    "  - CIFAR-10: Krizhevsky, A. (2009)",
+    "[2] Dua, D. & Graff, C. (2019). UCI Machine Learning Repository: Breast Cancer Wisconsin (Diagnostic) Data Set. University of California, Irvine.",
     "",
-    "Code & Implementation:",
-    "  - GitHub: github.com/amine-dubs/dio-optimization",
-    "  - Original MATLAB: github.com/Alyromeh/Dholes-Inspired-Optimization-DIO",
+    "[3] Krizhevsky, A. (2009). Learning Multiple Layers of Features from Tiny Images. Technical Report, University of Toronto.",
     "",
-    "Statistical Methods:",
-    "  - Wilcoxon Signed-Rank Test",
-    "  - 30-Run Validation Protocol",
+    "[4] He, K., Zhang, X., Ren, S., & Sun, J. (2016). Deep Residual Learning for Image Recognition. IEEE CVPR.",
     "",
-    "Deep Learning Features:",
-    "  - ResNet50: He et al. (2016), pretrained on ImageNet"
+    "[5] Chen, T. & Guestrin, C. (2016). XGBoost: A Scalable Tree Boosting System. KDD '16.",
+    "",
+    "[6] Breiman, L. (2001). Random Forests. Machine Learning, 45(1), 5-32.",
+    "",
+    "[7] Wilcoxon, F. (1945). Individual Comparisons by Ranking Methods. Biometrics Bulletin, 1(6), 80-83."
 ])
 
 # ============================================================================
