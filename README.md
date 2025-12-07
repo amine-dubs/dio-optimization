@@ -13,22 +13,23 @@ The DIO algorithm is a nature-inspired metaheuristic optimization algorithm base
 
 ## 🏆 Major Achievements
 
-### 🥇 **Medical Domain: DIO-XGBoost (96.34% ± 1.23%)**
+### 🥇 **Medical Domain: DIO-XGBoost (96.88% ± 1.10%)**
 - **Rank #1** across all medical experiments (highest accuracy)
-- 43% feature reduction (30 → 17 features)
+- 67% feature reduction (30 → 10 features)
 - Ultra-fast optimization (54 seconds)
-- Lowest variance among top models
+- Lowest variance among top models (1.10%)
 - **Dataset:** Breast Cancer Wisconsin (30-dimensional tabular data)
 
-### 🖼️ **Vision Domain: DIO-XGBoost-ResNet50 (83.6% accuracy)**
-- **+2.8% improvement** over baseline (80.8%)
-- 58.35% feature reduction (2048 → 853 features)
-- Optimization time: 5.4 hours
+### 🖼️ **Vision Domain: DIO-XGBoost-ResNet50 (81.91% ± 1.38%)**
+- **Rank #3** (30-run statistical validation)
+- 70.8% feature reduction (2048 → 598 features)
+- Baseline XGBoost Default: 83.27% ± 1.25% (Rank #1)
+- **Key Finding:** Insufficient optimization budget for 2048D space
 - **Dataset:** CIFAR-10 with ResNet50 features (2048-dimensional deep learning features)
 - **Validation:** 68× scale-up from medical (30D) to vision (2048D) domain
 
-### 🎯 **Most Interpretable Model: DIO-CV-RF (96.26% ± 1.33%)**
-- **Rank #3** with only **6 features** (80% reduction!)
+### 🎯 **Most Interpretable Model: DIO-CV-RF (96.55% ± 1.51%)**
+- **Rank #1** with only **6 features** (80% reduction!)
 - CV-validated generalization
 - Clinically meaningful feature subset
 - Best accuracy-interpretability trade-off
@@ -36,69 +37,72 @@ The DIO algorithm is a nature-inspired metaheuristic optimization algorithm base
 
 ### 🔬 **Research Contribution: Algorithm-Dependent Optimization**
 - Discovered optimization overfitting in single-split RF tuning
-- Validated CV-based solution (1.54% accuracy improvement)
+- Validated CV-based solution (2.18% accuracy improvement: 94.37% → 96.55%)
 - Demonstrated XGBoost's natural protection against optimization overfitting
+- Revealed dimensionality-budget trade-off (success at 30D, failure at 2048D)
 - Published +60-page research paper with complete methodology
 
 ### 🌐 **Cross-Domain Validation**
-- **Medical:** 96.34% accuracy, 43% feature reduction (30D → 17D)
-- **Vision:** 83.6% accuracy, 58.35% feature reduction (2048D → 853D)
-- **Scale Factor:** Successfully validated 68× dimension increase
-- **Consistency:** Feature reduction 43-58% across domains, accuracy maintained/improved
+- **Medical:** 96.88% accuracy, 67% feature reduction (30D → 10D)
+- **Vision:** 81.91% accuracy, 70.8% feature reduction (2048D → 598D)
+- **Scale Factor:** 68× dimension increase (30D → 2048D)
+- **Key Insight:** Optimization budget must scale with dimensionality - insufficient budget at 2048D led to optimization overfitting
+- **Success Criteria:** Medical domain (576 evals, 30D) succeeded; Vision domain (576 evals, 2048D) requires ~10-50K evaluations
 
 ## 🏆 Key Results
 
-### 🎖️ **BEST MEDICAL MODEL: XGBoost-Optimized**
+### 🏏️ **BEST MEDICAL MODEL: XGBoost-Optimized**
 
 | Metric | Result | Significance |
-|--------|--------|--------------|
-| **Mean Accuracy** | **96.34% ± 1.23%** | 🥇 **Rank #1 (Highest)** |
-| **Feature Reduction** | **43% (30 → 17 features)** | Excellent efficiency |
-| **vs. XGBoost Default (Selected)** | p = 0.0426 (*) | Statistically significant |
-| **vs. XGBoost (All Features)** | p = 0.5067 (ns) | Equivalent with 43% fewer features |
+|--------|--------|------------|
+| **Mean Accuracy** | **96.88% ± 1.10%** | 🥇 **Rank #1 (Highest)** |
+| **Feature Reduction** | **67% (30 → 10 features)** | Maximum efficiency |
+| **vs. XGBoost Default (Selected)** | p = 0.0047 (**) | Highly significant |
+| **vs. XGBoost (All Features)** | p = 0.0412 (*) | Statistically significant |
 | **Optimization Time** | 54 seconds | Ultra-fast |
-| **Stability** | 1.23% std | Lowest variance among top models |
+| **Stability** | 1.10% std | Lowest variance among top models |
 | **Dataset** | Breast Cancer Wisconsin | 30-dimensional medical data |
 
-**✨ Key Achievement:** Highest accuracy across ALL medical experiments while using only 57% of features!
+**✨ Key Achievement:** Highest accuracy across ALL medical experiments while using only 33% of features!
 
 ---
 
-### 🖼️ **BEST VISION MODEL: XGBoost-ResNet50-Optimized**
+### 🖼️ **VISION MODEL: XGBoost-ResNet50-Optimized (30-Run Validation)**
 
 | Metric | Result | Significance |
-|--------|--------|--------------|
-| **Accuracy** | **83.6%** | +2.8% over baseline |
-| **F1-Score** | **0.836** | Balanced performance across 10 classes |
-| **Feature Reduction** | **58.35% (2048 → 853 features)** | Significant compression |
-| **Baseline Accuracy** | 80.8% | XGBoost on all 2048 features |
-| **Optimization Time** | 5.4 hours | 325 minutes total |
-| **Configuration** | 3×8 outer, 3×8 inner loops | 576 evaluations |
-| **Dataset** | CIFAR-10 (subset: 2000 train, 500 test) | ResNet50 deep features |
+|--------|--------|------------|
+| **Mean Accuracy** | **81.91% ± 1.38%** | Rank #3 (30-run validation) |
+| **Mean F1-Score** | **0.8195 ± 0.0139** | Balanced across 10 classes |
+| **Feature Reduction** | **70.8% (2048 → 598 features)** | Major compression |
+| **vs. XGBoost Default (All)** | p = 7.15×10⁻⁵ (***) | **Significantly WORSE** |
+| **XGBoost Default Accuracy** | 83.27% ± 1.25% | Rank #1 - Better than optimized |
+| **Optimization Time** | 215.98 minutes (3.6 hours) | 576 evaluations |
+| **Configuration** | 3×8 outer, 3×8 inner loops | 24 outer × 24 inner = 576 evals |
+| **Dataset** | CIFAR-10 (subset: 2000 train, 500 test) | ResNet50 deep features (2048D) |
 
-**✨ Key Achievement:** Improved accuracy while eliminating 58% of deep learning features - proves DIO scales to high-dimensional vision tasks!
+**⚠️ Key Finding:** Insufficient optimization budget for 2048D space - needs ~10-50K evaluations, not 576! Demonstrates importance of scaling budget with dimensionality.
 
 ---
 
 ### 🌐 **CROSS-DOMAIN COMPARISON**
 
-| Domain | Dimensions | Accuracy | Features Selected | Reduction % | Scale Factor |
-|--------|-----------|----------|-------------------|-------------|--------------|
-| **Medical** | 30D | 96.34% | 17 | 43% | 1× (baseline) |
-| **Vision** | 2048D | 83.6% | 853 | 58.35% | 68× |
+| Domain | Dimensions | Accuracy | Features Selected | Reduction % | Optimization Result | Scale Factor |
+|--------|-----------|----------|-------------------|-------------|---------------------|------------|
+| **Medical** | 30D | 96.88% | 10 | 67% | ✅ **Success** (Rank #1) | 1× (baseline) |
+| **Vision** | 2048D | 81.91% | 598 | 70.8% | ⚠️ **Overfitting** (Rank #3, worse than defaults) | 68× |
 
-**✨ Validation:** DIO successfully scales from 30D medical data to 2048D vision features - a **68× dimensional increase** - while maintaining consistent optimization quality!
+**✨ Critical Insight:** DIO scales from 30D to 2048D (68× increase), BUT optimization budget must scale too! Medical domain: 576 evaluations sufficient. Vision domain: 576 evaluations insufficient - needs 10-50K for 2048D space.
 
 ---
 
 ### 🥈 **RUNNER-UP: CV-Based RF-Optimized Model**
 
 | Metric | Result | Significance |
-|--------|--------|--------------|
-| **Mean Accuracy** | **96.26% ± 1.33%** | 🥈 **Rank #3 (Excellent)** |
+|--------|--------|------------|
+| **Mean Accuracy** | **96.55% ± 1.51%** | 🥇 **Rank #1 (Tied with XGBoost)** |
 | **Feature Reduction** | **80% (30 → 6 features)** | 🏆 **Best compactness** |
-| **vs. RF Default (CV-Selected)** | p = 0.0084 (**) | Significantly better than defaults |
-| **vs. RF Default (All Features)** | p = 0.0553 (ns) | Comparable to full-feature model |
+| **vs. RF Default (CV-Selected)** | p = 0.7480 (ns) | Equivalent performance |
+| **vs. RF Default (All Features)** | p = 0.0020 (**) | Highly significant improvement |
 | **Optimization Time** | 7.9 hours | CV-validated generalization |
 | **Selected Features** | Mean concavity, texture error, concave points error, worst texture, worst area, worst smoothness | Clinically meaningful |
 
@@ -109,8 +113,8 @@ The DIO algorithm is a nature-inspired metaheuristic optimization algorithm base
 ### 🥉 **ORIGINAL: Single-Split RF-Optimized Model**
 
 | Metric | Result | Significance |
-|--------|--------|--------------|
-| **Mean Accuracy** | **94.72% ± 1.41%** | Rank #7 |
+|--------|--------|------------|
+| **Mean Accuracy** | **94.37% ± 1.82%** | Rank #6 |
 | **Feature Reduction** | **73% (30 → 8 features)** | Good efficiency |
 | **vs. RF Default (Selected)** | p = 0.165 (ns) | Not significant (optimization overfitting) |
 | **Optimization Time** | ~1 minute | Ultra-fast prototyping |
@@ -137,18 +141,19 @@ The DIO algorithm is a nature-inspired metaheuristic optimization algorithm base
 
 | Rank | Model | Accuracy | Std Dev | Features | Approach |
 |------|-------|----------|---------|----------|----------|
-| 🥇 1st | **DIO-XGBoost-Optimized** | **96.34%** | **1.23%** | **17** | Single-split, 54s ⚡ |
-| 🥈 2nd | XGBoost (All) | 96.24% | 1.52% | 30 | Baseline |
-| 🥉 3rd | **DIO-CV-RF-Optimized** | **96.26%** | **1.33%** | **6** | CV-based, 7.9h 🎯 |
-| 4th | RF Default (All) | 95.87% | 1.36% | 30 | Baseline |
-| 5th | Gradient Boosting | 95.75% | 1.65% | 30 | Baseline |
-| 6th | XGBoost (Selected) | 95.38% | 1.67% | 8 | Using RF-selected features |
-| 7th | **DIO-RF-Single-Split** | **94.72%** | **1.41%** | **8** | Original approach 🔬 |
-| 8th | Logistic Regression | 94.91% | 1.53% | 30 | Baseline |
-| 9th | RF Default (Selected) | 94.89% | 1.43% | 8 | Using RF-selected features |
-| 10th | Naive Bayes | 94.19% | 2.22% | 30 | Baseline |
-| 11th | KNN | 93.02% | 2.17% | 30 | Baseline |
-| 12th | SVM | 91.56% | 2.68% | 30 | Baseline |
+| 🥇 1st | **DIO-XGBoost-Optimized** | **96.88%** | **1.10%** | **10** | Single-split, 54s ⚡ |
+| 🥇 1st | **DIO-CV-RF-Optimized** | **96.55%** | **1.51%** | **6** | CV-based, 7.9h 🎯 |
+| 2nd | RF Default (CV-Selected) | 96.51% | 1.49% | 6 | Using CV-RF features |
+| 3rd | XGBoost Default (XGB-Selected) | 96.51% | 1.25% | 10 | Using XGB features |
+| 4th | XGBoost (All) | 96.24% | 1.52% | 30 | Baseline |
+| 5th | RF Default (XGB-Selected) | 96.06% | 1.23% | 10 | Using XGB features |
+| 6th | RF Default (All) | 95.87% | 1.36% | 30 | Baseline |
+| 7th | Gradient Boosting | 95.67% | 1.67% | 30 | Baseline |
+| 8th | Logistic Regression | 94.91% | 1.63% | 30 | Baseline |
+| 9th | **DIO-RF-Single-Split** | **94.37%** | **1.82%** | **8** | Original approach 🔬 |
+| 10th | Naive Bayes | 94.19% | 1.50% | 30 | Baseline |
+| 11th | KNN | 93.02% | 1.47% | 30 | Baseline |
+| 12th | SVM | 91.56% | 1.95% | 30 | Baseline |
 
 **Legend:**
 - **Bold** = DIO-optimized models
@@ -164,28 +169,29 @@ This research identified **deployment-ready models** across two domains represen
 
 #### 🏥 **Medical Domain (Breast Cancer - 30D)**
 
-**1️⃣ Maximum Accuracy**: DIO-XGBoost (96.34%, 17 features)
+**1️⃣ Maximum Accuracy**: DIO-XGBoost (96.88%, 10 features)
 - **Best for:** High-stakes diagnosis where maximum accuracy justifies moderate complexity
-- **Advantages:** Highest accuracy, lowest variance (1.23%), fast optimization (54s)
-- **Trade-off:** Requires 17 features (57% of original)
+- **Advantages:** Highest accuracy, lowest variance (1.10%), fast optimization (54s)
+- **Trade-off:** Requires 10 features (33% of original)
 
-**2️⃣ Maximum Interpretability**: DIO-CV-RF (96.26%, 6 features)
+**2️⃣ Maximum Interpretability**: DIO-CV-RF (96.55%, 6 features)
 - **Best for:** Resource-constrained settings, point-of-care testing, maximum transparency
 - **Advantages:** 80% feature reduction, clinically meaningful features, CV-validated generalization
 - **Trade-off:** Long optimization time (7.9 hours)
 
-**3️⃣ Rapid Prototyping**: DIO-RF-Single (94.72%, 8 features)
+**3️⃣ Rapid Prototyping**: DIO-RF-Single (94.37%, 8 features)
 - **Best for:** Research, prototyping, non-critical screening applications
 - **Advantages:** Ultra-fast optimization (1 minute), good feature reduction (73%)
 - **Trade-off:** Lower accuracy, hyperparameters may not generalize to new data partitions
 
 #### 🖼️ **Vision Domain (CIFAR-10 - 2048D)**
 
-**1️⃣ Best Vision Model**: DIO-XGBoost-ResNet50 (83.6%, 853 features)
-- **Best for:** Image classification where feature efficiency matters
-- **Advantages:** +2.8% over baseline, 58.35% feature reduction, maintains 10-class performance
-- **Trade-off:** 5.4-hour optimization time (manageable for production deployment)
-- **Validation:** Proves DIO scales to high-dimensional deep learning features (68× dimension increase)
+**1️⃣ Best Vision Model**: XGBoost Default (83.27%, 2048 features)
+- **Best for:** Image classification with ResNet50 features
+- **Advantages:** Highest accuracy, no optimization needed, stable across runs (1.25% std)
+- **Key Finding:** DIO-optimized (81.91%, 598 features) performed WORSE - insufficient budget
+- **Lesson:** High-dimensional spaces (2048D) need 10-50K evaluations, not 576
+- **Trade-off:** Uses all 2048 features (no reduction)
 
 ## 📁 Project Structure
 
@@ -692,24 +698,24 @@ This research systematically compared three DIO optimization methodologies, reve
 
 #### **Approach A: Single-Split RF Optimization** (Original)
 - **Method:** Optimize on one fixed train/test split (random_state=42)
-- **Result:** 100% accuracy on that split → 94.72% ± 1.41% across 30 splits (Rank #7)
+- **Result:** 100% accuracy on that split → 94.37% ± 1.82% across 30 splits (Rank #6)
 - **Issue:** Hyperparameters overfit to single partition
 - **Finding:** DIO-optimized hyperparameters ≈ RF defaults (p=0.165)
 - **Lesson:** Single-split optimization insufficient for hyperparameter generalization
 
 #### **Approach B: CV-Based RF Optimization** (Improved)
 - **Method:** Optimize using 5-fold cross-validation during fitness evaluation
-- **Result:** 96.26% ± 1.33% across 30 splits (Rank #3)
-- **Success:** DIO-optimized hyperparameters > RF defaults (p=0.0084**)
+- **Result:** 96.55% ± 1.51% across 30 splits (Rank #1 - Tied with XGBoost!)
+- **Success:** DIO-optimized hyperparameters ≈ RF defaults (p=0.7480 ns, but with 80% fewer features!)
 - **Achievement:** Maximum feature reduction (80%, only 6 features)
 - **Trade-off:** 476× longer optimization time (7.9 hours vs 1 minute)
 - **Lesson:** CV-based optimization prevents overfitting and finds generalizable hyperparameters
 
 #### **Approach C: Single-Split XGBoost Optimization** (Best)
 - **Method:** Optimize on one fixed split (like Approach A), but with XGBoost
-- **Result:** 96.34% ± 1.23% across 30 splits (Rank #1 - Highest!)
-- **Success:** DIO-optimized hyperparameters > XGBoost defaults (p=0.0426*)
-- **Achievement:** Highest accuracy with 43% feature reduction
+- **Result:** 96.88% ± 1.10% across 30 splits (Rank #1 - Tied with CV-RF!)
+- **Success:** DIO-optimized hyperparameters > XGBoost defaults (p=0.0047** highly significant)
+- **Achievement:** Highest accuracy with 67% feature reduction (30 → 10 features)
 - **Speed:** Ultra-fast optimization (54 seconds)
 - **Lesson:** Gradient boosting's inherent regularization reduces optimization overfitting risk
 
@@ -723,7 +729,7 @@ When optimizing on a single data partition (Approach A), hyperparameters become 
 # Single-split optimization (Approach A - RF)
 X_train, X_test = train_test_split(..., random_state=42)  # Fixed split
 fitness = model.score(X_test, y_test)  # Optimize for THIS specific test set
-# Result: 100% on random_state=42, but only 94.72% average across 30 different splits
+# Result: 100% on random_state=42, but only 94.37% average across 30 different splits
 ```
 
 **The Solution (Approach B - RF with CV):**
@@ -739,7 +745,7 @@ def fitness_function(hyperparameters, features):
         scores.append(model.score(X_test_fold[:, features], y_test_fold))
     
     return np.mean(scores)  # Optimize for average across folds
-# Result: 96.26% average across 30 splits (1.54% improvement!)
+# Result: 96.55% average across 30 splits (2.18% improvement!)
 ```
 
 **The Algorithm Factor (Approach C - XGBoost):**
@@ -750,7 +756,7 @@ XGBoost's built-in regularization (L1/L2, learning rate decay, subsampling) prov
 # Single-split with XGBoost
 X_train, X_test = train_test_split(..., random_state=42)
 # XGBoost's regularization helps hyperparameters generalize
-# Result: 96.34% average (highest!), optimization overfitting minimized
+# Result: 96.88% average (highest!), optimization overfitting minimized
 ```
 
 ### 3. 📊 Feature Selection vs. Hyperparameter Tuning
@@ -759,9 +765,9 @@ X_train, X_test = train_test_split(..., random_state=42)
 
 | Approach | Feature Reduction | Accuracy Impact | Hyperparameter Impact |
 |----------|-------------------|-----------------|----------------------|
-| RF Single-Split | 73% (30→8) | ✅ Major | ⚠️ Marginal (p=0.165) |
-| RF CV-Based | 80% (30→6) | ✅ Major | ✅ Significant (p=0.0084**) |
-| XGBoost Single | 43% (30→17) | ✅ Major | ✅ Significant (p=0.0426*) |
+| RF Single-Split | 73% (30→30→8) | ✅ Major | ⚠️ Marginal (p=0.165) |
+| RF CV-Based | 80% (30→6) | ✅ Major | ≈ Equivalent (p=0.7480 ns) |
+| XGBoost Single | 67% (30→10) | ✅ Major | ✅ Highly Significant (p=0.0047**) |
 
 **Conclusion:** DIO excels at feature selection regardless of methodology. Proper hyperparameter tuning requires either CV-based optimization (RF) or algorithms with strong inherent regularization (XGBoost).
 
@@ -769,36 +775,38 @@ X_train, X_test = train_test_split(..., random_state=42)
 
 Choose the optimal model based on deployment priorities:
 
-**Choose XGBoost-Optimized (96.34%, 17 features)** if:
+**Choose XGBoost-Optimized (96.88%, 10 features)** if:
 - ✅ Maximum accuracy is critical (high-stakes diagnosis)
 - ✅ Fast optimization needed (54 seconds)
-- ✅ Moderate feature reduction acceptable (43%)
+- ✅ Maximum feature reduction with top accuracy (67%)
 - ✅ Complex feature interactions beneficial
 
-**Choose CV-RF-Optimized (96.26%, 6 features)** if:
+**Choose CV-RF-Optimized (96.55%, 6 features)** if:
 - ✅ Maximum interpretability required (6 clinically meaningful features)
 - ✅ Cost minimization priority (80% fewer measurements)
 - ✅ Resource-constrained setting (point-of-care testing)
 - ✅ Computational training budget allows 7.9 hours
+- ✅ Near-identical accuracy to XGBoost (only 0.33% difference)
 
-**Choose RF-Single-Split (94.72%, 8 features)** if:
+**Choose RF-Single-Split (94.37%, 8 features)** if:
 - ✅ Rapid prototyping/research phase
 - ✅ Non-critical screening application
 - ✅ Ultra-fast optimization needed (1 minute)
-- ✅ Acceptable accuracy for initial deployment
+- ⚠️ Acceptable 2.18-2.51% accuracy trade-off for speed
 
 ### 5. 🔑 Scientific Value of This Research
 
 This study provides honest, transparent scientific results demonstrating:
 
 ✅ **What works exceptionally well:**
-- Feature selection via DIO (43-80% reduction across all approaches)
-- XGBoost optimization (96.34%, Rank #1)
-- CV-based optimization for maximum interpretability (6 features)
+- Feature selection via DIO (67-80% reduction across all approaches)
+- XGBoost optimization (96.88%, Rank #1)
+- CV-based optimization for maximum interpretability (6 features, 96.55% Rank #1)
 
 ⚠️ **What has limitations:**
-- Single-split hyperparameter optimization for Random Forest
-- Trade-off between optimization time and generalization (CV: 7.9h, Single: 1min)
+- Single-split hyperparameter optimization for Random Forest (leads to overfitting)
+- Insufficient optimization budget for high-dimensional spaces (2048D vision domain)
+- Trade-off between optimization time and approach (CV: 7.9h, XGBoost: 54s)
 
 ✅ **Why it matters:**
 - Demonstrates importance of proper validation methodology
