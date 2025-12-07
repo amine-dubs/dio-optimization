@@ -1,0 +1,57 @@
+{
+    "method": "DIO for XGBoost (Single-Split, Fast)",
+    "configuration": {
+        "outer_loop": {
+            "n_dholes": 5,
+            "max_iterations": 10
+        },
+        "inner_loop": {
+            "n_dholes": 5,
+            "max_iterations": 10
+        }
+    },
+    "optimization_time_seconds": 350.49465680122375,
+    "best_hyperparameters": {
+        "n_estimators": 139,
+        "max_depth": 6,
+        "learning_rate": 0.2326932684165316,
+        "subsample": 0.7769596664671885,
+        "colsample_bytree": 0.6522922404689467
+    },
+    "selected_features": {
+        "count": 10,
+        "indices": [
+            1,
+            4,
+            7,
+            10,
+            12,
+            13,
+            15,
+            21,
+            24,
+            26
+        ],
+        "names": [
+            "mean texture",
+            "mean smoothness",
+            "mean concave points",
+            "radius error",
+            "perimeter error",
+            "area error",
+            "compactness error",
+            "worst texture",
+            "worst smoothness",
+            "worst concavity"
+        ],
+        "reduction_percentage": 66.67
+    },
+    "performance": {
+        "fitness": 0.014912280701754384,
+        "test_accuracy": 0.9883040935672515,
+        "test_precision": 0.981651376146789,
+        "test_recall": 1.0,
+        "test_f1_score": 0.9907407407407407,
+        "test_roc_auc": 0.9910922897196262
+    }
+}

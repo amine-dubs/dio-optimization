@@ -1,39 +1,39 @@
 {
     "method": "DIO with k-fold Cross-Validation",
     "k_folds": 5,
-    "optimization_time_seconds": 28584.26062989235,
+    "optimization_time_seconds": 19764.59312272072,
     "best_hyperparameters": {
-        "n_estimators": 174,
-        "max_depth": 15,
-        "min_samples_split": 6,
-        "min_samples_leaf": 5
+        "n_estimators": 198,
+        "max_depth": 7,
+        "min_samples_split": 4,
+        "min_samples_leaf": 1
     },
     "selected_features": {
         "count": 6,
         "indices": [
-            6,
-            11,
-            17,
-            21,
-            23,
-            24
+            1,
+            7,
+            20,
+            24,
+            26,
+            28
         ],
         "names": [
-            "mean concavity",
-            "texture error",
-            "concave points error",
-            "worst texture",
-            "worst area",
-            "worst smoothness"
+            "mean texture",
+            "mean concave points",
+            "worst radius",
+            "worst smoothness",
+            "worst concavity",
+            "worst symmetry"
         ],
         "reduction_percentage": 80.0
     },
     "performance": {
-        "cv_fitness": 0.019450316455696205,
-        "test_accuracy": 0.9590643274853801,
-        "test_f1_score": 0.9589983626587679,
-        "test_precision": 0.9590024443825612,
-        "test_recall": 0.9590643274853801
+        "cv_fitness": 0.02189398734177215,
+        "test_accuracy": 0.9649122807017544,
+        "test_f1_score": 0.9646682554269665,
+        "test_precision": 0.9655761024182077,
+        "test_recall": 0.9649122807017544
     },
     "dio_configuration": {
         "outer_loop": {

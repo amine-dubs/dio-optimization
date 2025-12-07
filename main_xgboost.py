@@ -127,8 +127,8 @@ def hyperparameter_objective_function(params):
     fs_dio = DIO(
         objective_function=feature_selection_objective_function,
         search_space=fs_search_space,
-        n_dholes=5,          # Fast configuration
-        max_iterations=10    # Fast configuration
+        n_dholes=10,          # Fast configuration
+        max_iterations=20    # Fast configuration
     )
     
     print("    Running feature selection (5 dholes, 10 iterations)...")
@@ -285,9 +285,9 @@ results = {
     }
 }
 
-with open('xgboost_optimization_results.json', 'w') as f:
+with open('xgboost_optimization/xgboost_optimization_results.json', 'w') as f:
     json.dump(results, f, indent=4)
-print("✓ Results saved to 'xgboost_optimization_results.json'")
+print("✓ Results saved to 'xgboost_optimization/xgboost_optimization_results.json'")
 
 # ==================== COMPARISON WITH BASELINES ====================
 print(f"\n{'='*80}")
@@ -350,8 +350,8 @@ for model_name, model in baseline_models.items():
 comparison_df = pd.DataFrame(comparison_results)
 comparison_df = comparison_df.sort_values('Accuracy', ascending=False).reset_index(drop=True)
 comparison_df['Rank'] = range(1, len(comparison_df) + 1)
-comparison_df.to_csv('xgboost_model_comparison.csv', index=False)
-print("\n✓ Comparison saved to 'xgboost_model_comparison.csv'")
+comparison_df.to_csv('xgboost_optimization/xgboost_model_comparison.csv', index=False)
+print("\n✓ Comparison saved to 'xgboost_optimization/xgboost_model_comparison.csv'")
 
 # ==================== VISUALIZATIONS ====================
 print(f"\n{'='*80}")
@@ -429,8 +429,8 @@ ax4.legend(loc='lower right', fontsize=10)
 ax4.grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('xgboost_optimization_visualization.png', dpi=300, bbox_inches='tight')
-print("✓ Visualization saved to 'xgboost_optimization_visualization.png'")
+plt.savefig('xgboost_optimization/xgboost_optimization_visualization.png', dpi=300, bbox_inches='tight')
+print("✓ Visualization saved to 'xgboost_optimization/xgboost_optimization_visualization.png'")
 
 plt.show()
 
@@ -448,9 +448,9 @@ print(f"\n🏆 Model Ranking:")
 dio_rank = comparison_df[comparison_df['Model'] == 'DIO-Optimized XGBoost']['Rank'].values[0]
 print(f"  • DIO-Optimized XGBoost: Rank #{dio_rank} out of {len(comparison_df)}")
 print(f"\n✅ Files Generated:")
-print(f"  1. xgboost_optimization_results.json - Full optimization details")
-print(f"  2. xgboost_model_comparison.csv - Performance comparison table")
-print(f"  3. xgboost_optimization_visualization.png - 4-panel analysis figure")
+print(f"  1. xgboost_optimization/xgboost_optimization_results.json - Full optimization details")
+print(f"  2. xgboost_optimization/xgboost_model_comparison.csv - Performance comparison table")
+print(f"  3. xgboost_optimization/xgboost_optimization_visualization.png - 4-panel analysis figure")
 print(f"\n{'='*80}")
 print("XGBOOST OPTIMIZATION COMPLETE!")
 print(f"{'='*80}\n")

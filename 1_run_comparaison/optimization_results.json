@@ -1,0 +1,25 @@
+{
+    "best_hyperparameters": {
+        "n_estimators": 200,
+        "max_depth": 20,
+        "min_samples_split": 9,
+        "min_samples_leaf": 10
+    },
+    "selected_features": {
+        "indices": [
+            4,
+            13,
+            23,
+            24
+        ],
+        "count": 4,
+        "names": [
+            "mean smoothness",
+            "area error",
+            "worst area",
+            "worst smoothness"
+        ]
+    },
+    "optimization_fitness": 0.007122807017543914,
+    "final_test_accuracy": 0.9941520467836257
+}

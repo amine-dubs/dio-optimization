@@ -31,7 +31,7 @@ print("="*80)
 
 # ========== LOAD CV-OPTIMIZED CONFIGURATION ==========
 print("\nLoading DIO CV-optimized configuration...")
-with open('optimization_results_cv.json', 'r') as f:
+with open('cv_optimization/optimization_results_cv.json', 'r') as f:
     opt_config = json.load(f)
 
 best_hyperparams = opt_config['best_hyperparameters']
@@ -265,12 +265,12 @@ print("SAVING RESULTS")
 print(f"{'='*80}")
 
 # Save statistical summary
-stats_df.to_csv('statistical_comparison_summary_cv.csv', index=False)
-print("✓ Statistical summary saved to 'statistical_comparison_summary_cv.csv'")
+stats_df.to_csv('cv_optimization/statistical_comparison_summary_cv.csv', index=False)
+print("✓ Statistical summary saved to 'cv_optimization/statistical_comparison_summary_cv.csv'")
 
 # Save statistical tests
-stats_tests_df.to_csv('statistical_significance_tests_cv.csv', index=False)
-print("✓ Statistical tests saved to 'statistical_significance_tests_cv.csv'")
+stats_tests_df.to_csv('cv_optimization/statistical_significance_tests_cv.csv', index=False)
+print("✓ Statistical tests saved to 'cv_optimization/statistical_significance_tests_cv.csv'")
 
 # Save all raw results
 raw_results_df = pd.DataFrame()
@@ -280,8 +280,8 @@ for model_name, metrics in all_results.items():
     temp_df['Run'] = range(1, NUM_RUNS + 1)
     raw_results_df = pd.concat([raw_results_df, temp_df], ignore_index=True)
 
-raw_results_df.to_csv('all_runs_detailed_results_cv.csv', index=False)
-print("✓ Detailed results (all runs) saved to 'all_runs_detailed_results_cv.csv'")
+raw_results_df.to_csv('cv_optimization/all_runs_detailed_results_cv.csv', index=False)
+print("✓ Detailed results (all runs) saved to 'cv_optimization/all_runs_detailed_results_cv.csv'")
 
 # Display summary table
 print(f"\n{'='*80}")

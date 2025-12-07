@@ -1,33 +1,25 @@
 {
     "best_hyperparameters": {
-        "n_estimators": 193,
-        "max_depth": 13,
-        "min_samples_split": 4,
-        "min_samples_leaf": 1
+        "n_estimators": 200,
+        "max_depth": 20,
+        "min_samples_split": 9,
+        "min_samples_leaf": 10
     },
     "selected_features": {
         "indices": [
-            5,
+            4,
             13,
-            16,
-            17,
-            19,
             23,
-            24,
-            29
+            24
         ],
-        "count": 8,
+        "count": 4,
         "names": [
-            "mean compactness",
+            "mean smoothness",
             "area error",
-            "concavity error",
-            "concave points error",
-            "fractal dimension error",
             "worst area",
-            "worst smoothness",
-            "worst fractal dimension"
+            "worst smoothness"
         ]
     },
-    "optimization_fitness": 0.0026666666666666666,
-    "final_test_accuracy": 1.0
+    "optimization_fitness": 0.007122807017543914,
+    "final_test_accuracy": 0.9941520467836257
 }

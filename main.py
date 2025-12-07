@@ -96,8 +96,8 @@ def hyperparameter_objective_function(params):
     fs_dio = DIO(
         objective_function=feature_selection_objective_function,
         search_space=fs_search_space,
-        n_dholes=5,          # Reduced from 10 for faster execution
-        max_iterations=10    # Reduced from 20 for faster execution
+        n_dholes=10,          # Reduced from 10 for faster execution
+        max_iterations=20    # Reduced from 20 for faster execution
     )
     
     # Run feature selection
@@ -126,8 +126,8 @@ print("Running Hyper-parameter Optimization (with nested Feature Selection)...\n
 hp_dio = DIO(
     objective_function=hyperparameter_objective_function,
     search_space=hp_search_space,
-    n_dholes=3,            # Reduced from 5 for faster execution
-    max_iterations=5       # Reduced from 10 for faster execution
+    n_dholes=5,            # Reduced from 5 for faster execution
+    max_iterations=10       # Reduced from 10 for faster execution
 )
 
 best_hyperparameters, best_fitness = hp_dio.optimize()

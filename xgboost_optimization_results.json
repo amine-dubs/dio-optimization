@@ -10,62 +10,48 @@
             "max_iterations": 10
         }
     },
-    "optimization_time_seconds": 54.0351402759552,
+    "optimization_time_seconds": 350.49465680122375,
     "best_hyperparameters": {
-        "n_estimators": 53,
-        "max_depth": 5,
-        "learning_rate": 0.290560088310227,
-        "subsample": 0.5437433211611727,
-        "colsample_bytree": 0.735489017123613
+        "n_estimators": 139,
+        "max_depth": 6,
+        "learning_rate": 0.2326932684165316,
+        "subsample": 0.7769596664671885,
+        "colsample_bytree": 0.6522922404689467
     },
     "selected_features": {
-        "count": 17,
+        "count": 10,
         "indices": [
             1,
-            2,
-            3,
             4,
-            5,
-            6,
             7,
-            8,
             10,
-            11,
+            12,
             13,
-            16,
-            17,
-            18,
-            26,
-            27,
-            28
+            15,
+            21,
+            24,
+            26
         ],
         "names": [
             "mean texture",
-            "mean perimeter",
-            "mean area",
             "mean smoothness",
-            "mean compactness",
-            "mean concavity",
             "mean concave points",
-            "mean symmetry",
             "radius error",
-            "texture error",
+            "perimeter error",
             "area error",
-            "concavity error",
-            "concave points error",
-            "symmetry error",
-            "worst concavity",
-            "worst concave points",
-            "worst symmetry"
+            "compactness error",
+            "worst texture",
+            "worst smoothness",
+            "worst concavity"
         ],
-        "reduction_percentage": 43.33
+        "reduction_percentage": 66.67
     },
     "performance": {
-        "fitness": 0.017245614035087717,
+        "fitness": 0.014912280701754384,
         "test_accuracy": 0.9883040935672515,
         "test_precision": 0.981651376146789,
         "test_recall": 1.0,
         "test_f1_score": 0.9907407407407407,
-        "test_roc_auc": 0.9945969626168224
+        "test_roc_auc": 0.9910922897196262
     }
 }

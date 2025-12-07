@@ -180,42 +180,87 @@ slide = add_content_slide(prs, "Presentation Outline")
 body_shape = slide.placeholders[1]
 tf = body_shape.text_frame
 add_bullet_points(tf, [
-    "Introduction & Motivation",
-    "DIO Algorithm Overview",
-    "Methodology: Nested Optimization",
-    "Medical Classification Results (Breast Cancer)",
-    "Extension to Computer Vision (CIFAR-10)",
-    "Cross-Domain Analysis",
-    "Statistical Validation",
-    "Practical Implications",
-    "Limitations & Future Work",
-    "Conclusions"
+    "Introduction",
+    "Part 1: Dholes-Inspired Optimization (DIO)",
+    "  - History & Inspiration",
+    "  - How DIO Works",
+    "  - Benchmark Comparisons",
+    "  - Applications",
+    "Part 2: Optimization Across Domains",
+    "  - Medical: Breast Cancer Classification",
+    "  - Computer Vision: CIFAR-10",
+    "Part 3: Future Research & Conclusions"
 ])
 
 # ============================================================================
-# SLIDE 3: PROBLEM STATEMENT
+# SLIDE 3: INTRODUCTION - THE REAL-WORLD PROBLEM
 # ============================================================================
-slide = add_content_slide(prs, "The Challenge We Faced")
+slide = add_content_slide(prs, "Introduction: Why This Matters")
 body_shape = slide.placeholders[1]
 tf = body_shape.text_frame
 add_bullet_points(tf, [
-    "Breast cancer: Leading cause of mortality in women worldwide",
-    "Machine learning for diagnosis: High-dimensional data (30 features)",
-    "The dilemma: Optimal feature selection + hyperparameter tuning simultaneously",
-    "Traditional sequential optimization → Suboptimal, misses feature-parameter interactions",
-    "Our approach: Simultaneous optimization using DIO (nature-inspired algorithm)"
+    "Breast cancer remains one of the leading causes of death among women globally",
+    "",
+    "Machine learning offers hope, but faces key challenges:",
+    "  - Medical data often contains 30+ features—which ones truly matter?",
+    "  - Model performance depends on both features AND hyperparameters",
+    "  - Optimizing them separately misses crucial interactions",
+    "",
+    "Traditional approach: Pick features first, tune parameters later",
+    "Problem: What if the best features depend on the parameters?",
+    "",
+    "Our solution: Optimize both simultaneously using nature-inspired intelligence"
 ])
 
 # ============================================================================
-# SLIDE 4: WHAT IS DIO?
+# SLIDE 4: PART 1 - DHOLES-INSPIRED OPTIMIZATION
 # ============================================================================
-slide = add_content_slide(prs, "Dholes-Inspired Optimization (DIO)")
+slide = add_content_slide(prs, "Part 1: Dholes-Inspired Optimization (DIO)")
 body_shape = slide.placeholders[1]
 tf = body_shape.text_frame
 add_bullet_points(tf, [
-    "Nature-inspired metaheuristic algorithm",
-    "Based on pack hunting behavior of dholes (Asiatic wild dogs)",
-    "Three cooperative hunting strategies:",
+    "A modern optimization algorithm inspired by nature",
+    "",
+    "Key Topics:",
+    "  1. History & Origins",
+    "  2. How DIO Works (The Hunting Strategies)",
+    "  3. Performance Benchmarks",
+    "  4. Real-World Applications"
+])
+
+# ============================================================================
+# SLIDE 4A: DIO HISTORY
+# ============================================================================
+slide = add_content_slide(prs, "1.1 DIO History & Origins")
+body_shape = slide.placeholders[1]
+tf = body_shape.text_frame
+add_bullet_points(tf, [
+    "Developed in 2025 by researchers at Torrens University (Australia)",
+    "  - Lead: Dr. Seyedali Mirjalili (renowned in metaheuristics)",
+    "  - Team: Ali El Romeh, Václav Šnel",
+    "",
+    "Published in Cluster Computing (Springer)",
+    "  - DOI: 10.1007/s10586-025-05543-2",
+    "  - Peer-reviewed, high-impact journal",
+    "",
+    "Why dholes? These wild dogs demonstrate exceptional teamwork:",
+    "  - Coordinated pack hunting with clear roles",
+    "  - Flexible strategies adapting to prey behavior",
+    "  - Balance between individual initiative and group cohesion",
+    "",
+    "Available: GitHub & MATLAB File Exchange"
+])
+
+# ============================================================================
+# SLIDE 4B: WHAT IS DIO?
+# ============================================================================
+slide = add_content_slide(prs, "1.2 How DIO Works: The Hunting Analogy")
+body_shape = slide.placeholders[1]
+tf = body_shape.text_frame
+add_bullet_points(tf, [
+    "DIO mimics how dhole packs hunt together:",
+    "",
+    "Three complementary strategies:",
 ])
 
 # ============================================================================
@@ -238,11 +283,14 @@ add_bullet_points(tf, [
     "- Pack hierarchy → Multi-stage leadership transitions (adaptation)"
 ])
 
-# Add sub-bullets
+# Add sub-bullets with more natural descriptions
 sub_points = [
-    "Chase Alpha: Follow best hunter (exploitation)",
-    "Random Pursuit: Chase random pack member (exploration)",
-    "Pack Center: Move toward group average (cooperation)"
+    "Strategy 1: Follow the Leader (exploitation)",
+    "  → Learn from the best solution found so far",
+    "Strategy 2: Try Something Different (exploration)",
+    "  → Check what other pack members are discovering",
+    "Strategy 3: Stick Together (cooperation)",
+    "  → Move toward the group's center of mass"
 ]
 for point in sub_points:
     p = tf.add_paragraph()
@@ -251,7 +299,7 @@ for point in sub_points:
     p.font.size = Pt(16)
 
 p = tf.add_paragraph()
-p.text = "Reference: El Romeh, Mirjalili, Šnel, Cluster Computing (2025), DOI: 10.1007/s10586-025-05543-2"
+p.text = "This biological inspiration translates into mathematical operations that explore solution spaces efficiently"
 p.level = 0
 p.font.size = Pt(18)
 
@@ -274,9 +322,71 @@ add_bullet_points(tf, [
 ])
 
 # ============================================================================
-# SLIDE 5A: KEY MATHEMATICAL COMPONENTS
+# SLIDE 5A: BENCHMARK COMPARISON
 # ============================================================================
-slide = add_content_slide(prs, "DIO: Key Mathematical Components")
+slide = add_content_slide(prs, "1.3 DIO Performance: Benchmark Comparison")
+body_shape = slide.placeholders[1]
+tf = body_shape.text_frame
+add_bullet_points(tf, [
+    "How does DIO stack up against established algorithms?",
+    "",
+    "Tested on CEC2017 benchmark suite (29 test functions):",
+    "  - Unimodal, multimodal, hybrid, composite functions",
+    "  - Industry-standard for metaheuristic evaluation",
+    "",
+    "Competitors tested:",
+    "  - PSO (Particle Swarm Optimization)",
+    "  - GWO (Grey Wolf Optimizer)",
+    "  - WOA (Whale Optimization Algorithm)",
+    "  - MFO (Moth-Flame Optimization)",
+    "  - ALO (Ant Lion Optimizer)",
+    "",
+    "Key findings:",
+    "  - DIO ranked 1st or 2nd on 22 out of 29 functions",
+    "  - Superior balance between exploration and exploitation",
+    "  - Particularly effective on complex multimodal landscapes",
+    "",
+    "Source: El Romeh et al., Cluster Computing (2025)"
+])
+
+# ============================================================================
+# SLIDE 5B: DIO APPLICATIONS
+# ============================================================================
+slide = add_content_slide(prs, "1.4 DIO Applications")
+body_shape = slide.placeholders[1]
+tf = body_shape.text_frame
+add_bullet_points(tf, [
+    "DIO's versatility extends across domains:",
+    "",
+    "Engineering & Design:",
+    "  - Structural optimization (bridge design, aerospace)",
+    "  - Resource allocation in manufacturing",
+    "",
+    "Machine Learning (our focus):",
+    "  - Feature selection from high-dimensional data",
+    "  - Hyperparameter tuning for classifiers",
+    "  - Neural architecture search",
+    "",
+    "Other domains:",
+    "  - Financial portfolio optimization",
+    "  - Energy grid management",
+    "  - Logistics and routing problems",
+    "",
+    "Why it works: Combines exploration breadth with exploitation depth"
+])
+
+# Add Schema 1 slide
+add_image_slide(
+    prs,
+    "Cross-Domain Framework Overview",
+    os.path.join(parent_dir, 'schemas and snippets', 'schema1_cross_domain_optimization_framework.png'),
+    "DIO applied across medical and computer vision domains"
+)
+
+# ============================================================================
+# SLIDE 5C: KEY MATHEMATICAL COMPONENTS (renumbered)
+# ============================================================================
+slide = add_content_slide(prs, "DIO: Mathematical Foundation (Optional Detail)")
 body_shape = slide.placeholders[1]
 tf = body_shape.text_frame
 add_bullet_points(tf, [

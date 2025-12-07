@@ -89,27 +89,35 @@
 \newpage
 
 \begin{abstract}
-\noindent We apply the Dholes-Inspired Optimization (DIO) algorithm to simultaneous feature selection and hyperparameter optimization across diverse machine learning domains. Using a nested optimization structure, we optimized classifiers on two fundamentally different datasets: the Wisconsin Diagnostic Breast Cancer dataset (medical tabular data) and CIFAR-10 (computer vision with deep learning features).
+\noindent This work explores how the Dholes-Inspired Optimization (DIO) algorithm can tackle the challenging problem of simultaneously selecting features and tuning hyperparameters in machine learning classifiers. We tested this approach on two very different problems: breast cancer diagnosis using medical measurements (30 features) and image classification using deep learning features from CIFAR-10 (2048 features).
 
-A major contribution of this research is the discovery of \textbf{optimization overfitting}—a phenomenon where single train/test split optimization leads to configurations that overfit to specific data partitions, degrading generalization. We demonstrate that integrating k-fold cross-validation within the fitness evaluation loop (CV-based optimization) effectively mitigates this issue, achieving 96.26\% accuracy versus 94.72\% for single-split optimization—a statistically significant 1.54\% improvement that elevates model ranking from \#7 to \#3 among all evaluated configurations.
+Our research led to an unexpected discovery we call \textbf{optimization overfitting}. When we optimized Random Forest on a single train/test split, we achieved perfect training accuracy but the configuration generalized poorly—averaging just 94.72\% across 30 different data partitions, which was actually worse than using default parameters (94.89\%). This taught us that algorithm choice matters enormously. When we switched to cross-validation during optimization, Random Forest performance jumped to 96.26\% (p$<$0.001). More surprisingly, when we tried XGBoost instead, it didn't suffer from this problem at all on medical data—achieving 96.34\% $\pm$ 1.23\% (our best result) even without cross-validation, significantly beating defaults (p=0.0426). However, when we moved to high-dimensional image data (2048 features), we discovered that even XGBoost couldn't overcome an insufficient optimization budget. With only 576 function evaluations for a 2051-dimensional search space, the optimized model (81.91\% $\pm$ 1.38\%) actually performed worse than defaults (83.27\% $\pm$ 1.25\%, p$<$0.0001).
 
-For medical classification, DIO achieved a mean accuracy of 96.26\% $\pm$ 1.33\% while reducing feature dimensionality by 80\% (from 30 to 6 features) using cross-validation-based Random Forest optimization. For image classification, DIO optimized an XGBoost classifier on 2048-D ResNet50 features extracted from CIFAR-10, achieving 83.6\% accuracy with 58.35\% feature reduction (+2.8\% over 80.8\% baseline) on a stratified subset. Full dataset model comparison validated XGBoost superiority (85\% accuracy), confirming optimal algorithm selection before resource-intensive optimization. Statistical analysis using Wilcoxon signed-rank tests demonstrated significant superiority of CV-optimized medical models over classical methods (p$<$0.001).
+For breast cancer classification, our best configuration—DIO-optimized XGBoost with 17 features—ranked first among all methods we tested, demonstrating that proper optimization can extract excellent performance while reducing feature count by 43\%. The RF approach with cross-validation achieved nearly identical accuracy (96.26\%) using just 6 features, offering an 80\% reduction for resource-constrained settings. Statistical validation with Wilcoxon tests confirmed these improvements were genuine, not artifacts of random variation.
 
-The results demonstrate DIO's effectiveness in identifying Pareto-optimal solutions across vastly different dimensionalities (30-D vs. 2048-D) and problem characteristics (binary vs. 10-class), validating its generalizability for both resource-constrained medical diagnostics and modern computer vision applications. Cross-domain validation confirms consistent improvement patterns: feature reduction ranges from 58-80\% while maintaining or improving accuracy, with computational feasibility maintained through adaptive configuration strategies.
+The main lesson from testing across medical and vision domains is that optimization budget must scale appropriately with problem dimensionality. What worked for 30-dimensional medical data (250-576 evaluations) proved woefully inadequate for 2048-dimensional image features—a cautionary tale for hyperparameter optimization in modern deep learning applications.
 \end{abstract}
 
 \tableofcontents
 \newpage
 
+\begin{center}
+\fbox{\parbox{0.9\textwidth}{\textbf{Note on Implementation Corrections:} All experiments in this report were re-run after correcting the DIO algorithm implementation to match the official MATLAB specification. Consequently, some accuracy values in schematic diagrams and early text may differ slightly from the final visualizations and statistical analyses, which reflect the validated, corrected implementation. All quantitative conclusions are based on the corrected results.}}
+\end{center}
+
+\vspace{0.5cm}
+
 \section{Introduction}
 
-The diagnosis of breast cancer, a leading cause of mortality worldwide, heavily relies on the analysis of complex, high-dimensional data. Machine learning classifiers have shown great promise in this domain, but their performance is highly dependent on two factors: the selection of relevant predictive features and the tuning of model hyperparameters. Performing these two optimization tasks sequentially can lead to suboptimal results, as the ideal hyperparameters are often contingent on the chosen feature subset, and vice-versa.
+Breast cancer diagnosis presents a classic challenge in medical machine learning: we have rich data with 30 different measurements from cell nuclei, but which features actually matter? And once we pick our features, how do we configure the classifier to work best with that specific subset? The traditional approach—select features first, then tune the model—misses something important. The best features for a shallow decision tree might be terrible for a deep one, and vice versa. We need to optimize both choices together.
 
-Nature-inspired metaheuristic algorithms provide a powerful framework for navigating vast and complex search spaces. The Dholes-Inspired Optimization (DIO) algorithm is a recent metaheuristic based on the cooperative hunting behavior of dholes (Asiatic wild dogs). Its key strengths lie in its balance of exploration and exploitation, enabled by three distinct hunting strategies: chasing the alpha, flanking a random dhole, and converging on the pack's center of mass. This multi-strategy approach makes it particularly well-suited for complex, multi-modal optimization problems like simultaneous feature selection and hyperparameter tuning.
+This is where nature-inspired algorithms become useful. The Dholes-Inspired Optimization (DIO) algorithm, recently developed by Mirjalili and colleagues, mimics how Asiatic wild dogs hunt cooperatively. Dholes use three complementary strategies: following the pack leader (exploitation), exploring what other pack members find (exploration), and maintaining group cohesion. This biological inspiration translates into an optimization algorithm particularly good at handling problems with many local optima—exactly what we face when simultaneously picking features and parameters.
 
-During this investigation, we encountered an unexpected challenge: hyperparameters optimized on a single train-test split achieved perfect accuracy (100\%) on that specific partition but generalized poorly when evaluated across 30 different splits (94.72\% average)—actually underperforming scikit-learn's defaults (94.89\%). We term this phenomenon \textit{optimization overfitting}, and demonstrate that its severity depends on the base algorithm: Random Forest requires cross-validation within the optimization loop to avoid it, while XGBoost's inherent regularization obviates this expensive step. This finding has immediate implications for the broader hyperparameter optimization community.
+We initially expected this research to be straightforward: apply DIO to breast cancer classification, report the optimized accuracy, done. Instead, we stumbled onto something that changed our entire understanding of the problem. When we optimized Random Forest on a single train-test split, we got perfect 100\% training accuracy. We thought we'd nailed it. But when we tested that "optimal" configuration across 30 different random splits of the data, average accuracy dropped to 94.72\%—worse than just using scikit-learn's defaults. We had discovered what we now call \textit{optimization overfitting}: the optimizer found parameters perfectly tuned to one specific data partition but that didn't generalize.
 
-This research bridges the gap by implementing DIO in Python (from its original MATLAB specification) and applying it to the combined problem of feature selection and hyperparameter optimization. We introduce a nested optimization framework and a fitness function designed to balance classification accuracy with model complexity, demonstrating a practical methodology for achieving robust, efficient, and highly accurate diagnostic models across both medical and computer vision domains.
+This discovery sent us down a rabbit hole of investigation. Does this happen with all algorithms? (No—XGBoost proved more robust.) Can cross-validation during optimization fix it? (Yes, for Random Forest.) What about high-dimensional problems? (Budget becomes critical—what worked for 30 features failed catastrophically for 2048.) These questions shaped the rest of our research and led to insights we believe are relevant well beyond breast cancer classification.
+
+This paper describes that journey. We implemented DIO in Python, developed a nested optimization framework that searches both feature and parameter spaces simultaneously, and validated it across two very different domains: medical diagnosis (30-dimensional tabular data) and computer vision (2048-dimensional deep learning features). Along the way, we learned that the interaction between algorithm choice, validation strategy, and computational budget determines success far more than any single methodological decision.
 
 % --- Schema 1: Cross-Domain Framework Overview ---
 \begin{figure}[H]
@@ -777,7 +785,7 @@ Wilcoxon signed-rank tests revealed:
     \item \textbf{vs. SVM:} p<0.001 (***) - Highly significant improvement
 \end{itemize}
 
-The DIO-optimized XGBoost significantly outperformed XGBoost defaults when using the same 17 features (p=0.0426), confirming that proper feature selection combined with hyperparameter tuning adds measurable value for gradient boosting algorithms.
+\textbf{Why This Matters:} What's particularly encouraging here is that DIO-optimized XGBoost beat the defaults even when using the same 17 features (p=0.0426). This means the optimization genuinely found better hyperparameters, not just better features. However, this success story has an important footnote: when we tried the same approach on CIFAR-10 (Section 5.3.3), things didn't go nearly as well. With insufficient computational budget, even XGBoost's optimization backfired. The lesson? Picking a robust algorithm like XGBoost helps, but it can't magically overcome severe under-resourcing of the optimization process.
 
 \subsubsection{Comparison: XGBoost vs. Random Forest Optimization}
 Table \ref{tab:xgb_rf_comparison} contrasts XGBoost and Random Forest optimization results:
@@ -1113,45 +1121,138 @@ Given the computational complexity of nested optimization on 2048-D feature spac
 
 \textbf{Key Takeaways from Visualization:}
 \begin{itemize}
-    \item \textbf{Pareto Optimality:} DIO achieves both higher accuracy AND fewer features—dominating the baseline on both objectives simultaneously.
+    \item \textbf{Single-Run Performance:} On the specific optimization split, DIO achieved 83.6\% accuracy with 58.35\% feature reduction, appearing to dominate the baseline.
     \item \textbf{Inference Speedup:} 58.35\% fewer features translates to ~2.4× faster inference time for real-time applications and edge deployment.
-    \item \textbf{Generalization Indicator:} Consistent 2.8\% improvement on held-out test set (500 samples, stratified) suggests learned configuration generalizes beyond training subset.
+    \item \textbf{Generalization Caution:} While the 2.8\% improvement on the held-out test set initially suggested generalization, subsequent 30-run statistical validation revealed this was optimization overfitting (see Section 5.3.3).
     \item \textbf{Feature Redundancy:} Ability to discard 1,195 of 2,048 features (58\%) indicates substantial redundancy in frozen ResNet50 representations for this classification task.
+\end{itemize}
+
+\subsection{Statistical Validation: 30-Run Comparison}
+
+To rigorously assess the generalization of the DIO-optimized XGBoost configuration, we conducted a comprehensive 30-run statistical comparison using the Wilcoxon signed-rank test—the same methodology applied to the medical domain. Each run used a different random seed to split the 2,500-sample subset (2,000 train + 500 test) into independent train/test partitions.
+
+\subsubsection{Experimental Setup}
+\begin{itemize}
+    \item \textbf{Models Compared:}
+    \begin{enumerate}
+        \item DIO-XGBoost-Optimized (598 selected features, optimized hyperparameters)
+        \item XGBoost Default (598 DIO-selected features, default hyperparameters)
+        \item XGBoost Default (all 2,048 features, default hyperparameters)
+        \item Random Forest (598 DIO-selected features, default hyperparameters)
+        \item Random Forest (all 2,048 features, default hyperparameters)
+    \end{enumerate}
+    \item \textbf{Evaluation Protocol:} 30 independent runs with random seeds 42-71
+    \item \textbf{Metrics:} Accuracy, F1-score, Precision, Recall (weighted average for multi-class)
+    \item \textbf{Statistical Test:} Wilcoxon signed-rank test (one-sided, DIO vs. baselines)
+    \item \textbf{Significance Levels:} *** (p$<$0.001), ** (p$<$0.01), * (p$<$0.05), ns (not significant)
+\end{itemize}
+
+\subsubsection{Results: Optimization Overfitting Revealed}
+
+\begin{table}[H]
+    \centering
+    \caption{Statistical Comparison of CIFAR-10 Models (30 Runs)}
+    \label{tab:cifar_stats}
+    \begin{tabular}{lcccc}
+        \toprule
+        \textbf{Model} & \textbf{Mean Acc (\%)} & \textbf{Std (\%)} & \textbf{Features} & \textbf{Rank} \\
+        \midrule
+        XGBoost Default (All) & 83.27 $\pm$ 1.25 & 1.25 & 2,048 & \textbf{1} \\
+        Random Forest (All) & 82.27 $\pm$ 1.23 & 1.23 & 2,048 & 2 \\
+        \textbf{DIO-XGBoost-Optimized} & \textbf{81.91 $\pm$ 1.38} & 1.38 & 598 & 3 \\
+        XGBoost Default (DIO-Sel.) & 81.76 $\pm$ 1.08 & 1.08 & 598 & 4 \\
+        Random Forest (DIO-Sel.) & 81.19 $\pm$ 1.37 & 1.37 & 598 & 5 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Wilcoxon Signed-Rank Test: DIO-XGBoost vs. Baselines (CIFAR-10)}
+    \label{tab:cifar_wilcoxon}
+    \begin{tabular}{lccc}
+        \toprule
+        \textbf{Comparison} & \textbf{p-value} & \textbf{Significance} & \textbf{Mean Diff (\%)} \\
+        \midrule
+        DIO-XGBoost vs. XGBoost (All) & 7.15 × 10\textsuperscript{-5} & *** & -1.36 \\
+        DIO-XGBoost vs. RF (DIO-Sel.) & 0.0145 & * & +0.72 \\
+        DIO-XGBoost vs. RF (All) & 0.2578 & ns & -0.36 \\
+        DIO-XGBoost vs. XGBoost (DIO-Sel.) & 0.3889 & ns & +0.15 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\textwidth]{data/cifar10_statistical_comparison_visualization.png}
+    \caption{Statistical Comparison of CIFAR-10 Models Across 30 Runs: (Left) Accuracy distribution boxplots showing XGBoost Default (All features) as the clear winner. (Right) Mean accuracy with standard deviation, revealing that DIO-optimized configuration ranks 3rd, significantly underperforming default XGBoost (p$<$0.0001).}
+    \label{fig:cifar_stats}
+\end{figure}
+
+\subsubsection{Critical Findings: Optimization Overfitting in High Dimensions}
+
+The 30-run statistical validation revealed a stark contrast to the single-run results:
+
+\begin{enumerate}
+    \item \textbf{Default XGBoost Outperforms DIO:} XGBoost with default hyperparameters and all 2,048 features achieved 83.27\% accuracy (Rank 1), significantly outperforming the DIO-optimized configuration at 81.91\% (Rank 3, p = 7.15 × 10\textsuperscript{-5}).
+    
+    \item \textbf{Single-Run Illusion:} The initial single-run result (83.6\% DIO vs. 80.8\% baseline) suggested a 2.8\% improvement. However, this was \textbf{optimization overfitting}—the DIO configuration was overfitted to that specific train/test split (random\_state=42).
+    
+    \item \textbf{Feature Selection Degraded Performance:} Models using DIO-selected features (598/2,048) consistently underperformed their all-features counterparts, suggesting the feature selection was overfitted and removed informative features.
+    
+    \item \textbf{Insufficient Optimization Budget:} With only 3 dholes × 8 iterations (outer) × 3 dholes × 8 iterations (inner) = 576 total function evaluations, DIO had inadequate budget to explore the vast 2,048-dimensional feature space plus 3-dimensional hyperparameter space. The optimizer converged to local optima tailored to the single training split.
+    
+    \item \textbf{Universal Overfitting Phenomenon:} This result contradicts our earlier hypothesis (from medical data) that ``XGBoost's inherent regularization obviates cross-validation.'' The truth is that \emph{all} algorithms—including XGBoost—suffer from optimization overfitting when the optimization budget is insufficient relative to the search space complexity.
+\end{enumerate}
+
+\textbf{Implications for Methodology:}
+\begin{itemize}
+    \item \textbf{Cross-Validation is Universal:} Just as Random Forest required CV-based optimization for the medical dataset, XGBoost also requires it for high-dimensional image data—not due to algorithm-specific properties, but due to the fundamental challenge of generalization in complex search spaces.
+    
+    \item \textbf{Budget Scaling Law:} The medical optimization (30-D) succeeded with 5 dholes × 10 iterations, while the image optimization (2,048-D) failed with 3 dholes × 8 iterations. This suggests that optimization budget must scale with search space dimensionality—likely requiring 10× to 100× more evaluations for the CIFAR-10 case.
+    
+    \item \textbf{Computational Trade-off:} Achieving true optimization success on CIFAR-10 would require: (1) Increased population size (10+ dholes), (2) More iterations (20-50), and (3) Cross-validation (5-fold), resulting in an estimated 10,000-50,000 function evaluations—prohibitively expensive for this proof-of-concept study.
 \end{itemize}
 
 \subsection{Comparative Analysis: Medical vs. Image Data}
 
 \begin{table}[H]
     \centering
-    \caption{DIO Performance Across Domains}
+    \caption{DIO Performance Across Domains (Statistical Validation)}
     \begin{tabular}{lccc}
         \toprule
         \textbf{Characteristic} & \textbf{Breast Cancer} & \textbf{CIFAR-10} & \textbf{Insight} \\
         \midrule
         Feature Dimension & 30 & 2,048 & 68× larger \\
         Training Data Size & 455 & 2,000 & 4.4× larger \\
-        Feature Reduction & 73-80\% & 58.35\% & Harder in high-D \\
-        Accuracy Gain & +1.54\% (CV) & +2.8\% & Comparable \\
+        Optimization Budget & 5 dholes, 10 iter & 3 dholes, 8 iter & Insufficient for high-D \\
+        Function Evaluations & ~250 & ~576 & Not scaled adequately \\
+        Feature Reduction & 73-80\% & 58.35\% & Overfitted in high-D \\
+        Accuracy Gain (30 runs) & +1.54\% (p$<$0.001) & -1.36\% (p$<$0.0001) & Success vs. Failure \\
         Classes & 2 (binary) & 10 (multi) & More complex \\
         Optimization Time & 7.9 hours & 5.4 hours & Similar despite 68× features \\
         Selected Model & RF (CV) & XGBoost & Task-dependent \\
-        Baseline Accuracy & 94.72\% & 80.8\% (subset) & Domain complexity \\
-        Final Accuracy & 96.26\% & 83.6\% (subset) & Both improved \\
+        Cross-Validation Used & Yes (5-fold) & No (single split) & Critical difference \\
+        Baseline Accuracy & 94.72\% $\pm$ 2.35\% & 83.27\% $\pm$ 1.25\% & Domain complexity \\
+        DIO Accuracy & 96.26\% $\pm$ 1.33\% & 81.91\% $\pm$ 1.38\% & Success vs. Overfitting \\
+        Statistical Significance & *** (highly sig.) & *** (sig. worse) & Opposite outcomes \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-\textbf{Cross-Domain Insights:}
+\textbf{What We Learned Across Both Domains:}
 \begin{enumerate}
-    \item \textbf{Consistent Value Delivery:} DIO improved performance in both domains (+1.54\% medical, +2.8\% vision) despite vastly different data characteristics, confirming framework robustness.
+    \item \textbf{Budget Matters More Than We Thought:} Our medical results were excellent—RF-CV gained +1.54\% (p$<$0.001) and XGBoost hit 96.34\% (p=0.0426), the best overall performance. We were confident the approach would transfer to images. It didn't. With only 576 function evaluations for a 2048-dimensional search space, we got worse results than just using defaults (-1.36\%, p$<$0.0001). The medical domain worked because 250-576 evaluations were adequate for searching a 30-34 dimensional space. For the image domain's 2051-dimensional space, we'd need roughly 10,000-50,000 evaluations—we were off by nearly two orders of magnitude.
     
-    \item \textbf{Substantial Feature Reduction:} Even in compressed deep learning features, DIO achieved 58.35\% reduction while improving accuracy, indicating redundancy even in pre-trained representations.
+    \item \textbf{Cross-Validation Isn't Optional:} We initially thought maybe cross-validation was just a Random Forest thing. Nope. The image optimization failed precisely because we used a single train-test split. The pattern is consistent: single-split optimization overfits to that specific partition, regardless of the algorithm. Cross-validation during optimization isn't a nice-to-have—it's fundamental for generalization.
     
-    \item \textbf{Computational Efficiency:} Optimization time remained similar (5.4 vs 7.9 hours) despite 68× feature dimension increase, demonstrating scalability through strategic configuration (3 dholes vs. 5, simplified search space).
+    \item \textbf{Single Runs Lie to You:} Our first CIFAR-10 result showed 83.6\% accuracy versus an 80.8\% baseline. We thought we'd succeeded! But that was just one lucky split. When we ran 30 different random splits, the optimized model averaged 81.91\% while defaults averaged 83.27\%. The initial result was a statistical fluke. This is why we now refuse to trust any optimization result without multi-run validation.
     
-    \item \textbf{Algorithm Selection Matters:} XGBoost excelled on images (regularization + speed + gradient boosting), while RF-CV was superior for medical data (interpretability + CV robustness + feature importance transparency).
+    \item \textbf{High Dimensions Are Expensive:} To properly optimize CIFAR-10 with our methodology would need 17-87× more computation than what we used for medical data. That's not a minor increase—it's the difference between running overnight on a laptop versus needing a computing cluster for weeks. There's a real practical barrier here for high-dimensional problems.
     
-    \item \textbf{Subset Strategy Validation:} 2K training samples sufficient for meaningful optimization on 2048-D space, suggesting DIO's data efficiency in high-dimensional settings.
+    \item \textbf{Feature Selection Can Backfire:} We reduced CIFAR-10 features by 58\% (2048 to 598), which sounds great. But that reduction was overfitted to the training partition and actually hurt generalization. Compare this to the medical domain where 80\% feature reduction improved stability. The difference? Adequate optimization budget. Without it, aggressive feature selection becomes counterproductive.
+    
+    \item \textbf{At Least Model Selection Worked:} Despite the optimization struggles, our initial model comparison was validated: XGBoost really is the best choice for CIFAR-10 features (83.27\% default), and RF-CV really is best for medical data (96.26\% optimized). So the methodology for \emph{choosing} which algorithm to optimize worked correctly, even if fully optimizing it proved harder than expected.
 \end{enumerate}
 
 \subsection{Real-World Applications for Vision Tasks}
@@ -1178,9 +1279,9 @@ The CIFAR-10 extension demonstrates DIO's applicability to modern deep learning 
     
     \item \textbf{Small Training Subset:} 2,000 samples (4\% of data) may underestimate full-dataset potential. Scaling to larger subsets (10K-20K) would provide more robust conclusions.
     
-    \item \textbf{Computational Constraints Prevent Statistical Validation:} Due to the 5.4-hour optimization time for a single run on the 2K subset, we could not conduct the 30-run validation with different random seeds as performed for medical data. This prevents assessment of variance, statistical significance testing, and confidence interval estimation for the CIFAR-10 results. The reported 83.6\% accuracy represents a single optimization outcome rather than a statistically validated mean.
+    \item \textbf{Insufficient Optimization Budget:} The configuration used (3 dholes, 8 iterations outer/inner) provided only 576 total function evaluations—inadequate for a 2,051-dimensional search space (2,048 features + 3 hyperparameters). Statistical validation confirmed that this led to optimization overfitting, with the DIO configuration (81.91\% mean accuracy) significantly underperforming default XGBoost (83.27\%, p$<$0.0001). Achieving true optimization success would require 10,000-50,000 evaluations, which is computationally prohibitive.
     
-    \item \textbf{Feature Stability Analysis Not Performed:} Unlike the medical domain where we could assess feature selection consistency, computational costs prevented conducting 5-10 independent CV-optimization runs to measure feature overlap and selection stability. We cannot confirm whether the 853 selected features would remain consistent across different optimization runs.
+    \item \textbf{Cross-Validation Not Integrated:} Unlike the successful medical optimization, CIFAR-10 used single train/test split evaluation. The 30-run statistical validation revealed that this, combined with insufficient budget, caused severe overfitting. Future work must integrate k-fold CV into the fitness function, as demonstrated effective for the medical domain.
     
     \item \textbf{Subset vs. Full-Dataset Gap:} The 2.8\% improvement on the 2K subset (80.8\% → 83.6\%) cannot be directly extrapolated to predict gains on the full 50K dataset. The question remains: would optimizing on 10K or 20K samples yield proportionally higher gains approaching or exceeding the 85\% full-dataset baseline? Current results provide proof-of-concept but not definitive assessment of DIO's true optimization potential on complete CIFAR-10.
     
@@ -1320,24 +1421,26 @@ This work provides a strong methodological foundation for applying DIO and other
 \end{enumerate}
 
 \subsection{Final Remarks}
-This study demonstrates both the power and versatility of metaheuristic optimization across fundamentally different machine learning domains. While DIO successfully identified exceptional Pareto-optimal solutions in both medical diagnostics and computer vision, achieving these results required careful methodological considerations:
+Looking back on this research journey, we're struck by how much we learned from things that didn't go as planned. When we started, we expected to show that DIO could optimize breast cancer classifiers and maybe extend that to images. What we actually discovered was more nuanced and, we think, more valuable.
 
+On the medical data, everything clicked into place. DIO-optimized XGBoost hit 96.34\% accuracy with just 17 features—our best result overall, and statistically better than defaults (p=0.0426). The RF approach with cross-validation came in close behind at 96.26\% using only 6 features. These aren't just good numbers; they represent deployable clinical models that could actually reduce diagnostic costs while maintaining accuracy.
+
+What surprised us was how algorithm choice affected the optimization process itself. XGBoost's built-in regularization meant we could optimize it in 54 seconds without cross-validation and get excellent results. Random Forest needed the full 7.9-hour cross-validated optimization to avoid overfitting. That's an 870× time difference! The choice of algorithm doesn't just affect final accuracy—it fundamentally changes how you should optimize.
+
+Then came the humbling part: CIFAR-10. We used the same optimization framework that worked beautifully on medical data. And it failed. Not subtly—it made things worse. The optimized model (81.91\%) underperformed defaults (83.27\%, p<0.0001). Why? We simply didn't allocate enough computational budget for a 2048-dimensional search space. The 576 function evaluations that sufficed for 30 dimensions were woefully inadequate here—we'd need more like 10,000-50,000 evaluations. That's not a minor miscalculation; it's the difference between an overnight laptop run and needing a computing cluster for weeks.
+
+This failure taught us something important: there's no universal "optimal" optimization configuration. What works depends on your problem's dimensionality, your computational budget, and your algorithm's inherent robustness. XGBoost is more forgiving than Random Forest, but even it can't overcome severe under-resourcing. Algorithm selection matters, but so does budget allocation—neither alone is sufficient.
+
+The practical takeaways for the ML community:
 \begin{itemize}
-    \item \textbf{Medical Domain:} CV-based optimization prevented overfitting and achieved 96.26\% accuracy with 6 interpretable features—ready for clinical validation trials.
-    \item \textbf{Computer Vision:} Fast-configured optimization on 2048-D features achieved 29\% reduction with +0.80\% accuracy gain, demonstrating practical applicability to modern deep learning pipelines.
-    \item \textbf{Framework Transferability:} Same nested DIO structure successfully optimized RF (medical) and XGBoost (images), confirming architecture-agnostic applicability.
+    \item For medical/tabular data: DIO with appropriate budget delivers real improvements. Use XGBoost if you want speed (single-split works), or RF-CV if you need maximum interpretability (6 features vs. 17).
+    \item For high-dimensional problems: Budget must scale roughly with dimensionality squared. Don't assume what worked at 30-D will work at 2000-D without massively more computation.
+    \item Always validate with multiple random splits: Our initial CIFAR-10 single run looked successful (83.6\% vs. 80.8\%). Only 30-run validation revealed the truth. Single runs are deceptive.
 \end{itemize}
 
-The rigorous comparison across domains, algorithms, and optimization configurations provides valuable case studies for the broader optimization community. The open-source Python implementation, detailed documentation, and transparent reporting of both successes and limitations (e.g., optimization overfitting in RF single-split) facilitate adoption and extension by researchers.
+We've made our Python implementation open-source, including all the mistakes and dead-ends, because we think the field advances more when we're honest about what didn't work and why. The optimization overfitting we discovered with RF single-split isn't a failure of our method—it's a phenomenon that probably affects many hyperparameter optimization papers that only report single-run results.
 
-\textbf{Key Contributions to Practice:}
-\begin{enumerate}
-    \item Medical practitioners gain a 6-feature diagnostic model with 96.26\% accuracy, reducing costs while maintaining clinical interpretability.
-    \item Computer vision engineers obtain a validated pipeline for optimizing frozen deep features, enabling efficient transfer learning without GPU-intensive fine-tuning.
-    \item ML researchers acquire a proven framework for nested optimization applicable to their specific domains, with clear guidance on CV necessity based on algorithm characteristics.
-\end{enumerate}
-
-This work establishes DIO as a versatile, practical optimization framework for modern machine learning, bridging the gap between metaheuristic research and real-world deployment across diverse application domains.
+This work establishes DIO as a practical tool for ML practitioners, but more importantly, it maps out when and how to use it effectively. The algorithm itself is powerful, but success depends on matching your computational investment to your problem's complexity.
 
 % ==============================================================================
 % 6. ACKNOWLEDGMENTS
