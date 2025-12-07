@@ -317,8 +317,8 @@ python xgboost_optimization.py
 This will:
 1. Run nested DIO optimization for XGBoost classifier
 2. Optimize 5 XGBoost hyperparameters + feature selection simultaneously
-3. Achieve **96.34% ± 1.23%** across 30 runs (Rank #1)
-4. Reduce features by 43% (30 → 17)
+3. Achieve **96.88% ± 1.10%** across 30 runs (Rank #1)
+4. Reduce features by 67% (30 → 10)
 5. Generate comprehensive results and visualizations in `xgboost_results/`
 
 **Key Results:**
@@ -342,14 +342,14 @@ This will:
 1. Load pre-extracted ResNet50 features from CIFAR-10 (2048D)
 2. Run nested DIO optimization for XGBoost classifier
 3. Optimize 3 XGBoost hyperparameters + feature selection simultaneously
-4. Achieve **83.6% accuracy** (+2.8% over 80.8% baseline)
-5. Reduce features by **58.35%** (2048 → 853 features)
+4. Achieve **83.0% accuracy** (+2.2% over 80.8% baseline)
+5. Reduce features by **70.8%** (2048 → 598 features)
 6. Generate results in `data/cifar10_xgboost_dio_results.json`
 
 **Key Results:**
 - ✅ Successfully scales to high-dimensional vision tasks (2048D)
-- ✅ Significant accuracy improvement (+2.8%)
-- ✅ Major feature reduction (58.35%)
+- ✅ Significant accuracy improvement (+2.2%)
+- ✅ Major feature reduction (70.8%)
 - ✅ Validates DIO across 68× dimensional increase
 
 **Execution Time:** ~5.4 hours (325 minutes, 576 evaluations)
@@ -446,11 +446,11 @@ Saved to `xgboost_results/`:
   - subsample: 0.5437
   - colsample_bytree: 0.7355
 - **`xgboost_statistical_comparison_results.csv`**: All 300 evaluations
-- **`xgboost_statistical_comparison_summary.csv`**: Mean 96.34% ± 1.23% (Rank #1)
+- **`xgboost_statistical_comparison_summary.csv`**: Mean 96.88% ± 1.10% (Rank #1)
 - **`xgboost_optimization_visualization.png`**: Optimization convergence
 - **`xgboost_statistical_comparison_visualization.png`**: 6-panel statistical analysis
 
-**Key Achievement:** Highest medical accuracy (96.34%), fastest optimization (54s), lowest variance (1.23%)
+**Key Achievement:** Highest medical accuracy (96.88%), fastest optimization (54s), lowest variance (1.10%)
 
 ---
 
@@ -461,14 +461,14 @@ Saved to `data/`:
   - Dataset: CIFAR-10 ResNet50 Features (2048D)
   - Subset: 2000 train, 500 test
   - Best hyperparameters:
-    - n_estimators: 76
-    - max_depth: 5
-    - learning_rate: 0.2167
-  - Selected features: 853/2048 (41.65% selected, 58.35% reduction)
-  - DIO-optimized accuracy: 83.6%
+    - n_estimators: 56
+    - max_depth: 3
+    - learning_rate: 0.2026
+  - Selected features: 598/2048 (29.2% selected, 70.8% reduction)
+  - DIO-optimized accuracy: 83.0%
   - Baseline accuracy: 80.8%
-  - Improvement: +2.8%
-  - Optimization time: 325.77 minutes (5.4 hours)
+  - Improvement: +2.2%
+  - Optimization time: 215.98 minutes (3.6 hours)
   - Configuration: 3×8 outer loop, 3×8 inner loop (576 evaluations)
 
 **Key Achievement:** Successful 68× scale-up validation (30D → 2048D), maintains optimization quality

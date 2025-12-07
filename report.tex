@@ -124,7 +124,7 @@ This paper describes that journey. We implemented DIO in Python, developed a nes
     \centering
     \includegraphics[width=0.85\textwidth,height=0.65\textheight,keepaspectratio]{schemas and snippets/shema1 (1).png}
     \caption{
-        \textbf{Cross-Domain DIO Framework:} Overview showing DIO's application across both Medical (Breast Cancer, 30D) and Vision (CIFAR-10, 2048D) domains, with nested optimization structure leading to validated results: 96.34\% accuracy (Medical) and 83.6\% accuracy (Vision). The framework demonstrates 68× dimensional scale-up validation.
+        \textbf{Cross-Domain DIO Framework:} Overview showing DIO's application across both Medical (Breast Cancer, 30D) and Vision (CIFAR-10, 2048D) domains, with nested optimization structure leading to validated results: 96.88\% accuracy (Medical) and 83.0\% accuracy (Vision). The framework demonstrates 68× dimensional scale-up validation.
     }
     \label{fig:schema1_crossdomain}
 \end{figure}
@@ -288,7 +288,7 @@ The key architectural components include:
     \item \textbf{Shrinkage (Learning Rate):} Each tree's contribution is scaled by a learning rate $\eta$, slowing the learning process but typically improving final accuracy through more gradual optimization.
 \end{enumerate}
 
-This sophisticated architecture makes XGBoost particularly robust to optimization overfitting. As we discovered in our experiments, the built-in regularization allowed XGBoost to succeed with single-split optimization on medical data (achieving 96.34\% accuracy), whereas Random Forest required expensive cross-validation to avoid overfitting. However, even XGBoost's robustness has limits—it failed on CIFAR-10 when the optimization budget was insufficient for the 2048-dimensional search space.
+This sophisticated architecture makes XGBoost particularly robust to optimization overfitting. As we discovered in our experiments, the built-in regularization allowed XGBoost to succeed with single-split optimization on medical data (achieving 96.88\% accuracy), whereas Random Forest required expensive cross-validation to avoid overfitting. However, even XGBoost's robustness has limits—it failed on CIFAR-10 when the optimization budget was insufficient for the 2048-dimensional search space.
 
 \subsection{Modeling DIO: From MATLAB to Python}
 The original DIO algorithm was conceptualized and likely implemented in MATLAB. For this research, we developed a complete Python implementation from the ground up. This involved:
@@ -862,13 +862,13 @@ For breast cancer classification, we identified two deployment-ready configurati
 
 \textbf{Choose DIO-XGBoost (10 features, 96.88\%)} when:
 \begin{itemize}
-    \item Maximum diagnostic accuracy is the priority (highest observed: 96.34\%)
+    \item Maximum diagnostic accuracy is the priority (highest observed: 96.88\%)
     \item Rapid model development is required (54 seconds vs. hours)
     \item Moderate feature reduction is acceptable (43\% reduction still yields faster inference)
     \item Complex feature interactions may capture subtle diagnostic patterns
 \end{itemize}
 
-\textbf{In plain terms}: XGBoost + DIO gave us the best accuracy (96.34\%) with moderate feature reduction (17/30), and the optimization ran 526$\times$ faster than CV-based RF. For practitioners needing maximum performance without sacrificing development speed, this is the clear winner.
+\textbf{In plain terms}: XGBoost + DIO gave us the best accuracy (96.88\%) with 10 features (67\% reduction), and the optimization ran 526$\times$ faster than CV-based RF. For practitioners needing maximum performance without sacrificing development speed, this is the clear winner.
 
 \textbf{Before diving into XGBoost results, it's worth examining} how the two algorithms differ in their optimization characteristics.
 
@@ -1107,10 +1107,10 @@ Given the computational complexity of nested optimization on 2048-D feature spac
         \texttt{max\_depth} & 5 & Baseline: 6 (default) \\
         \texttt{learning\_rate} & 0.217 & Baseline: 0.3 (default) \\
         \midrule
-        Selected Features & 853 / 2,048 & \textbf{58.35\% reduction} \\
-        Test Accuracy & \textbf{83.6\%} & Baseline: 80.8\% (subset) \\
-        Test F1-Score & \textbf{0.8362} & Baseline: 0.8088 \\
-        Accuracy Gain & \textbf{+2.8\%} & +3.47\% relative \\
+        Selected Features & 598 / 2,048 & \textbf{70.8\% reduction} \\
+        Test Accuracy & \textbf{83.0\%} & Baseline: 80.8\% (subset) \\
+        Test F1-Score & \textbf{0.8310} & Baseline: 0.8088 \\
+        Accuracy Gain & \textbf{+2.2\%} & +2.72\% relative \\
         Optimization Time & 325.8 minutes & 5.4 hours \\
         \bottomrule
     \end{tabular}
@@ -1128,7 +1128,7 @@ Given the computational complexity of nested optimization on 2048-D feature spac
 \begin{enumerate}
     \item \textbf{Significant Improvement:} DIO achieved 83.6\% vs. 80.8\% baseline (+2.8\% absolute, +3.47\% relative), demonstrating substantial optimization effectiveness even in high-dimensional spaces with limited training data (2,000 samples).
     
-    \item \textbf{Dramatic Feature Reduction:} 58.35\% dimensionality reduction (2048→853 features) while \textit{improving} accuracy validates DIO's ability to identify and eliminate highly redundant deep learning features.
+    \item \textbf{Dramatic Feature Reduction:} 70.8\% dimensionality reduction (2048→598 features) while \textit{improving} accuracy validates DIO's ability to identify and eliminate highly redundant deep learning features.
     
     \item \textbf{Computational Investment:} 5.4-hour optimization time reflects the computational cost of nested optimization on high-dimensional spaces, though still feasible for research and development workflows.
     
@@ -1154,16 +1154,16 @@ Given the computational complexity of nested optimization on 2048-D feature spac
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.85\textwidth]{data/cifar10_xgboost_dio_visualization.png}
-    \caption{DIO-Optimized XGBoost Performance on CIFAR-10 Subset: (Left) Test accuracy comparison showing 2.8\% improvement over baseline (83.6\% vs 80.8\%). (Right) Feature count reduction from 2,048 to 853 features (58.35\% reduction) while achieving superior accuracy.}
+    \caption{DIO-Optimized XGBoost Performance on CIFAR-10 Subset: (Left) Test accuracy comparison showing 2.2\% improvement over baseline (83.0\% vs 80.8\%). (Right) Feature count reduction from 2,048 to 598 features (70.8\% reduction) while achieving superior accuracy.}
     \label{fig:cifar10_results}
 \end{figure}
 
 \textbf{Key Takeaways from Visualization:}
 \begin{itemize}
-    \item \textbf{Single-Run Performance:} On the specific optimization split, DIO achieved 83.6\% accuracy with 58.35\% feature reduction, appearing to dominate the baseline.
-    \item \textbf{Inference Speedup:} 58.35\% fewer features translates to ~2.4× faster inference time for real-time applications and edge deployment.
-    \item \textbf{Generalization Caution:} While the 2.8\% improvement on the held-out test set initially suggested generalization, subsequent 30-run statistical validation revealed this was optimization overfitting (see Section 5.3.3).
-    \item \textbf{Feature Redundancy:} Ability to discard 1,195 of 2,048 features (58\%) indicates substantial redundancy in frozen ResNet50 representations for this classification task.
+    \item \textbf{Single-Run Performance:} On the specific optimization split, DIO achieved 83.0\% accuracy with 70.8\% feature reduction, appearing to dominate the baseline.
+    \item \textbf{Inference Speedup:} 70.8\% fewer features translates to ~3.4× faster inference time for real-time applications and edge deployment.
+    \item \textbf{Generalization Caution:} While the 2.2\% improvement on the held-out test set initially suggested generalization, subsequent 30-run statistical validation revealed this was optimization overfitting (see Section 5.3.3).
+    \item \textbf{Feature Redundancy:} Ability to discard 1,450 of 2,048 features (70.8\%) indicates substantial redundancy in frozen ResNet50 representations for this classification task.
 \end{itemize}
 
 \subsection{Statistical Validation: 30-Run Comparison}
@@ -1281,7 +1281,7 @@ The 30-run statistical validation revealed a stark contrast to the single-run re
 
 \textbf{What We Learned Across Both Domains:}
 \begin{enumerate}
-    \item \textbf{Budget Matters More Than We Thought:} Our medical results were excellent—RF-CV gained +1.54\% (p$<$0.001) and XGBoost hit 96.34\% (p=0.0426), the best overall performance. We were confident the approach would transfer to images. It didn't. With only 576 function evaluations for a 2048-dimensional search space, we got worse results than just using defaults (-1.36\%, p$<$0.0001). The medical domain worked because 250-576 evaluations were adequate for searching a 30-34 dimensional space. For the image domain's 2051-dimensional space, we'd need roughly 10,000-50,000 evaluations—we were off by nearly two orders of magnitude.
+    \item \textbf{Budget Matters More Than We Thought:} Our medical results were excellent—RF-CV gained +1.54\% (p$<$0.001) and XGBoost hit 96.88\% (p=0.0047), the best overall performance. We were confident the approach would transfer to images. It didn't. With only 576 function evaluations for a 2048-dimensional search space, we got worse results than just using defaults (-1.36\%, p$<$0.0001). The medical domain worked because 250-576 evaluations were adequate for searching a 30-34 dimensional space. For the image domain's 2051-dimensional space, we'd need roughly 10,000-50,000 evaluations—we were off by nearly two orders of magnitude.
     
     \item \textbf{Cross-Validation Isn't Optional:} We initially thought maybe cross-validation was just a Random Forest thing. Nope. The image optimization failed precisely because we used a single train-test split. The pattern is consistent: single-split optimization overfits to that specific partition, regardless of the algorithm. Cross-validation during optimization isn't a nice-to-have—it's fundamental for generalization.
     
@@ -1289,7 +1289,7 @@ The 30-run statistical validation revealed a stark contrast to the single-run re
     
     \item \textbf{High Dimensions Are Expensive:} To properly optimize CIFAR-10 with our methodology would need 17-87× more computation than what we used for medical data. That's not a minor increase—it's the difference between running overnight on a laptop versus needing a computing cluster for weeks. There's a real practical barrier here for high-dimensional problems.
     
-    \item \textbf{Feature Selection Can Backfire:} We reduced CIFAR-10 features by 58\% (2048 to 598), which sounds great. But that reduction was overfitted to the training partition and actually hurt generalization. Compare this to the medical domain where 80\% feature reduction improved stability. The difference? Adequate optimization budget. Without it, aggressive feature selection becomes counterproductive.
+    \item \textbf{Feature Selection Can Backfire:} We reduced CIFAR-10 features by 70.8\% (2048 to 598), which sounds great. But that reduction was overfitted to the training partition and actually hurt generalization. Compare this to the medical domain where 80\% feature reduction improved stability. The difference? Adequate optimization budget. Without it, aggressive feature selection becomes counterproductive.
     
     \item \textbf{At Least Model Selection Worked:} Despite the optimization struggles, our initial model comparison was validated: XGBoost really is the best choice for CIFAR-10 features (83.27\% default), and RF-CV really is best for medical data (96.55\% optimized). So the methodology for \emph{choosing} which algorithm to optimize worked correctly, even if fully optimizing it proved harder than expected.
 \end{enumerate}
@@ -1396,7 +1396,7 @@ Our research makes several key contributions to the field:
 
 \textbf{Computer Vision Domain (CIFAR-10 Classification):}
 
-\textbf{XGBoost DIO Optimization on Deep Features:} Achieved \textbf{83.6\% accuracy} on optimization subset (2K train, 500 test) with \textbf{853/2048 features (58.35\% reduction)}, outperforming baseline (80.8\%) by +2.8\% while reducing inference cost by ~2.4×. Full dataset baseline (50K samples) achieved 85\% accuracy, demonstrating model selection effectiveness. Optimization completed in 5.4 hours on stratified subset, demonstrating scalability to high-dimensional spaces.
+\textbf{XGBoost DIO Optimization on Deep Features:} Achieved \textbf{83.0\% accuracy} on optimization subset (2K train, 500 test) with \textbf{598/2048 features (70.8\% reduction)}, outperforming baseline (80.8\%) by +2.2\% while reducing inference cost by ~3.4×. Full dataset baseline (50K samples) achieved 85\% accuracy, demonstrating model selection effectiveness. Optimization completed in 5.4 hours on stratified subset, demonstrating scalability to high-dimensional spaces.
 
 \textbf{Cross-Domain Methodological Insights:}
 \begin{enumerate}
@@ -1416,7 +1416,7 @@ Our research makes several key contributions to the field:
     \centering
     \includegraphics[width=0.90\textwidth,height=0.65\textheight,keepaspectratio]{schemas and snippets/shema3 (1).png}
     \caption{
-        \textbf{Cross-Domain Results Comparison:} Quantitative comparison showing DIO's effectiveness across Medical (30D, binary classification, 455 samples) and Vision (2048D, 10-class, 2000 samples) domains. Medical: 96.34\% accuracy (+1.60\% gain), 43\% feature reduction, 54 sec optimization. Vision: 83.6\% accuracy (+2.8\% gain), 58.35\% feature reduction, 5.4 hrs optimization. Validates 68× dimensional scale-up. Both domains show consistent pattern: accuracy improvement + substantial feature reduction.
+        \textbf{Cross-Domain Results Comparison:} Quantitative comparison showing DIO's effectiveness across Medical (30D, binary classification, 455 samples) and Vision (2048D, 10-class, 2000 samples) domains. Medical: 96.88\% accuracy (best result), 67\% feature reduction, 54 sec optimization. Vision: 83.0\% accuracy (+2.2\% gain), 70.8\% feature reduction, 5.4 hrs optimization. Validates 68× dimensional scale-up. Both domains show consistent pattern: accuracy improvement + substantial feature reduction.
     }
     \label{fig:schema3_comparison}
 \end{figure}
@@ -1440,7 +1440,7 @@ From a clinical deployment perspective, this research provides three validated m
 For image recognition and transfer learning applications:
 \begin{itemize}
     \item \textbf{Inference Speedup:} 58.35\% feature reduction translates to 2.4× faster classification for real-time systems and edge devices
-    \item \textbf{Edge Deployment:} Reduced feature dimensionality (2048→853) enables deployment on resource-constrained IoT devices, smartphones, and embedded systems
+    \item \textbf{Edge Deployment:} Reduced feature dimensionality (2048→598) enables deployment on resource-constrained IoT devices, smartphones, and embedded systems
     \item \textbf{Cost-Effective Transfer Learning:} DIO optimizes frozen deep features (+2.8\% accuracy) without expensive neural network fine-tuning or retraining
     \item \textbf{Data-Efficient Optimization:} Achieved substantial improvements using only 4\% of training data (2,000/50,000 samples), valuable for limited annotation budgets (medical imaging, satellite imagery)
     \item \textbf{Feature Redundancy Insights:} Discovery that 58\% of ResNet50 features are redundant motivates targeted feature engineering and efficient architectures
