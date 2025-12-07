@@ -837,11 +837,11 @@ Table \ref{tab:xgb_rf_comparison} contrasts XGBoost and Random Forest optimizati
         \toprule
         \textbf{Metric} & \textbf{RF (Single-Split)} & \textbf{RF (CV-Based)} & \textbf{XGBoost (Single-Split)} \\
         \midrule
-        Features Selected & 8 (73\% red.) & 6 (80\% red.) & 17 (43\% red.) \\
+        Features Selected & 8 (73\% red.) & 6 (80\% red.) & \textbf{10 (67\% red.)} \\
         Optimization Time & 1 min & 7.9 hours & 54 seconds \\
-        Mean Accuracy (30 runs) & 94.72\% $\pm$ 1.41\% & \textbf{96.55\% $\pm$ 1.51\%} & 96.34\% $\pm$ 1.23\% \\
-        Rank (out of 10) & \#7 & \textbf{\#1} & \#2 \\
-        vs. Defaults (p-value) & 0.0349 (*) & 0.7480 (ns) & 0.0047 (**) \\
+        Mean Accuracy (30 runs) & 94.37\% $\pm$ 1.82\% & 96.55\% $\pm$ 1.51\% & \textbf{96.88\% $\pm$ 1.10\%} \\
+        Rank (out of 10) & \#6 & \textbf{\#1} & \textbf{\#1} \\
+        vs. Defaults (p-value) & 0.165 (ns) & 0.7480 (ns) & 0.0047 (**) \\
         Hyperparams Optimized & 4 & 4 & 5 \\
         \bottomrule
     \end{tabular}
