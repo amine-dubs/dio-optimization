@@ -131,7 +131,7 @@ def hyperparameter_objective_function(params):
         max_iterations=20    # Fast configuration
     )
     
-    print("    Running feature selection (5 dholes, 10 iterations)...")
+    print("    Running feature selection (10 dholes, 20 iterations)...")
     start_time = time.time()
     best_features, best_fitness = fs_dio.optimize()
     elapsed = time.time() - start_time

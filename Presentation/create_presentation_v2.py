@@ -215,6 +215,10 @@ add_bullet_points(tf, [
     "The problem: What if the best features change depending on the parameters?",
     "",
     "Our approach: Optimize both together using DIO [1]",
+    "  - Single-split RF: 5 dholes/10 iter (outer), 10 dholes/20 iter (inner)",
+    "  - Single-split XGBoost: 5 dholes/10 iter (both loops)",
+    "  - CV-based RF: 5 dholes/10 iter (outer), 10 dholes/20 iter (inner)",
+    "  - CIFAR-10 XGBoost: 3 dholes/8 iter (both loops)",
     "",
     "This presentation tells the story of what we discovered—successes, failures, and lessons learned"
 ])
@@ -385,11 +389,13 @@ add_bullet_points(tf, [
 
 # ============================================================================
 # SCHEMA 1: CROSS-DOMAIN FRAMEWORK
+# Purpose: Show DIO's versatility across both domains (big picture)
+# File: schema1_cross_domain_framework.png
 # ============================================================================
 add_image_slide(
     prs,
     "DIO Framework: Medical + Vision Domains",
-    os.path.join(parent_dir, 'schemas and snippets', 'schema1_cross_domain_optimization_framework.png'),
+    os.path.join(parent_dir, 'schemas and snippets', 'schema1_cross_domain_framework.png'),
     "Our implementation applies DIO to both medical diagnosis and computer vision"
 )
 
@@ -468,7 +474,9 @@ add_bullet_points(tf, [
 ])
 
 # ============================================================================
-# SCHEMA 4: NESTED STRUCTURE
+# SCHEMA 4: NESTED OPTIMIZATION STRUCTURE
+# Purpose: Show two-level hierarchical architecture
+# File: schema4_nested_optimization_structure.png
 # ============================================================================
 add_image_slide(
     prs,
@@ -478,13 +486,15 @@ add_image_slide(
 )
 
 # ============================================================================
-# SCHEMA 5: FEATURE ENCODING
+# SCHEMA 5: FITNESS-DRIVEN OPTIMIZATION (MOST IMPORTANT!)
+# Purpose: Show exactly how fitness function drives both optimization loops
+# File: schema5_fitness_driven_optimization.png
 # ============================================================================
 add_image_slide(
     prs,
-    "Feature Selection: Binary Encoding",
-    os.path.join(parent_dir, 'schemas and snippets', 'schema5_feature_selection_encoding.png'),
-    "How DIO represents feature selection as a binary decision vector"
+    "Fitness-Driven Optimization: The Complete Process",
+    os.path.join(parent_dir, 'schemas and snippets', 'schema5_fitness_driven_optimization.png'),
+    "How the fitness function drives both outer (hyperparameters) and inner (features) loops"
 )
 
 # ============================================================================
@@ -521,6 +531,8 @@ tf = body_shape.text_frame
 
 add_bullet_points(tf, [
     "Our first attempt: Optimize on one fixed train-test split",
+    "  - Configuration: 5 dholes/10 iterations (outer), 10 dholes/20 iterations (inner)",
+    "  - Total evaluations: ~10,000 (50 outer × 200 inner)",
     "",
     "Initial results looked incredible:",
     f"  - Training accuracy: 100% (perfect!)",
@@ -579,6 +591,9 @@ tf = body_shape.text_frame
 
 add_bullet_points(tf, [
     "Wait—can we do even better with a different algorithm?",
+    "  - Configuration: 5 dholes/10 iterations (outer), 10 dholes/20 iterations (inner)",
+    "  - Total evaluations: ~10,000 (50 outer × 200 inner)",
+    "  - Only 54 seconds optimization time!",
     "",
     "Why try XGBoost [5]?",
     "  - Gradient boosting with built-in regularization",
@@ -603,13 +618,27 @@ add_bullet_points(tf, [
 ])
 
 # ============================================================================
-# 2.3.4 THREE APPROACHES VALIDATED (SCHEMA 6)
+# SCHEMA 6: THREE APPROACHES EVOLUTION
+# Purpose: Show research progression and justify final choice
+# File: schema6_three_approaches_evolution.png
 # ============================================================================
 add_image_slide(
     prs,
-    "2.3.4 Medical Results: All Three Approaches",
-    os.path.join(parent_dir, 'schemas and snippets', 'schema6_medical_classification_results.png'),
-    "Visual comparison of DIO-RF-Single (failed), DIO-RF-CV (good), DIO-XGBoost (best)"
+    "2.3.4 Medical Results: Three Approaches Compared",
+    os.path.join(parent_dir, 'schemas and snippets', 'schema6_three_approaches_evolution.png'),
+    "Evolution from RF Single-Split (failed) → RF-CV (fixed) → XGBoost (best)"
+)
+
+# ============================================================================
+# SCHEMA 2: ALGORITHM-DEPENDENT OPTIMIZATION OVERFITTING
+# Purpose: Visual comparison showing algorithm-dependent overfitting (KEY DISCOVERY)
+# File: schema2_algorithm_dependent_overfitting.png
+# ============================================================================
+add_image_slide(
+    prs,
+    "Algorithm-Dependent Optimization Overfitting",
+    os.path.join(parent_dir, 'schemas and snippets', 'schema2_algorithm_dependent_overfitting.png'),
+    "Why RF needs CV but XGBoost doesn't - our key research contribution"
 )
 
 slide = add_content_slide(prs, "Summary: Three Validated Approaches")
@@ -705,6 +734,9 @@ tf = body_shape.text_frame
 
 add_bullet_points(tf, [
     "We ran the same DIO-XGBoost optimization on CIFAR-10",
+    "  - Configuration: 3 dholes/8 iterations for BOTH loops (reduced for speed)",
+    "  - Total evaluations: ~576 (24 outer × 24 inner)",
+    "  - Optimization time: 3.6 hours",
     "",
     "Single-run result looked okay:",
     "  - DIO-optimized (598 features): 83.0% accuracy",
@@ -719,22 +751,36 @@ add_bullet_points(tf, [
     "  - Wilcoxon test: p = 7.15×10⁻⁵ (***) → Highly significant WORSE",
     "",
     "What went wrong? Insufficient optimization budget:",
-    "  - Medical: 30-D space, 250-576 function evaluations → SUCCESS",
-    "  - Vision: 2048-D space, 576 function evaluations → FAILURE",
-    "  - Budget didn't scale with dimensionality",
+    "  - Medical: 30-D space, 10,000 evaluations → SUCCESS (5/10 + 10/20)",
+    "  - Vision: 2048-D space, 576 evaluations → FAILURE (3/8 + 3/8)",
+    "  - Budget didn't scale with dimensionality (68× larger space!)",
     "  - Need ~10,000-50,000 evaluations for 2048-D (17-87× more)",
     "",
     "Optimization overfitting strikes again—even XGBoost can't overcome severe under-budgeting"
 ])
 
 # ============================================================================
-# 2.5 CROSS-DOMAIN INSIGHTS (SCHEMA 3)
+# SCHEMA 7: CIFAR-10 STATISTICAL FAILURE ANALYSIS
+# Purpose: Honest negative result showing budget failure (CRITICAL for research integrity)
+# File: schema7_cifar10_statistical_failure.png
 # ============================================================================
 add_image_slide(
     prs,
-    "2.5 Cross-Domain Analysis: Success vs Failure",
-    os.path.join(parent_dir, 'schemas and snippets', 'schema3_crossdomain_insights.png'),
-    "Why optimization succeeded on medical data but failed on CIFAR-10"
+    "CIFAR-10: Statistical Analysis of Optimization Failure",
+    os.path.join(parent_dir, 'schemas and snippets', 'schema7_cifar10_statistical_failure.png'),
+    "30-run validation reveals DIO underperforms defaults: 81.91% vs 83.27% (p<0.0001)"
+)
+
+# ============================================================================
+# 2.5 CROSS-DOMAIN INSIGHTS (SCHEMA 3)RISON
+# Purpose: Quantify achievements and failures across both domains
+# File: schema3_cross_domain_results_table.png
+# ============================================================================
+add_image_slide(
+    prs,
+    "2.5 Cross-Domain Results: Success vs Failure",
+    os.path.join(parent_dir, 'schemas and snippets', 'schema3_cross_domain_results_table.png'),
+    "Complete comparison: Medical (96.88%, SUCCESS) vs CIFAR-10 (81.91%, FAILURE)"
 )
 
 slide = add_content_slide(prs, "Lessons Learned Across Both Domains")
@@ -745,8 +791,9 @@ add_bullet_points(tf, [
     "Three critical factors determine optimization success:",
     "",
     "Factor 1: Optimization Budget vs Dimensionality",
-    "  - Medical (30-D): 250-576 evaluations sufficient → SUCCESS",
-    "  - Vision (2048-D): 576 evaluations insufficient → FAILURE",
+    "  - Medical RF (30-D): 10,000 evaluations (5/10 outer, 10/20 inner) → Mixed",
+    "  - Medical XGBoost (30-D): 10,000 evaluations (5/10 outer, 10/20 inner) → SUCCESS",
+    "  - Vision XGBoost (2048-D): 576 evaluations (3/8 both loops) → FAILURE",
     "  - Rule of thumb: Budget must scale with dimensionality²",
     "",
     "Factor 2: Algorithm Robustness",

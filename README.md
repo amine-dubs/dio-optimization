@@ -77,7 +77,7 @@ The DIO algorithm is a nature-inspired metaheuristic optimization algorithm base
 | **vs. XGBoost Default (All)** | p = 7.15×10⁻⁵ (***) | **Significantly WORSE** |
 | **XGBoost Default Accuracy** | 83.27% ± 1.25% | Rank #1 - Better than optimized |
 | **Optimization Time** | 215.98 minutes (3.6 hours) | 576 evaluations |
-| **Configuration** | 3×8 outer, 3×8 inner loops | 24 outer × 24 inner = 576 evals |
+| **Configuration** | 3×8 outer, 3×8 inner loops | 24 outer × 24 inner ≈ 576 evals |
 | **Dataset** | CIFAR-10 (subset: 2000 train, 500 test) | ResNet50 deep features (2048D) |
 
 **⚠️ Key Finding:** Insufficient optimization budget for 2048D space - needs ~10-50K evaluations, not 576! Demonstrates importance of scaling budget with dimensionality.
@@ -352,7 +352,7 @@ This will:
 - ✅ Major feature reduction (70.8%)
 - ✅ Validates DIO across 68× dimensional increase
 
-**Execution Time:** ~5.4 hours (325 minutes, 576 evaluations)
+**Execution Time:** ~3.6 hours (215.98 minutes, 576 evaluations)
 
 **Prerequisites:**
 1. Extract ResNet50 features first (see `data/IMAGE_OPTIMIZATION_GUIDE.md`)
@@ -469,7 +469,7 @@ Saved to `data/`:
   - Baseline accuracy: 80.8%
   - Improvement: +2.2%
   - Optimization time: 215.98 minutes (3.6 hours)
-  - Configuration: 3×8 outer loop, 3×8 inner loop (576 evaluations)
+  - Configuration: 3×8 outer loop (hyperparameters), 3×8 inner loop (features) ≈ 576 evaluations
 
 **Key Achievement:** Successful 68× scale-up validation (30D → 2048D), maintains optimization quality
 
@@ -567,7 +567,7 @@ fitness = 0.99 * (1 - accuracy) + 0.01 * (n_selected / n_total)
 
 ### Adjusting DIO Parameters
 
-In `main.py`, you can modify:
+In `main.py` (single-split Random Forest), you can modify:
 
 ```python
 # Hyperparameter optimization (outer loop)
@@ -585,6 +585,20 @@ fs_dio = DIO(
     n_dholes=10,         # Number of candidate solutions
     max_iterations=20    # Number of optimization iterations
 )
+```
+
+In `main_xgboost.py` (single-split XGBoost), the configuration is:
+
+```python
+# Outer: 5 dholes, 10 iterations | Inner: 10 dholes, 20 iterations
+hp_dio = DIO(n_dholes=5, max_iterations=10)   # Outer: hyperparameters
+fs_dio = DIO(n_dholes=10, max_iterations=20)  # Inner: features
+```
+
+In `main_cv.py` (CV-based Random Forest), the configuration matches `main.py`:
+
+```python
+# Outer: 5 dholes, 10 iterations | Inner: 10 dholes, 20 iterations
 ```
 
 ### Hyperparameter Search Space

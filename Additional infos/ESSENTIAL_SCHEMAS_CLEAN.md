@@ -1,6 +1,61 @@
 # Essential Schemas for DIO Multi-Domain Research
 
-## 📐 ONLY 6 Schemas - Maximum Impact, Minimum Space
+## 📐 SCHEMA NAMING CONVENTION & FILE MAPPING
+
+**Standardized naming:** `schema#_descriptive_name.png` (all lowercase)
+
+### 🗂️ Schema Files to Create/Rename:
+```
+schema1_cross_domain_framework.png          → Cross-domain DIO overview
+schema2_algorithm_dependent_overfitting.png → Three approaches comparison
+schema3_cross_domain_results_table.png      → Success/failure quantification
+schema4_nested_optimization_structure.png   → Two-level hierarchy
+schema5_fitness_driven_optimization.png     → Fitness function mechanism (MOST IMPORTANT)
+schema6_three_approaches_evolution.png      → Research progression timeline
+schema7_cifar10_statistical_failure.png     → Negative result & budget analysis
+```
+
+### 📍 Schema Placement Guide:
+
+#### **PRESENTATION (create_presentation_v2.py):**
+- **Slide after "1.4 Applications"** → `schema1_cross_domain_framework.png`
+- **Slide after "2.2 Methodology"** → `schema4_nested_optimization_structure.png`
+- **Slide after "2.2 Methodology"** → `schema5_fitness_driven_optimization.png` ⭐ CRITICAL
+- **Slide after "2.3.4 Medical Results"** → `schema6_three_approaches_evolution.png`
+- **Slide "2.3.4 Comparison"** → `schema2_algorithm_dependent_overfitting.png`
+- **Slide "2.5 Cross-Domain"** → `schema3_cross_domain_results_table.png`
+- **Slide "2.4.1 CIFAR-10"** → `schema7_cifar10_statistical_failure.png`
+
+#### **REPORT (report.tex):**
+- **Section 2 Introduction** → `schema1_cross_domain_framework.png` (Figure 1)
+- **Section 3.5 DIO Benchmark** → Keep existing `dio_flowchart.png` & `comparaison_table...png`
+- **Section 4.1 Architecture** → `schema4_nested_optimization_structure.png` (Figure 4)
+- **Section 4.2 Fitness Function** → `schema5_fitness_driven_optimization.png` (Figure 5) ⭐
+- **Section 5 Medical RF Results** → `schema2_algorithm_dependent_overfitting.png` (Figure 10)
+- **Section 8 XGBoost Results** → `schema6_three_approaches_evolution.png` (Figure 16)
+- **Section 10 Cross-Domain** → `schema3_cross_domain_results_table.png` (Figure 21)
+- **Section 10.3 CIFAR-10 Discussion** → `schema7_cifar10_statistical_failure.png` (Figure 22)
+
+### 🔄 Existing Files to Keep:
+- `dio_optimise_snippet.png` → Code snippet (Section 3)
+- `dio_flowchart.png` → DIO algorithm flow (Section 3.5)
+- `comparaison_table_of_results...png` → Benchmark table (Section 3.5)
+- `feature_selection_objective_func_rf.png` → RF feature fitness (Section 4.2)
+- `hyperparameter_objective_func_rf.png` → RF hyperparameter fitness (Section 4.2)
+- `outer_optimization_and_retreiving_results.png` → Results retrieval (Section 4.3)
+- `xgboost_hyperparameters_search_space_cancer.png` → XGBoost search space medical (Section 8)
+- `xgboost_hyperparameters_search_space_images.png` → XGBoost search space CIFAR-10 (Section 10)
+
+### ❌ Files to Delete/Archive:
+- `shema1 (1).png` → Rename to `schema1_cross_domain_framework.png`
+- `Shema2 (1).png` → Rename to `schema2_algorithm_dependent_overfitting.png`
+- `shema3 (1).png` → Rename to `schema3_cross_domain_results_table.png`
+- `shema4 (1).png` → Rename to `schema4_nested_optimization_structure.png`
+- `shema5 (1).PNG` → Rename to `schema5_fitness_driven_optimization.png`
+
+---
+
+## 📐 7 ESSENTIAL SCHEMAS - Detailed Specifications
 
 Based on your complete research (Medical + CIFAR-10), here are the **absolutely essential** schemas:
 
@@ -42,9 +97,9 @@ Show DIO's versatility across medical and vision domains - **Simple diagram**
             ↓                               ↓
     ┌───────────────┐              ┌───────────────┐
     │ RESULTS       │              │ RESULTS       │
-    │ 96.34% acc    │              │ 83.6% acc     │
-    │ 17/30 feat    │              │ 853/2048 feat │
-    │ 43% reduction │              │ 58% reduction │
+    │ 96.88% acc    │              │ 81.91% acc    │
+    │ 10/30 feat    │              │ 598/2048 feat │
+    │ 67% reduction │              │ 70.8% reduct. │
     └───────────────┘              └───────────────┘
             │                               │
             └───────────────┬───────────────┘
@@ -52,7 +107,8 @@ Show DIO's versatility across medical and vision domains - **Simple diagram**
                 ┌───────────────────────┐
                 │ VALIDATED FRAMEWORK   │
                 │ • 68× scale-up        │
-                │ • Both domains work! │
+                │ • Medical: SUCCESS ✅ │
+                │ • Vision: FAILURE ❌  │
                 └───────────────────────┘
 ```
 
@@ -81,16 +137,21 @@ Explain THE main research contribution - **Simple 3-box comparison**
 │ RF Single-Split        │  │ RF Cross-Validation    │  │ XGBoost Single-Split   │
 ├────────────────────────┤  ├────────────────────────┤  ├────────────────────────┤
 │                        │  │                        │  │                        │
+│ Configuration:         │  │ Configuration:         │  │ Configuration:         │
+│ 5 dholes, 10 iter (O)  │  │ 5 dholes, 10 iter (O)  │  │ 5 dholes, 10 iter (O)  │
+│ 10 dholes, 20 iter (I) │  │ 10 dholes, 20 iter (I) │  │ 10 dholes, 20 iter (I) │
+│                        │  │                        │  │                        │
 │ Optimization:          │  │ Optimization:          │  │ Optimization:          │
-│ 100% (overfit!)        │  │ 95.91% (CV avg)        │  │ 98.83% (holdout)       │
+│ 99% (overfit!)         │  │ 95.91% (CV avg)        │  │ 98.83% (holdout)       │
 │                        │  │                        │  │                        │
 │        ↓               │  │        ↓               │  │        ↓               │
 │                        │  │                        │  │                        │
 │ Validation:            │  │ Validation:            │  │ Validation:            │
-│ 94.72% (poor)          │  │ 96.26% (good)          │  │ 96.34% (BEST!) 🏆     │
-│ Rank: #7               │  │ Rank: #3               │  │ Rank: #1               │
+│ 94.37% ± 1.82%         │  │ 96.55% ± 1.51%         │  │ 96.88% ± 1.10% 🏆      │
+│ Rank: #6               │  │ Rank: #1               │  │ Rank: #1               │
 │                        │  │                        │  │                        │
-│ Time: 1 min            │  │ Time: 7.9 hrs          │  │ Time: 54 sec           │
+│ Time: ~60 min          │  │ Time: 7.9 hrs          │  │ Time: 54 sec           │
+│ (~10,000 evals)        │  │ (~10,000 evals + CV)   │  │ (~10,000 evals)        │
 │                        │  │                        │  │                        │
 │ ❌ OVERFITTING         │  │ ✅ FIXED               │  │ ✅ NO ISSUE            │
 │    (memorized split)   │  │    (but slow)          │  │    (built-in reg.)     │
@@ -99,13 +160,14 @@ Explain THE main research contribution - **Simple 3-box comparison**
 KEY DISCOVERY:
 ┌──────────────────────────────────────────────────────────────┐
 │ XGBoost's multi-layer regularization prevents meta-overfitting│
-│ → Single-split is SUFFICIENT and 870× FASTER than RF-CV      │
+│ → Single-split is SUFFICIENT and 526× FASTER than RF-CV      │
+│ → Algorithm choice determines whether CV is necessary!        │
 └──────────────────────────────────────────────────────────────┘
 ```
 
 **For draw.io:**
 - 3 vertical boxes side-by-side (RF-Single | RF-CV | XGBoost)
-- Each shows: Optimization → Validation → Result
+- Each shows: Configuration → Optimization → Validation → Result
 - Color code: Red (bad), Yellow (ok), Green (best)
 - Bottom: Key discovery box
 
@@ -127,30 +189,36 @@ Metric                  │  Medical (Breast Cancer) │  Vision (CIFAR-10)
 ────────────────────────┼──────────────────────────┼──────────────────────
 Feature Dimension       │  30-D                    │  2,048-D (68× larger)
 Task                    │  Binary (2 classes)      │  Multi-class (10)
-Training Samples        │  455                     │  2,000
+Training Samples        │  399 (train)             │  2,000 (subset)
+Test Samples            │  171 (test)              │  500 (subset)
 ────────────────────────┼──────────────────────────┼──────────────────────
-Best Algorithm          │  XGBoost                 │  XGBoost
-Baseline Accuracy       │  94.74% (defaults)       │  80.8% (subset)
-                        │                          │  85.0% (full data)
+Best Algorithm          │  XGBoost                 │  XGBoost (Default!)
+Baseline Accuracy       │  94.74% ± 1.55% (XGB)    │  80.8% (single-run)
+                        │                          │  83.27% ± 1.25% (30-run)
 ────────────────────────┼──────────────────────────┼──────────────────────
-DIO-Optimized           │  96.34% 🏆               │  83.6%
-Accuracy Gain           │  +1.60%                  │  +2.8%
+DIO-Optimized (Single)  │  98.83% (training)       │  83.0% (single-run)
+DIO Validation (30-run) │  96.88% ± 1.10% 🏆       │  81.91% ± 1.38%
+Accuracy Gain/Loss      │  +2.14% (p=0.0047 **)    │  -1.36% (p<0.0001 ***)
+Statistical Rank        │  #1 out of 10            │  #3 out of 9 (WORSE)
 ────────────────────────┼──────────────────────────┼──────────────────────
-Feature Reduction       │  43% (30 → 17)           │  58.35% (2048 → 853)
-Inference Speedup       │  1.8×                    │  2.4×
-Optimization Time       │  54 seconds              │  5.4 hours
+Feature Reduction       │  67% (30 → 10)           │  70.8% (2048 → 598)
+Optimization Config     │  5/10 outer, 5/10 inner  │  3/8 outer, 3/8 inner
+Optimization Budget     │  ~2,500 evaluations      │  ~576 evaluations
+Optimization Time       │  54 seconds              │  215.98 min (3.6 hrs)
 ────────────────────────┼──────────────────────────┼──────────────────────
-Statistical Rank        │  #1 out of 10            │  N/A (subset exp.)
-────────────────────────┼──────────────────────────┼──────────────────────
-Key Advantage           │  Best accuracy           │  Edge deployment
-                        │  + Moderate reduction    │  (2.4× faster)
+Outcome                 │  ✅ SUCCESS              │  ❌ FAILURE
+Key Finding             │  Best accuracy           │  Insufficient budget
+                        │  + Moderate reduction    │  (need 10-50K evals)
 ────────────────────────┴──────────────────────────┴──────────────────────
 
-✅ CONSISTENT PATTERN: DIO achieves substantial improvements in BOTH domains
-✅ SCALE VALIDATION: 30-D → 2048-D (68× dimensionality increase)
+✅ MEDICAL SUCCESS: DIO achieves #1 rank with 96.88% (p=0.0047)
+❌ VISION FAILURE: DIO ranks #3, worse than defaults (p<0.0001)
+⚠️ CRITICAL INSIGHT: Optimization budget must scale with dimensionality²
+   • 30-D with 2,500 evals → SUCCESS
+   • 2048-D with 576 evals → FAILURE (need ~17-87× more evaluations)
 ```
 
-**Why Essential:** Quantifies all results, proves cross-domain effectiveness
+**Why Essential:** Quantifies all results, proves cross-domain effectiveness AND limitations
 
 ---
 
@@ -197,7 +265,7 @@ Show the two-level hierarchical optimization - **Simple nested boxes**
 
 Cost: Outer_evals × Inner_evals = Total model trainings
 Medical: 50 × 50 = 2,500 → 54 seconds
-Vision:  24 × 24 = 576 → 5.4 hours
+Vision:  24 × 24 = 576 → 3.6 hours (215.98 min)
 ```
 
 **For draw.io:**
@@ -274,11 +342,11 @@ Vision:  24 × 24 = 576 → 5.4 hours
                 │ • Best θ* (hyper)    │
                 │ • Best S* (features) │
                 │                      │
-                │ Medical: 96.34% acc  │
-                │          17/30 feat  │
+                │ Medical: 96.88% acc  │
+                │          10/30 feat  │
                 │                      │
-                │ Vision:  83.6% acc   │
-                │          853/2048 feat│
+                │ Vision:  81.91% acc  │
+                │          598/2048 ft │
                 └──────────────────────┘
 
 KEY CONCEPT:
@@ -291,7 +359,7 @@ KEY CONCEPT:
 │                                                            │
 │  Total evaluations: Outer_iterations × Inner_iterations   │
 │  Medical: 10 × 10 = 100 (but 5 dholes) = 2,500 → 54 sec  │
-│  Vision:  8 × 8 = 64 (but 3 dholes) = 576 → 5.4 hours    │
+│  Vision:  8 × 8 = 64 (but 3 dholes) = 576 → 3.6 hrs (215.98 min) │
 └────────────────────────────────────────────────────────────┘
 ```
 
@@ -320,28 +388,42 @@ Show research progression and justify final choice - **Simple timeline**
 ┌──────────────┐      ┌──────────────┐      ┌──────────────┐
 │   RF-Single  │  →   │    RF-CV     │  →   │   XGBoost    │
 │              │      │              │      │              │
+│ Config:      │      │ Config:      │      │ Config:      │
+│ 5/10 outer   │      │ 5/10 outer   │      │ 5/10 outer   │
+│ 10/20 inner  │      │ 10/20 inner  │      │ 5/10 inner   │
+│              │      │              │      │              │
 │ ❌ Overfits  │      │ ✅ Fixed     │      │ ✅ BEST      │
-│ Opt: 100%    │      │ Uses 5-Fold  │      │ Built-in     │
-│ Val: 94.72%  │      │ Val: 96.26%  │      │ regularize   │
-│ Rank: #7     │      │ Rank: #3     │      │ Val: 96.34%  │
-│              │      │              │      │ Rank: #1     │
-│ Time: 1 min  │      │ Time: 7.9 hr │      │ Time: 54 sec │
+│ Opt: 99%     │      │ Uses 5-Fold  │      │ Built-in     │
+│ Val: 94.37%  │      │ CV during    │      │ regularize   │
+│ Rank: #6     │      │ optimization │      │ Val: 96.88%  │
+│              │      │ Val: 96.55%  │      │ Rank: #1     │
+│              │      │ Rank: #1     │      │              │
+│ Time: ~60min │      │ Time: 7.9 hr │      │ Time: 54 sec │
+│ (~10K evals) │      │ (~10K + CV)  │      │ (~2.5K evals)│
 └──────────────┘      └──────────────┘      └──────────────┘
    Discovery:            Discovery:            Discovery:
    Single-split          CV fixes              XGBoost doesn't
    causes overfit        overfitting           need CV!
 
-FINAL COMPARISON TABLE:
-┌────────────┬──────────┬──────────┬─────────┬──────┐
-│ Approach   │ Time     │ vs Best  │ Val Acc │ Rank │
-├────────────┼──────────┼──────────┼─────────┼──────┤
-│ RF-Single  │ 1 min    │ 1×       │ 94.72%  │ #7   │
-│ RF-CV      │ 7.9 hrs  │ 474×     │ 96.26%  │ #3   │
-│ XGBoost    │ 54 sec   │ 0.9×     │ 96.34%🏆│ #1   │
-└────────────┴──────────┴──────────┴─────────┴──────┘
+FINAL COMPARISON TABLE (30-Run Statistical Validation):
+┌────────────┬──────────┬──────────┬─────────┬──────┬──────────┐
+│ Approach   │ Time     │ vs Best  │ Val Acc │ Rank │ Features │
+├────────────┼──────────┼──────────┼─────────┼──────┼──────────┤
+│ RF-Single  │ ~60 min  │ 1.1×     │ 94.37%  │ #6   │ 8/30     │
+│ RF-CV      │ 7.9 hrs  │ 8.8×     │ 96.55%  │ #1   │ 6/30     │
+│ XGBoost    │ 54 sec   │ 1×       │ 96.88%🏆│ #1   │ 10/30    │
+└────────────┴──────────┴──────────┴─────────┴──────┴──────────┘
 
-KEY INSIGHT: XGBoost achieves BEST accuracy 870× faster than RF-CV!
-Built-in regularization (gamma, lambda) prevents overfitting without CV.
+KEY INSIGHTS:
+• XGBoost achieves BEST accuracy (96.88%) 526× faster than RF-CV!
+• Same inner loop config as RF (10/20), but simpler outer (5/10 vs 5/10)
+└────────────┴──────────┴──────────┴─────────┴──────┴──────────┘
+
+KEY INSIGHTS:
+• XGBoost achieves BEST accuracy (96.88%) 526× faster than RF-CV!
+• Built-in regularization (gamma, lambda, learning_rate) prevents overfitting
+• RF needs CV for robust optimization, XGBoost doesn't (algorithm-dependent)
+• Trade-off: XGBoost (best acc, fast) vs RF-CV (fewest features, slow)
 ```
 
 **For draw.io:**
@@ -349,48 +431,157 @@ Built-in regularization (gamma, lambda) prevents overfitting without CV.
 - Simple table below
 - Arrows between boxes showing progression
 - Color code: Red → Yellow → Green
-- Time labels prominent (1 min → 7.9 hrs → 54 sec)
+- Time labels prominent (~60 min → 7.9 hrs → 54 sec)
 
-**Why Essential:** Justifies final algorithm choice (XGBoost)
-
-**Why Essential:** Justifies your methodology choices and shows research rigor
+**Why Essential:** Justifies final algorithm choice (XGBoost) and shows research rigor
 
 ---
 
-## 📝 FINAL Summary - All 6 Schemas (Draw.io Ready!)
+## 7. 📉 **CIFAR-10 Statistical Comparison: When Budget Fails** (CRITICAL NEGATIVE RESULT)
+
+### Purpose
+Show the importance of optimization budget scaling - **Honest failure analysis**
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│     CIFAR-10: OPTIMIZATION FAILURE DUE TO BUDGET            │
+│     30-Run Statistical Validation (Wilcoxon Signed-Rank)    │
+└─────────────────────────────────────────────────────────────┘
+
+SETUP:
+• Dataset: CIFAR-10 ResNet50 features (2048-D, 68× larger than medical)
+• Subset: 2000 train, 500 test (computational constraints)
+• Configuration: 3 dholes/8 iterations (both loops) = ~576 evaluations
+• Validation: 30 independent runs with different random seeds
+
+┌──────────────────────────────────────────────────────────────┐
+│               STATISTICAL COMPARISON TABLE                   │
+├────────────────┬─────────────┬──────────┬──────┬────────────┤
+│ Model          │ Mean Acc    │ Std Dev  │ Rank │ vs Default │
+├────────────────┼─────────────┼──────────┼──────┼────────────┤
+│ XGBoost        │ 83.27%      │ 1.25%    │  #1  │ Baseline   │
+│ Default (All)  │             │          │      │            │
+│ 2048 features  │             │          │      │            │
+├────────────────┼─────────────┼──────────┼──────┼────────────┤
+│ RF Default     │ 82.45%      │ 1.29%    │  #2  │ -0.82%     │
+│ (All features) │             │          │      │            │
+├────────────────┼─────────────┼──────────┼──────┼────────────┤
+│ DIO-XGBoost    │ 81.91%      │ 1.38%    │  #3  │ -1.36%     │
+│ OPTIMIZED      │             │          │      │ (WORSE!)   │
+│ 598 features   │             │          │      │            │
+├────────────────┼─────────────┼──────────┼──────┼────────────┤
+│ Gradient Boost │ 80.49%      │ 1.51%    │  #4  │ -2.78%     │
+└────────────────┴─────────────┴──────────┴──────┴────────────┘
+
+WILCOXON SIGNED-RANK TEST RESULTS:
+┌────────────────────────────────────────────────────────────┐
+│ DIO-XGBoost (81.91%) vs XGBoost Default (83.27%)         │
+│ • p-value: 7.15×10⁻⁵ (***)                               │
+│ • Result: HIGHLY SIGNIFICANT WORSE                         │
+│ • Mean difference: -1.36% (DIO underperforms!)            │
+│ • Conclusion: Optimization FAILED - worse than defaults    │
+└────────────────────────────────────────────────────────────┘
+
+WHY DID IT FAIL?
+┌────────────────────────────────────────────────────────────┐
+│ 1. INSUFFICIENT BUDGET (Critical Issue)                   │
+│    • Search space: 2048 features + 3 hyperparams = 2051-D │
+│    • Budget provided: ~576 evaluations                     │
+│    • Budget needed: ~10,000-50,000 evaluations            │
+│    • Ratio: OFF BY 17-87×!                                │
+│                                                            │
+│ 2. OPTIMIZATION OVERFITTING (Again!)                      │
+│    • Single-run result: 83.0% (looked good vs 80.8%)     │
+│    • 30-run average: 81.91% (actually worse)              │
+│    • Optimizer found config perfect for ONE split         │
+│    • Didn't generalize across different partitions        │
+│                                                            │
+│ 3. DIMENSIONALITY CURSE                                   │
+│    • Medical (30-D): 2,500 evals → SUCCESS ✅             │
+│    • Vision (2048-D): 576 evals → FAILURE ❌              │
+│    • Budget must scale with dimensionality²               │
+│    • We underestimated by nearly 2 orders of magnitude    │
+└────────────────────────────────────────────────────────────┘
+
+KEY LESSONS:
+• ⚠️  Even XGBoost's regularization can't save inadequate budgets
+• ⚠️  Single-run results are DECEPTIVE - always validate statistically
+• ⚠️  Optimization budget must scale with problem dimensionality
+• ⚠️  What works for 30-D (medical) doesn't work for 2048-D (vision)
+• ✅  Honest reporting: We discovered the limits of our approach
+
+COMPUTATIONAL REALITY:
+┌────────────────────────────────────────────────────────────┐
+│ To succeed on CIFAR-10, we'd need:                        │
+│ • 10-20 dholes (not 3)                                     │
+│ • 20-50 iterations (not 8)                                 │
+│ • 5-fold CV (not single-split)                            │
+│ • Result: 50,000+ evaluations × ~0.4 hrs/100 = 200+ hours│
+│ • Our budget: 576 evaluations = 3.6 hours (215.98 min)   │
+│ • Gap: 55× more computation needed                        │
+└────────────────────────────────────────────────────────────┘
+```
+
+**For draw.io:**
+- Top: Statistical comparison table (4 models, clear winner)
+- Middle: Wilcoxon test result box (red, emphasize WORSE)
+- Bottom-left: "Why it failed" box (3 reasons)
+- Bottom-right: "Lessons learned" box (key takeaways)
+- Color: Red theme (negative result, but valuable insight)
+
+**Why Essential:** Shows research honesty, explains failure, validates lessons about budget scaling
+
+---
+
+## 📝 FINAL Summary - All 7 Schemas (Draw.io Ready!)
 
 **✅ All schemas are now simplified for quick drawing:**
 
 1. ✅ **Cross-Domain Framework** (~40 lines) - Simple flow: 1 top + 2 parallel paths + 1 bottom
-2. ✅ **Optimization Overfitting** (~30 lines) - 3 columns side-by-side comparison
-3. ✅ **Results Comparison** (table) - Already clean, just draw table
+2. ✅ **Optimization Overfitting** (~45 lines) - 3 columns side-by-side comparison with configs
+3. ✅ **Results Comparison** (table) - Already clean, includes success/failure analysis
 4. ✅ **Nested Structure** (~35 lines) - 2 nested boxes + 1 output box
 5. ✅ **Modularization & Fitness** (~50 lines) - 4 boxes with clear flow ⭐ MOST IMPORTANT
-6. ✅ **Three Approaches** (~40 lines) - Timeline with 3 boxes + comparison table
+6. ✅ **Three Approaches** (~45 lines) - Timeline with 3 boxes + comparison table
+7. ✅ **CIFAR-10 Statistical Failure** (~70 lines) - Honest negative result with lessons ⚠️ CRITICAL
 
 **Estimated drawing time in draw.io:**
 - Schema 1: 10 minutes
-- Schema 2: 10 minutes
-- Schema 3: 5 minutes (table)
+- Schema 2: 12 minutes (added config details)
+- Schema 3: 8 minutes (table + notes)
 - Schema 4: 8 minutes
 - Schema 5: 15 minutes (most important, take time)
-- Schema 6: 10 minutes
-- **Total: ~60 minutes for all 6 schemas**
+- Schema 6: 12 minutes
+- Schema 7: 20 minutes (most complex, statistical results)
+- **Total: ~85 minutes for all 7 schemas**
 
 **Each schema now includes:**
 - Simple box structure (max 4-5 boxes)
 - Clear "For draw.io" instructions
 - Minimal text, maximum clarity
-- Real research numbers
+- Real research numbers (updated with correct results)
 - Color coding suggestions
 
 **What each schema explains:**
-- Schema 1: Big picture (scope)
-- Schema 2: Novel finding (contribution)
-- Schema 3: Evidence (results)
-- Schema 4: Architecture (nested loops)
+- Schema 1: Big picture (scope) - Both domains
+- Schema 2: Novel finding (contribution) - Algorithm-dependent overfitting
+- Schema 3: Evidence (results) - Success AND failure quantified
+- Schema 4: Architecture (nested loops) - How it works
 - Schema 5: **Mechanism (fitness + optimization)** ← MOST TECHNICAL
-- Schema 6: Justification (methodology)
+- Schema 6: Justification (methodology) - Research evolution
+- Schema 7: **Negative result (budget failure)** ← MOST HONEST, shows research integrity
+
+**Updated Results Summary:**
+- **Medical Success:** 96.88% ± 1.10% (Rank #1), 10 features, p=0.0047
+- **Medical Alternative:** 96.55% ± 1.51% (Rank #1), 6 features, best interpretability
+- **Medical Failure:** 94.37% ± 1.82% (Rank #6), discovered optimization overfitting
+- **Vision Failure:** 81.91% ± 1.38% (Rank #3), worse than defaults (83.27%), p<0.0001
+
+**Critical Configurations (CORRECTED):**
+- **RF Single-Split:** 5/10 outer (dholes/iterations), 10/20 inner → ~10,000 evals
+- **RF-CV:** 5/10 outer, 10/20 inner + 5-fold CV → ~10,000 evals × CV
+- **XGBoost Medical:** 5/10 outer, 10/20 inner → ~10,000 evals (same as RF!)
+- **XGBoost CIFAR-10:** 3/8 outer, 3/8 inner → ~576 evals (INSUFFICIENT!)
 
 ---
 
@@ -409,11 +600,17 @@ Built-in regularization (gamma, lambda) prevents overfitting without CV.
 - File naming: `Fig1_CrossDomain.png`, `Fig2_Overfitting.png`, etc.
 - [ ] Schema 5: Modularization & Fitness Function (optimization mechanism) ⭐ CRITICAL
 - [ ] Schema 6: Three Approaches (research evolution)
+- [ ] Schema 7: CIFAR-10 Statistical Failure (negative result, budget analysis) ⚠️ CRITICAL
 
-**That's it! Only 6 schemas needed - Schema 5 is the MOST IMPORTANT for understanding HOW the optimization works.**
+**That's it! 7 schemas - Schema 5 is the MOST IMPORTANT for understanding HOW the optimization works, Schema 7 is CRITICAL for showing research honesty and budget lessons.**
 
 ---
 
-**Last Updated**: November 11, 2025  
+**Last Updated**: December 8, 2025  
 **Scope**: Medical + Vision (Cross-Domain)  
-**Key Results**: 96.34% (Medical), 83.6% (Vision)
+**Key Results (CORRECTED):**
+- Medical Success: 96.88% ± 1.10% (XGBoost, Rank #1, p=0.0047)
+- Medical Alternative: 96.55% ± 1.51% (RF-CV, Rank #1, 6 features)
+- Vision Failure: 81.91% ± 1.38% (Rank #3, worse than 83.27% defaults, p<0.0001)
+- Key Discovery: Algorithm-dependent optimization overfitting
+- Key Lesson: Optimization budget must scale with dimensionality²
