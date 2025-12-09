@@ -1,0 +1,160 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" version="29.2.6">
+  <diagram name="Schema 7 - CIFAR-10 Failure" id="cifar10-failure">
+    <mxGraphModel dx="618" dy="233" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e74c3c;strokeColor=#c0392b;fontColor=#ffffff;fontSize=14;verticalAlign=middle;" value="&lt;b&gt;CIFAR-10: OPTIMIZATION FAILURE DUE TO BUDGET&lt;/b&gt;&lt;br&gt;30-Run Statistical Validation (Wilcoxon Signed-Rank)" vertex="1">
+          <mxGeometry height="50" width="600" x="250" as="geometry" />
+        </mxCell>
+        <mxCell id="setup" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;align=left;spacingLeft=10;" value="&lt;b&gt;📋 SETUP&lt;/b&gt;&lt;br&gt;• Dataset: CIFAR-10 ResNet50 features (2048-D, 68× larger than medical)&lt;br&gt;• Subset: 2000 train, 500 test (computational constraints)&lt;br&gt;• Configuration: 3 dholes/8 iterations (both loops) = ~576 evaluations&lt;br&gt;• Validation: 30 independent runs with different random seeds" vertex="1">
+          <mxGeometry height="80" width="600" x="250" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="table_header" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;" value="&lt;b&gt;📊 STATISTICAL COMPARISON TABLE&lt;/b&gt;" vertex="1">
+          <mxGeometry height="25" width="600" x="250" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="row_header" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;fontStyle=1;" value="&lt;b&gt;Model&lt;/b&gt;" vertex="1">
+          <mxGeometry height="25" width="150" x="250" y="195" as="geometry" />
+        </mxCell>
+        <mxCell id="row_header2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;fontStyle=1;" value="&lt;b&gt;Mean Acc&lt;/b&gt;" vertex="1">
+          <mxGeometry height="25" width="100" x="400" y="195" as="geometry" />
+        </mxCell>
+        <mxCell id="row_header3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;fontStyle=1;" value="&lt;b&gt;Std Dev&lt;/b&gt;" vertex="1">
+          <mxGeometry height="25" width="80" x="500" y="195" as="geometry" />
+        </mxCell>
+        <mxCell id="row_header4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;fontStyle=1;" value="&lt;b&gt;Rank&lt;/b&gt;" vertex="1">
+          <mxGeometry height="25" width="60" x="580" y="195" as="geometry" />
+        </mxCell>
+        <mxCell id="row_header5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;fontStyle=1;" value="&lt;b&gt;vs Default&lt;/b&gt;" vertex="1">
+          <mxGeometry height="25" width="210" x="640" y="195" as="geometry" />
+        </mxCell>
+        <mxCell id="row1_1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" value="🥇 XGBoost Default&lt;br&gt;(2048 features)" vertex="1">
+          <mxGeometry height="35" width="150" x="250" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="row1_2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;fontStyle=1;" value="&lt;b&gt;83.27%&lt;/b&gt;" vertex="1">
+          <mxGeometry height="35" width="100" x="400" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="row1_3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" value="1.25%" vertex="1">
+          <mxGeometry height="35" width="80" x="500" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="row1_4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;fontStyle=1;" value="&lt;b&gt;#1&lt;/b&gt;" vertex="1">
+          <mxGeometry height="35" width="60" x="580" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="row1_5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;" value="Baseline" vertex="1">
+          <mxGeometry height="35" width="210" x="640" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="row2_1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" value="🥈 RF Default&lt;br&gt;(All features)" vertex="1">
+          <mxGeometry height="35" width="150" x="250" y="255" as="geometry" />
+        </mxCell>
+        <mxCell id="row2_2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" value="82.45%" vertex="1">
+          <mxGeometry height="35" width="100" x="400" y="255" as="geometry" />
+        </mxCell>
+        <mxCell id="row2_3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" value="1.29%" vertex="1">
+          <mxGeometry height="35" width="80" x="500" y="255" as="geometry" />
+        </mxCell>
+        <mxCell id="row2_4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" value="#2" vertex="1">
+          <mxGeometry height="35" width="60" x="580" y="255" as="geometry" />
+        </mxCell>
+        <mxCell id="row2_5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" value="-0.82%" vertex="1">
+          <mxGeometry height="35" width="210" x="640" y="255" as="geometry" />
+        </mxCell>
+        <mxCell id="row3_1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;fontStyle=1;" value="&lt;b&gt;🥉 DIO-XGBoost OPTIMIZED&lt;/b&gt;&lt;br&gt;(598 features)" vertex="1">
+          <mxGeometry height="35" width="150" x="250" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="row3_2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;fontStyle=1;" value="&lt;b&gt;81.91%&lt;/b&gt;" vertex="1">
+          <mxGeometry height="35" width="100" x="400" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="row3_3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" value="1.38%" vertex="1">
+          <mxGeometry height="35" width="80" x="500" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="row3_4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;fontStyle=1;" value="&lt;b&gt;#3&lt;/b&gt;" vertex="1">
+          <mxGeometry height="35" width="60" x="580" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="row3_5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;fontStyle=1;fontColor=#b85450;" value="&lt;b&gt;-1.36% (WORSE!)&lt;/b&gt;" vertex="1">
+          <mxGeometry height="35" width="210" x="640" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="row4_1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;" value="#4 Gradient Boost" vertex="1">
+          <mxGeometry height="25" width="150" x="250" y="325" as="geometry" />
+        </mxCell>
+        <mxCell id="row4_2" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;" value="80.49%" vertex="1">
+          <mxGeometry height="25" width="100" x="400" y="325" as="geometry" />
+        </mxCell>
+        <mxCell id="row4_3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;" value="1.51%" vertex="1">
+          <mxGeometry height="25" width="80" x="500" y="325" as="geometry" />
+        </mxCell>
+        <mxCell id="row4_4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;" value="#4" vertex="1">
+          <mxGeometry height="25" width="60" x="580" y="325" as="geometry" />
+        </mxCell>
+        <mxCell id="row4_5" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;" value="-2.78%" vertex="1">
+          <mxGeometry height="25" width="210" x="640" y="325" as="geometry" />
+        </mxCell>
+        <mxCell id="wilcoxon" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e74c3c;strokeColor=#c0392b;fontColor=#ffffff;fontSize=11;align=center;" value="&lt;b&gt;⚠️ WILCOXON SIGNED-RANK TEST&lt;/b&gt;&lt;br&gt;&lt;br&gt;DIO-XGBoost (81.91%) vs XGBoost Default (83.27%)&lt;br&gt;&lt;b&gt;p-value: 7.15×10⁻⁵ (***)&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#ffffff&quot;&gt;&lt;b&gt;❌ HIGHLY SIGNIFICANT WORSE&lt;/b&gt;&lt;/font&gt;&lt;br&gt;Mean difference: -1.36% (DIO underperforms!)&lt;br&gt;&lt;b&gt;Conclusion: Optimization FAILED - worse than defaults&lt;/b&gt;" vertex="1">
+          <mxGeometry height="110" width="600" x="250" y="370" as="geometry" />
+        </mxCell>
+        <mxCell id="reasons" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;align=left;spacingLeft=10;verticalAlign=top;spacingTop=5;" value="&lt;b&gt;❓ WHY DID IT FAIL?&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;1. INSUFFICIENT BUDGET (Critical)&lt;/b&gt;&lt;br&gt;• Search space: 2048 features + 3 hyperparams = 2051-D&lt;br&gt;• Budget provided: ~576 evaluations&lt;br&gt;• Budget needed: ~10,000-50,000 evaluations&lt;br&gt;• Ratio: OFF BY 17-87×!&lt;br&gt;&lt;br&gt;&lt;b&gt;2. OPTIMIZATION OVERFITTING&lt;/b&gt;&lt;br&gt;• Single-run result: 83.0% (looked good)&lt;br&gt;• 30-run average: 81.91% (actually worse)&lt;br&gt;• Optimizer found config perfect for ONE split&lt;br&gt;&lt;br&gt;&lt;b&gt;3. DIMENSIONALITY CURSE&lt;/b&gt;&lt;br&gt;• Medical (30-D): 2,500 evals → SUCCESS ✅&lt;br&gt;• Vision (2048-D): 576 evals → FAILURE ❌&lt;br&gt;• Budget must scale with dimensionality²" vertex="1">
+          <mxGeometry height="240" width="290" x="250" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="RivJ4syrnBeMuG5JkE11-4" edge="1" parent="1" source="lessons" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontSize=12;startSize=8;endSize=8;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="704.6363636363635" y="680" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="lessons" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;align=left;spacingLeft=10;verticalAlign=top;spacingTop=5;" value="&lt;b&gt;📚 KEY LESSONS&lt;/b&gt;&lt;br&gt;&lt;br&gt;⚠️ Even XGBoost&#39;s regularization can&#39;t save&lt;br&gt;     inadequate budgets&lt;br&gt;&lt;br&gt;⚠️ Single-run results are DECEPTIVE&lt;br&gt;     - always validate statistically&lt;br&gt;&lt;br&gt;⚠️ Optimization budget must scale with&lt;br&gt;     problem dimensionality&lt;br&gt;&lt;br&gt;⚠️ What works for 30-D (medical)&lt;br&gt;     doesn&#39;t work for 2048-D (vision)&lt;br&gt;&lt;br&gt;✅ &lt;b&gt;Honest reporting:&lt;/b&gt;&lt;br&gt;     We discovered the limits of our approach" vertex="1">
+          <mxGeometry height="210" width="290" x="560" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="RivJ4syrnBeMuG5JkE11-5" edge="1" parent="1" source="compute" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="compute" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RivJ4syrnBeMuG5JkE11-7" edge="1" parent="1" source="lessons" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="compute">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="705" y="710" />
+            </Array>
+            <mxPoint x="705" y="719.9999999999999" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="RivJ4syrnBeMuG5JkE11-8" edge="1" parent="1" source="compute" style="edgeStyle=none;curved=1;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=12;startSize=8;endSize=8;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="705" y="719.9999999999999" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="compute" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;align=left;spacingLeft=10;verticalAlign=top;spacingTop=5;" value="&lt;b&gt;💻 COMPUTATIONAL REALITY&lt;/b&gt;&lt;br&gt;&lt;br&gt;To succeed on CIFAR-10, we&#39;d need:&lt;br&gt;• 10-20 dholes (not 3)&lt;br&gt;• 20-50 iterations (not 8)&lt;br&gt;• 5-fold CV (not single-split)&lt;br&gt;• Result: 50,000+ evals = &lt;b&gt;200+ hours&lt;/b&gt;&lt;br&gt;&lt;br&gt;Our budget: 576 evals = 3.6 hours&lt;br&gt;&lt;b&gt;Gap: 55× more computation needed&lt;/b&gt;" vertex="1">
+          <mxGeometry height="130" width="290" x="560" y="720" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow1" edge="1" parent="1" source="title" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=2;" target="setup">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow2" edge="1" parent="1" source="setup" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#666666;strokeWidth=2;" target="table_header">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow3" edge="1" parent="1" source="row4_1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#c0392b;strokeWidth=2;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="wilcoxon">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="550" y="350" />
+            </Array>
+            <mxPoint x="410" y="350" as="sourcePoint" />
+            <mxPoint x="550" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow4" edge="1" parent="1" source="wilcoxon" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#c0392b;strokeWidth=2;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="470" y="480" />
+              <mxPoint x="470" y="480" />
+            </Array>
+            <mxPoint x="395" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow5" edge="1" parent="1" source="wilcoxon" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#82b366;strokeWidth=2;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="550" y="490" />
+              <mxPoint x="705" y="490" />
+            </Array>
+            <mxPoint x="705" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

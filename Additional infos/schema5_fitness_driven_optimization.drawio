@@ -1,0 +1,139 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" version="29.2.6">
+  <diagram name="Schema 5 - Fitness-Driven Optimization" id="fitness-driven-optimization">
+    <mxGraphModel dx="1041" dy="392" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#6c8ebf;strokeColor=#3a5a8c;fontColor=#ffffff;fontSize=14;verticalAlign=middle;" value="&lt;b&gt;DIO OPTIMIZATION: FITNESS-DRIVEN PROCESS&lt;/b&gt;" vertex="1">
+          <mxGeometry height="40" width="450" x="200" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="fitness_box" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;verticalAlign=top;spacingTop=5;" value="&lt;b&gt;FITNESS FUNCTION&lt;/b&gt;&lt;br&gt;(The Goal)" vertex="1">
+          <mxGeometry height="100" width="250" x="300" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="fitness_formula" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;" value="&lt;b&gt;F = 0.99×(1-Acc) + 0.01×(Feat/Total)&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;i&gt;Lower is better ↓&lt;/i&gt;" vertex="1">
+          <mxGeometry height="50" width="230" x="310" y="115" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow_fitness_outer" edge="1" parent="1" source="fitness_box" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#d6b656;strokeWidth=2;endArrow=classic;endFill=1;fontSize=10;fontColor=#d6b656;labelBackgroundColor=#ffffff;" target="outer_loop" value="Drives both loops">
+          <mxGeometry relative="1" x="-0.3" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="outer_loop" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;verticalAlign=top;spacingTop=5;" value="" vertex="1">
+          <mxGeometry height="420" width="650" x="100" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="outer_title" parent="1" style="text;html=1;strokeColor=none;fillColor=#6c8ebf;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=12;fontColor=#ffffff;" value="&lt;b&gt;OUTER LOOP: Hyperparameter Optimization&lt;/b&gt;" vertex="1">
+          <mxGeometry height="25" width="300" x="150" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="outer_input" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=10;align=left;spacingLeft=10;" value="&lt;b&gt;Input:&lt;/b&gt; Random θ&lt;br&gt;(n_estimators, max_depth, learning_rate, gamma, etc.)" vertex="1">
+          <mxGeometry height="45" width="280" x="130" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="outer_population" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;" value="&lt;b&gt;Population:&lt;/b&gt; 5 dholes × 10 iterations" vertex="1">
+          <mxGeometry height="25" width="180" x="450" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow_outer_inner" edge="1" parent="1" source="outer_input" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6c8ebf;strokeWidth=2;endArrow=classic;endFill=1;" target="inner_loop">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="270" y="320" />
+              <mxPoint x="425" y="320" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="inner_loop" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=10;verticalAlign=top;spacingTop=5;" value="" vertex="1">
+          <mxGeometry height="180" width="590" x="130" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="inner_title" parent="1" style="text;html=1;strokeColor=none;fillColor=#82b366;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=11;fontColor=#ffffff;" value="&lt;b&gt;INNER LOOP: Feature Selection&lt;/b&gt;" vertex="1">
+          <mxGeometry height="22" width="220" x="140" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="inner_input" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=10;align=left;spacingLeft=8;" value="&lt;b&gt;Input:&lt;/b&gt;&lt;br&gt;• Fixed θ from outer loop&lt;br&gt;• Random feature mask S: [1,0,1,1,0,...]" vertex="1">
+          <mxGeometry height="55" width="200" x="150" y="397.5" as="geometry" />
+        </mxCell>
+        <mxCell id="inner_process" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=10;align=left;spacingLeft=8;" value="&lt;b&gt;Process:&lt;/b&gt;&lt;br&gt;• Train model with θ and S&lt;br&gt;• Calculate F(θ, S)&lt;br&gt;• DIO updates S to minimize F&lt;br&gt;• Repeat 10 iterations" vertex="1">
+          <mxGeometry height="80" width="180" x="370" y="385" as="geometry" />
+        </mxCell>
+        <mxCell id="inner_output" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;fontSize=10;align=left;spacingLeft=8;" value="&lt;b&gt;Output:&lt;/b&gt;&lt;br&gt;Best features S*&lt;br&gt;for this θ" vertex="1">
+          <mxGeometry height="55" width="130" x="570" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="inner_population" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=9;" value="&lt;b&gt;Population:&lt;/b&gt; 5 dholes × 10 iter" vertex="1">
+          <mxGeometry height="20" width="160" x="150" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow_inner1" edge="1" parent="1" source="inner_input" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#82b366;strokeWidth=1;endArrow=classic;endFill=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="inner_process">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+            <mxPoint x="370" y="412" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow_inner2" edge="1" parent="1" source="inner_process" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#82b366;strokeWidth=1;endArrow=classic;endFill=1;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="570" y="425" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="return_text" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#82b366;" value="&lt;i&gt;Return S* to outer loop&lt;/i&gt;" vertex="1">
+          <mxGeometry height="20" width="130" x="570" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="outer_process" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=10;align=left;spacingLeft=8;" value="&lt;b&gt;After Inner Loop:&lt;/b&gt;&lt;br&gt;• Calculate F(θ, S*) for this θ&lt;br&gt;• DIO updates θ to minimize F&lt;br&gt;• Repeat 10 iterations" vertex="1">
+          <mxGeometry height="70" width="250" x="130" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="outer_output" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;fontSize=10;align=left;spacingLeft=8;" value="&lt;b&gt;Output:&lt;/b&gt;&lt;br&gt;Best hyperparameters θ*" vertex="1">
+          <mxGeometry height="50" width="170" x="430" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow_inner_outer" edge="1" parent="1" source="inner_loop" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6c8ebf;strokeWidth=2;endArrow=classic;endFill=1;">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="425" y="530" />
+              <mxPoint x="250" y="530" />
+            </Array>
+            <mxPoint x="250" y="550" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="arrow_outer_out" edge="1" parent="1" source="outer_process" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6c8ebf;strokeWidth=1;endArrow=classic;endFill=1;" target="outer_output">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow_outer_final" edge="1" parent="1" source="outer_loop" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#6c8ebf;strokeWidth=2;endArrow=classic;endFill=1;" target="final_result">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="final_result" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;verticalAlign=top;spacingTop=5;" value="" vertex="1">
+          <mxGeometry height="130" width="350" x="250" y="670" as="geometry" />
+        </mxCell>
+        <mxCell id="final_title" parent="1" style="text;html=1;strokeColor=none;fillColor=#b85450;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=12;fontColor=#ffffff;" value="&lt;b&gt;FINAL RESULT&lt;/b&gt;" vertex="1">
+          <mxGeometry height="25" width="150" x="350" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="final_content" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=11;" value="&lt;b&gt;• Best θ* (hyperparameters)&lt;/b&gt;&lt;br&gt;&lt;b&gt;• Best S* (features)&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;font color=&quot;#2e7d32&quot;&gt;&lt;b&gt;Medical:&lt;/b&gt; 96.88% acc, 10/30 features&lt;/font&gt;&lt;br&gt;&lt;font color=&quot;#c62828&quot;&gt;&lt;b&gt;Vision:&lt;/b&gt; 81.91% acc, 598/2048 features&lt;/font&gt;" vertex="1">
+          <mxGeometry height="80" width="310" x="270" y="710" as="geometry" />
+        </mxCell>
+        <mxCell id="key_concept" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1;verticalAlign=top;spacingTop=5;" value="&lt;b&gt;KEY CONCEPT&lt;/b&gt;" vertex="1">
+          <mxGeometry height="140" width="650" x="100" y="830" as="geometry" />
+        </mxCell>
+        <mxCell id="key_content" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=10;spacingLeft=10;" value="&lt;b&gt;Fitness F drives BOTH loops:&lt;/b&gt;&lt;br&gt;• &lt;b&gt;Outer:&lt;/b&gt; Tests different hyperparameters θ&lt;br&gt;• &lt;b&gt;Inner:&lt;/b&gt; For each θ, finds best features S&lt;br&gt;• &lt;b&gt;Hierarchical:&lt;/b&gt; Outer contains Inner&lt;br&gt;• &lt;b&gt;Goal:&lt;/b&gt; Minimize F(θ*, S*)&lt;br&gt;&lt;br&gt;&lt;b&gt;Total evaluations:&lt;/b&gt; Outer_iterations × Inner_iterations × dholes²&lt;br&gt;&lt;font color=&quot;#2e7d32&quot;&gt;Medical: 10 × 10 × 5 × 5 = 2,500 → 54 sec&lt;/font&gt;  |  &lt;font color=&quot;#c62828&quot;&gt;Vision: 8 × 8 × 3 × 3 = 576 → 3.6 hrs&lt;/font&gt;" vertex="1">
+          <mxGeometry height="90" width="630" x="110" y="855" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontStyle=1;" value="&lt;b&gt;LEGEND&lt;/b&gt;" vertex="1">
+          <mxGeometry height="20" width="60" x="650" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_fitness" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=9;" value="" vertex="1">
+          <mxGeometry height="15" width="20" x="650" y="105" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_fitness_text" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=9;" value="Fitness Function" vertex="1">
+          <mxGeometry height="20" width="80" x="675" y="102" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_outer" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=9;" value="" vertex="1">
+          <mxGeometry height="15" width="20" x="650" y="125" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_outer_text" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=9;" value="Outer Loop (θ)" vertex="1">
+          <mxGeometry height="20" width="80" x="675" y="122" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_inner" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=9;" value="" vertex="1">
+          <mxGeometry height="15" width="20" x="650" y="145" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_inner_text" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=9;" value="Inner Loop (S)" vertex="1">
+          <mxGeometry height="20" width="80" x="675" y="142" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_result" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=9;" value="" vertex="1">
+          <mxGeometry height="15" width="20" x="650" y="165" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_result_text" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=9;" value="Final Result" vertex="1">
+          <mxGeometry height="20" width="80" x="675" y="162" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
