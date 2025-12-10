@@ -846,34 +846,25 @@ add_bullet_points(tf, [
 # ============================================================================
 # 4. CONCLUSION & KEY CONTRIBUTIONS
 # ============================================================================
-slide = add_content_slide(prs, "4. Conclusion: What This Research Taught Us")
+slide = add_content_slide(prs, "4. Conclusion: Key Contributions")
 body_shape = slide.placeholders[1]
 tf = body_shape.text_frame
 
 add_bullet_points(tf, [
-    "This journey taught us as much from failures as from successes:",
+    "Four Key Contributions:",
     "",
-    "Key Contribution #1: Discovery of Optimization Overfitting",
-    "  - Models can 'memorize' specific data partitions during optimization",
-    "  - Single-run results can be wildly misleading (100% → 94.37%)",
-    "  - Solution: Use cross-validation DURING optimization, not just after",
+    "1. Discovered 'Optimization Overfitting'",
+    "   → Use CV during optimization, not just evaluation",
     "",
-    "Key Contribution #2: Algorithm-Dependent Strategies",
-    "  - Random Forest: Always needs CV for robust optimization",
-    "  - XGBoost: More forgiving but still fails with inadequate budget",
-    "  - No algorithm is immune to severe under-resourcing",
+    "2. Algorithm-Dependent Strategies",
+    "   → RF needs CV; XGBoost more robust but not immune",
     "",
-    "Key Contribution #3: Budget Scaling Laws",
-    "  - Success on medical (30-D, 250-576 evals)",
-    "  - Failure on vision (2048-D, 576 evals)",
-    "  - Lesson: Budget must grow ~quadratically with dimensions",
+    "3. Budget Scaling Laws",
+    "   → Budget must scale with dimensionality²",
     "",
-    "Key Contribution #4: DIO-XGBoost Medical Success",
-    "  - 96.88% accuracy (best overall), 67% feature reduction",
-    "  - Significantly better than defaults (p=0.0426)",
-    "  - Proves methodology works when properly resourced",
+    "4. DIO-XGBoost Success: 96.88% accuracy, 67% fewer features",
     "",
-    "Final thought: Optimization isn't magic—it needs adequate investment"
+    "Bottom line: Optimization needs adequate computational investment"
 ])
 
 # ============================================================================
@@ -884,26 +875,21 @@ body_shape = slide.placeholders[1]
 tf = body_shape.text_frame
 
 add_bullet_points(tf, [
-    "If you're deploying ML in healthcare:",
+    "For Healthcare ML Deployment:",
     "",
-    "Choose DIO-XGBoost (96.88%, 10 features) if:",
-    "  - Maximum accuracy is non-negotiable",
-    "  - You have computational resources",
-    "  - 67% feature reduction provides significant efficiency gains",
+    "🏆 DIO-XGBoost: 96.88%, 10 features",
+    "   → Best accuracy, use when resources available",
     "",
-    "Choose DIO-RF-CV (96.55%, 6 features) if:",
-    "  - Clinical interpretability is paramount (only 6 measurements!)",
-    "  - Resource-constrained environments (80% cost reduction)",
-    "  - Near-maximum accuracy is acceptable (only 0.08% less)",
+    "✓ DIO-RF-CV: 96.55%, 6 features",
+    "   → Best interpretability, 80% cost reduction",
     "",
-    "Avoid DIO-RF-Single (94.37%, 8 features) unless:",
-    "  - You only need rapid prototyping (1-minute optimization)",
-    "  - Lower accuracy is acceptable for initial screening",
+    "⚠ DIO-RF-Single: 94.37%, 8 features",
+    "   → Only for rapid prototyping",
     "",
-    "General wisdom:",
-    "  - Always run 30+ validation runs with different splits",
-    "  - Use statistical tests (Wilcoxon) to confirm improvements",
-    "  - Match optimization budget to problem dimensionality"
+    "Golden Rules:",
+    "  • Always validate with 30+ runs",
+    "  • Use statistical tests (Wilcoxon)",
+    "  • Scale budget with dimensionality"
 ])
 
 # ============================================================================
@@ -914,45 +900,30 @@ body_shape = slide.placeholders[1]
 tf = body_shape.text_frame
 
 add_bullet_points(tf, [
-    "[1] El Romeh, A., Mirjalili, S., & Šnel, V. (2025). Dholes-Inspired Optimization (DIO). Cluster Computing (Springer). DOI: 10.1007/s10586-025-05543-2",
-    "",
-    "[2] Dua, D. & Graff, C. (2019). UCI Machine Learning Repository: Breast Cancer Wisconsin (Diagnostic) Data Set. University of California, Irvine.",
-    "",
-    "[3] Krizhevsky, A. (2009). Learning Multiple Layers of Features from Tiny Images. Technical Report, University of Toronto.",
-    "",
-    "[4] He, K., Zhang, X., Ren, S., & Sun, J. (2016). Deep Residual Learning for Image Recognition. IEEE CVPR.",
-    "",
-    "[5] Chen, T. & Guestrin, C. (2016). XGBoost: A Scalable Tree Boosting System. KDD '16.",
-    "",
-    "[6] Breiman, L. (2001). Random Forests. Machine Learning, 45(1), 5-32.",
-    "",
-    "[7] Wilcoxon, F. (1945). Individual Comparisons by Ranking Methods. Biometrics Bulletin, 1(6), 80-83."
+    "[1] El Romeh et al. (2025). DIO Algorithm. Cluster Computing, Springer",
+    "[2] UCI ML Repository: Breast Cancer Wisconsin Dataset (2019)",
+    "[3] Krizhevsky (2009). CIFAR-10 Dataset. U. Toronto",
+    "[4] He et al. (2016). ResNet. IEEE CVPR",
+    "[5] Chen & Guestrin (2016). XGBoost. KDD '16",
+    "[6] Breiman (2001). Random Forests. Machine Learning",
+    "[7] Wilcoxon (1945). Signed-Rank Test. Biometrics Bulletin"
 ])
 
 # ============================================================================
 # ACKNOWLEDGMENTS
 # ============================================================================
-slide = add_content_slide(prs, "Acknowledgments")
+slide = add_content_slide(prs, "Thank You")
 body_shape = slide.placeholders[1]
 tf = body_shape.text_frame
 
 add_bullet_points(tf, [
-    "Special thanks to:",
+    "Acknowledgments:",
     "",
-    "Dr. Nabil Neggaz",
-    "  - Course instructor and research supervisor",
-    "  - Guidance throughout this project",
+    "• Dr. Nabil Neggaz – Course Professor & Supervisor",
+    "• USTO-MB Computer Science Department",
+    "• DIO Creators: Dr. Mirjalili & Team",
+    "• Open-Source: scikit-learn, XGBoost, NumPy",
     "",
-    "USTO-MB Computer Science Department",
-    "  - Providing resources and support",
-    "",
-    "Original DIO Creators",
-    "  - Dr. Seyedali Mirjalili and team",
-    "  - For open-sourcing their algorithm",
-    "",
-    "Open-Source Community",
-    "  - scikit-learn, XGBoost, NumPy, pandas",
-    "  - Making research accessible to all",
     "",
     "",
     "Questions?"
