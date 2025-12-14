@@ -434,9 +434,9 @@ To ensure statistical robustness, we conducted 30 independent experimental runs.
 The DIO-Optimized RF was compared against 9 baseline models to establish competitive context:
 \begin{enumerate}
     \item \textbf{Random Forest (Default, All Features):} Scikit-learn defaults with all 30 features
-    \item \textbf{Random Forest (Default, Selected Features):} Scikit-learn defaults with DIO's 8 selected features
+    \item \textbf{Random Forest (Default, Selected Features):} Scikit-learn defaults with DIO's 4 selected features
     \item \textbf{XGBoost (All Features):} Gradient boosting with default parameters, all features
-    \item \textbf{XGBoost (Selected Features):} Gradient boosting with default parameters, 8 features
+    \item \textbf{XGBoost (Selected Features):} Gradient boosting with default parameters, 4 features
     \item \textbf{Gradient Boosting:} Scikit-learn GradientBoostingClassifier, all features
     \item \textbf{Support Vector Machine:} RBF kernel, all features
     \item \textbf{K-Nearest Neighbors:} k=5, all features
@@ -480,12 +480,12 @@ An alternative approach, known as a hyper-heuristic, could also be considered. I
 The 30-run statistical comparison yielded robust insights into the performance of the DIO-Optimized Random Forest.
 
 \subsection{Overall Model Performance}
-Our nested DIO framework yielded a striking result: while full-feature models like XGBoost achieved peak accuracy (\textbf{96.24\% $\pm$ 1.52\%} on all 30 features), the DIO-Optimized Random Forest delivered competitive \textbf{94.37\% $\pm$ 1.82\%} using only \textit{8 features}—a 73\% dimensional reduction with good stability. Table \ref{tab:model_summary} summarizes these findings across eight classifiers.
+Our nested DIO framework yielded a striking result: while full-feature models like XGBoost achieved peak accuracy (\textbf{96.24\% $\pm$ 1.52\%} on all 30 features), the DIO-Optimized Random Forest delivered competitive \textbf{94.37\% $\pm$ 1.82\%} using only \textit{4 features}—an 87\% dimensional reduction with good stability. Table \ref{tab:model_summary} summarizes these findings across eight classifiers.
 
 % --- Results Table ---
 \begin{table}[H]
     \centering
-    \caption{Model Performance Summary over 30 Runs (Top 5 and DIO)}
+    \caption{Model Performance Summary over 30 Runs - RF Single-Split Approach (Top 5 and DIO)}
     \label{tab:model_summary}
     \resizebox{\textwidth}{!}{%
     \begin{tabular}{lccccc}
@@ -495,9 +495,9 @@ Our nested DIO framework yielded a striking result: while full-feature models li
         XGBoost (All) & 96.24 & 1.52 & 30 & 1 \\
         RF Default (All) & 95.87 & 1.36 & 30 & 2 \\
         Gradient Boosting & 95.67 & 1.67 & 30 & 3 \\
-        RF Default (Selected) & 94.99 & 1.53 & 8 & 4 \\
+        RF Default (Selected) & 94.99 & 1.53 & 4 & 4 \\
         Logistic Regression & 94.91 & 1.63 & 30 & 5 \\
-        \textbf{DIO-Optimized RF} & \textbf{94.37} & \textbf{1.82} & \textbf{8} & \textbf{6} \\
+        \textbf{DIO-Optimized RF} & \textbf{94.37} & \textbf{1.82} & \textbf{4} & \textbf{6} \\
         \bottomrule
     \end{tabular}%
     }
@@ -540,29 +540,25 @@ The results (Figure \ref{fig:main_viz}) expose several critical patterns. The bo
 \end{figure}
 
 \subsection{Pareto-Optimal Solution}
-The key success of this research is the achievement of a Pareto-optimal solution. While our model does not have the highest absolute accuracy, it represents the best trade-off between accuracy and complexity (number of features). A 73\% reduction in features for a mere 1.15\% drop in accuracy compared to a full-featured RF is a highly desirable outcome for practical applications, leading to faster inference times and more interpretable models.
+The key success of this research is the achievement of a Pareto-optimal solution. While our model does not have the highest absolute accuracy, it represents the best trade-off between accuracy and complexity (number of features). An 87\% reduction in features (30$\rightarrow$4) for a mere 1.50\% drop in accuracy compared to a full-featured RF is a highly desirable outcome for practical applications, leading to faster inference times and more interpretable models.
 
 \subsection{Feature Selection Analysis}
-The 8 features selected by the DIO algorithm provide valuable insights into the most discriminative characteristics for breast cancer classification. The selected features include:
+The 4 features selected by the DIO algorithm (single-split approach) provide valuable insights into the most discriminative characteristics for breast cancer classification. The selected features include:
 \begin{itemize}
-    \item Mean compactness
+    \item Mean smoothness
     \item Area error
-    \item Concavity error
-    \item Concave points error
-    \item Fractal dimension error
     \item Worst area
     \item Worst smoothness
-    \item Worst fractal dimension
 \end{itemize}
-This subset represents a balance between mean, error, and worst-case measurements, suggesting that DIO identified features capturing different statistical aspects of the cell nuclei characteristics. The 73\% feature reduction translates directly to computational savings: inference time is reduced proportionally, memory footprint decreases, and model interpretability improves significantly.
+This compact subset represents smoothness and area measurements at different scales (mean, error, worst), suggesting that DIO identified the most discriminative cell nuclei characteristics. The 87\% feature reduction (30$\rightarrow$4) translates directly to computational savings: inference time is reduced proportionally, memory footprint decreases, and model interpretability improves significantly.
 
 \subsection{Detailed Performance Comparison}
-When examining the full model landscape (Table \ref{tab:model_summary}), ensemble methods dominate the top rankings. However, it is crucial to distinguish between models using all 30 features versus those constrained to the 8 DIO-selected features. Among the 8-feature models, DIO-Optimized RF ranks 3rd out of 4, outperforming only the baseline RF Default (Selected). This indicates that while DIO's hyperparameter tuning provided marginal improvements, the primary value lies in the feature selection itself.
+When examining the full model landscape (Table \ref{tab:model_summary}), ensemble methods dominate the top rankings. However, it is crucial to distinguish between models using all 30 features versus those constrained to the 4 DIO-selected features. Among the 4-feature models, DIO-Optimized RF ranks below RF Default (Selected), indicating optimization overfitting—the hyperparameters were over-tuned to a single data partition.
 
-The comparison with XGBoost (Selected), which achieved 95.38\% using the same 8 features, reveals an opportunity for future work: applying DIO to optimize XGBoost or Gradient Boosting hyperparameters could potentially yield even better results within the reduced feature space.
+The comparison with XGBoost (Selected), which achieved 94.31\% using the same 4 features, reveals an opportunity for future work: applying DIO to optimize XGBoost or Gradient Boosting hyperparameters could potentially yield even better results within the reduced feature space.
 
 \subsection{Optimization Overfitting: A Critical Insight}
-A particularly noteworthy finding emerged when comparing DIO-Optimized RF (94.37\% $\pm$ 1.82\%) with RF Default (Selected) using the same 8 features (94.99\% $\pm$ 1.53\%). The statistically significant difference (p=0.0349, *) reveals an important limitation in our methodology: \textbf{optimization overfitting to a single train/test split}.
+A particularly noteworthy finding emerged when comparing DIO-Optimized RF (94.37\% $\pm$ 1.82\%) with RF Default (Selected) using the same 4 features (94.99\% $\pm$ 1.53\%). The statistically significant difference (p=0.0349, *) reveals an important limitation in our methodology: \textbf{optimization overfitting to a single train/test split}.
 
 % --- Single Run Results Figure ---
 \begin{figure}[H]
@@ -591,7 +587,7 @@ This counterintuitive result reveals what we term \textit{meta-overfitting}—th
 This finding has three important implications:
 
 \begin{enumerate}
-    \item \textbf{Feature Selection is Primary:} The 73\% feature reduction (30→8) was the true contribution, not the hyperparameter tuning. Both DIO-optimized and default hyperparameters performed similarly when using the selected features.
+    \item \textbf{Feature Selection is Primary:} The 87\% feature reduction (30$\rightarrow$4) was the true contribution, not the hyperparameter tuning. Both DIO-optimized and default hyperparameters performed similarly when using the selected features.
     
     \item \textbf{Generalization vs. Specialization:} Hyperparameters optimized for a single split may not generalize well. Scikit-learn's defaults, tuned across thousands of datasets over years, may actually be more robust.
     
@@ -713,7 +709,7 @@ Table \ref{tab:comparison} contrasts the two optimization approaches:
         \toprule
         \textbf{Metric} & \textbf{Single-Split} & \textbf{CV-Based} \\
         \midrule
-        Features Selected & 8 (73\% reduction) & 6 (80\% reduction) \\
+        Features Selected & 4 (87\% reduction) & 6 (80\% reduction) \\
         Optimization Time & $\sim$1 minute & 7.9 hours \\
         Mean Accuracy (30 runs) & 94.37\% $\pm$ 1.82\% & 96.55\% $\pm$ 1.51\% \\
         Rank (out of 10) & \#6 & \#1 \\
@@ -726,9 +722,9 @@ Table \ref{tab:comparison} contrasts the two optimization approaches:
 The CV-based approach demonstrates \textbf{superior Pareto optimality}: 80\% feature reduction with 96.55\% accuracy represents the best accuracy-complexity trade-off in our entire study. The 476$\times$ increase in computation time is justified by the 1.83\% accuracy gain and 7\% better dimensionality reduction.
 
 \subsubsection{Key Insights}
-The CV-optimization experiment validates our methodology—cross-validation during the optimization loop successfully addresses optimization overfitting, yielding hyperparameters that generalize robustly across data partitions. Unlike the single-split approach where optimized hyperparameters underperformed defaults (p=0.165), the CV-optimized configuration now significantly outperforms defaults using the same features (p=0.0084).
+The CV-optimization experiment validates our methodology—cross-validation during the optimization loop successfully addresses optimization overfitting, yielding hyperparameters that generalize robustly across data partitions. Unlike the single-split approach where optimized hyperparameters underperformed defaults (p=0.0349), the CV-optimized configuration achieves statistical equivalence with defaults using the same features (p=0.7480).
 
-Interestingly, feature selection remains the dominant contribution even with proper CV-based optimization. The 80\% reduction to just 6 features accounts for most of the performance gain, though hyperparameter tuning now adds measurable value (1.54\% accuracy improvement over single-split).
+Interestingly, feature selection remains the dominant contribution even with proper CV-based optimization. The 80\% reduction to just 6 features accounts for most of the performance gain, though hyperparameter tuning now adds measurable value (2.18\% accuracy improvement over single-split).
 
 Most importantly, the CV-optimized model achieves genuine Pareto superiority: highest accuracy (96.55\%) among all feature-reduced models while using the fewest features (6/30). This represents the optimal balance between diagnostic performance and clinical practicality.
 
@@ -837,11 +833,11 @@ Table \ref{tab:xgb_rf_comparison} contrasts XGBoost and Random Forest optimizati
         \toprule
         \textbf{Metric} & \textbf{RF (Single-Split)} & \textbf{RF (CV-Based)} & \textbf{XGBoost (Single-Split)} \\
         \midrule
-        Features Selected & 8 (73\% red.) & 6 (80\% red.) & \textbf{10 (67\% red.)} \\
+        Features Selected & 4 (87\% red.) & 6 (80\% red.) & \textbf{10 (67\% red.)} \\
         Optimization Time & 1 min & 7.9 hours & 54 seconds \\
         Mean Accuracy (30 runs) & 94.37\% $\pm$ 1.82\% & 96.55\% $\pm$ 1.51\% & \textbf{96.88\% $\pm$ 1.10\%} \\
         Rank (out of 10) & \#6 & \textbf{\#1} & \textbf{\#1} \\
-        vs. Defaults (p-value) & 0.165 (ns) & 0.7480 (ns) & 0.0047 (**) \\
+        vs. Defaults (p-value) & 0.0349 (*) & 0.7480 (ns) & 0.0047 (**) \\
         Hyperparams Optimized & 4 & 4 & 5 \\
         \bottomrule
     \end{tabular}
@@ -891,18 +887,18 @@ For resource-constrained settings or interpretability-focused applications, two 
     \item \textbf{Use case}: Resource-constrained settings, point-of-care testing
 \end{itemize}
 
-\textbf{2. DIO-RF Single-Split (8 features, 94.37\% $\pm$ 1.82\%):}
+\textbf{2. DIO-RF Single-Split (4 features, 94.37\% $\pm$ 1.82\%):}
 \begin{itemize}
     \item Ultra-fast optimization: 1 minute
-    \item Good feature reduction: 73\% (8 features)
+    \item Good feature reduction: 87\% (4 features)
     \item Acceptable accuracy: 94.37\%
     \item \textbf{Use case}: Prototyping, research, non-critical screening
 \end{itemize}
 
 \textbf{Unified Advantages Across All Models:}
 \begin{enumerate}
-    \item \textbf{Competitive Accuracy:} All optimized models achieve 94-96\% accuracy, comparable to or exceeding full-feature baselines
-    \item \textbf{Significant Feature Reduction:} 43-80\% fewer features translate to faster inference, lower costs, and improved interpretability
+    \item \textbf{Competitive Accuracy:} All optimized models achieve 94-97\% accuracy, comparable to or exceeding full-feature baselines
+    \item \textbf{Significant Feature Reduction:} 67-87\% fewer features translate to faster inference, lower costs, and improved interpretability
     \item \textbf{Robustness to Missing Data:} Smaller feature sets are less susceptible to measurement errors
     \item \textbf{Clinical Validity:} Selected features represent established biomarkers (texture, concavity, area, smoothness) with known diagnostic relevance
     \item \textbf{Generalization Assurance:} 30-run validation across diverse data partitions confirms consistent performance
@@ -1398,7 +1394,7 @@ Our research makes several key contributions to the field:
 
 \textbf{Medical Domain (Breast Cancer Diagnosis):}
 
-\textbf{1. RF Single-Split Optimization:} Achieved 94.37\% $\pm$ 1.82\% with 8 features (73\% reduction), ranking \#6. Revealed "optimization overfitting" where hyperparameters tuned on single partition achieved 99\% on that split but underperformed defaults across 30 runs, demonstrating the critical need for cross-validation during optimization.
+\textbf{1. RF Single-Split Optimization:} Achieved 94.37\% $\pm$ 1.82\% with 4 features (87\% reduction), ranking \#6. Revealed "optimization overfitting" where hyperparameters tuned on single partition achieved 99\% on that split but underperformed defaults across 30 runs, demonstrating the critical need for cross-validation during optimization.
 
 \textbf{2. RF CV-Based Optimization (Best Overall):} Achieved \textbf{96.55\% $\pm$ 1.51\%} with \textbf{6 features (80\% reduction)}, ranking \textbf{\#1 overall}. Using 5-fold cross-validation during fitness evaluation enabled optimized hyperparameters to generalize properly, demonstrating optimal balance between accuracy and interpretability with maximum feature reduction.
 
@@ -1410,15 +1406,15 @@ Our research makes several key contributions to the field:
 
 \textbf{Cross-Domain Methodological Insights:}
 \begin{enumerate}
-    \item \textbf{Consistent Value Delivery:} DIO improved accuracy-complexity trade-offs in both 30-D medical data (up to +1.54\% accuracy, 80\% feature reduction) and 2048-D image features (+2.8\% accuracy, 58.35\% reduction).
+    \item \textbf{Consistent Value Delivery:} DIO improved accuracy-complexity trade-offs in both 30-D medical data (up to +2.18\% accuracy, 80-87\% feature reduction) and 2048-D image features (single-run +2.2\% but failed statistical validation, 70.8\% reduction).
     
-    \item \textbf{Optimization Overfitting is Algorithm-Dependent:} RF single-split suffered from overfitting, while XGBoost single-split achieved top performance in both domains, validating gradient boosting's robustness.
+    \item \textbf{Optimization Overfitting is Algorithm-Dependent:} RF single-split suffered from overfitting, while XGBoost single-split achieved top performance on medical data, validating gradient boosting's robustness for low-dimensional problems.
     
-    \item \textbf{Substantial Feature Reduction in Deep Features:} Even in pre-compressed ResNet50 representations, DIO eliminated 58\% of features while improving accuracy, revealing significant redundancy in standard pre-trained models.
+    \item \textbf{Budget-Dependent Success:} Even in pre-compressed ResNet50 representations, DIO eliminated 70.8\% of features, but insufficient budget (576 vs needed 10,000+ evaluations) caused statistical underperformance.
     
-    \item \textbf{Computational Scaling:} Fast DIO configurations (3 dholes, 8 iterations) enable practical optimization even in 68× larger feature spaces with manageable time investment (3.6 hours / 215.98 minutes).
+    \item \textbf{Computational Scaling:} Fast DIO configurations (3 dholes, 8 iterations) proved inadequate for 68$\times$ larger feature spaces---budget must scale with dimensionality.
     
-    \item \textbf{Model Selection Criticality:} Systematic pre-optimization comparison identified optimal candidates (RF-CV for medical 96.26%, XGBoost for images 85\%), avoiding wasted computational resources.
+    \item \textbf{Model Selection Criticality:} Systematic pre-optimization comparison identified optimal candidates (RF-CV for medical 96.55\%, XGBoost for images 85\%), avoiding wasted computational resources.
 \end{enumerate}
 
 % --- Schema 3: Cross-Domain Results Comparison Table ---
