@@ -1348,24 +1348,39 @@ The CIFAR-10 extension demonstrates DIO's applicability to modern deep learning 
 
 \subsection{Summary of Image Classification Extension}
 
-The CIFAR-10 extension successfully demonstrates:
+The CIFAR-10 extension provides critical insights into DIO's limitations:
+
+\textbf{What Appeared to Work (Single-Run Illusion):}
 \begin{itemize}
-    \item $\checkmark$ \textbf{Domain Transferability:} DIO framework adapts effectively from medical tabular data (30-D) to image features (2048-D)
-    \item $\checkmark$ \textbf{High-Dimensional Robustness:} Achieved 58.35\% feature reduction with +2.8\% accuracy gain (80.8\% → 83.6\%) in 68× larger feature space
-    \item $\checkmark$ \textbf{Practical Feasibility:} Completed nested optimization in 3.6 hours (215.98 minutes) on subset, demonstrating computational viability
-    \item $\checkmark$ \textbf{Model Selection Validation:} Systematic comparison on full dataset (85\% XGBoost baseline) identified optimal candidate before expensive optimization
-    \item $\checkmark$ \textbf{Real-World Applicability:} Transfer learning + DIO optimization provides practical pipeline for computer vision deployment with 2.4× inference speedup
-    \item $\checkmark$ \textbf{Feature Redundancy Discovery:} Successful elimination of 58\% of ResNet50 features while improving accuracy reveals optimization potential in pre-trained models
+    \item Single optimization run showed 83.0\% accuracy vs. 80.8\% baseline (+2.2\% gain)
+    \item 70.8\% feature reduction (2048→598) with apparent improvement
+    \item Completed in 3.6 hours on 2K subset
 \end{itemize}
 
-This extension validates DIO as a versatile optimization framework applicable across diverse machine learning domains, from clinical diagnostics to computer vision, with substantial improvements in accuracy-complexity trade-offs even on compressed deep learning features.
+\textbf{What Statistical Validation Revealed (30-Run Reality):}
+\begin{itemize}
+    \item $\times$ \textbf{Optimization Failed:} DIO-XGBoost 81.91\% ± 1.38\% \textbf{significantly worse} than defaults 83.27\% ± 1.25\% (p=7.15×10\textsuperscript{-5}, ***)
+    \item $\times$ \textbf{Insufficient Budget:} 576 evaluations inadequate for 2051-D search space (need 10,000-50,000)
+    \item $\times$ \textbf{Feature Selection Overfitted:} 70.8\% reduction removed informative features
+    \item $\times$ \textbf{Single-Split Misleading:} Initial result was optimization overfitting to one partition
+\end{itemize}
+
+\textbf{Critical Lessons Learned:}
+\begin{enumerate}
+    \item \textbf{Budget Must Scale with Dimensionality:} 30-D medical (10K evals) → SUCCESS | 2048-D vision (576 evals) → FAILURE
+    \item \textbf{Single Runs Are Deceptive:} Always validate with 30+ independent runs
+    \item \textbf{No Algorithm Immune to Under-Resourcing:} Even XGBoost's regularization cannot overcome severe budget constraints
+    \item \textbf{Cross-Domain Success Requires Appropriate Resources:} Transfer learning framework is sound, but computational investment must match problem complexity
+\end{enumerate}
+
+This honest negative result strengthens the research by demonstrating: (1) methodological rigor through statistical validation, (2) clear boundaries of when DIO succeeds vs. fails, and (3) practical guidance for practitioners on budget allocation. The contrast between medical success and vision failure provides valuable insights into optimization budget scaling laws.
 
 % ==============================================================================
 % 6. CONCLUSION
 % ==============================================================================
 \section{Conclusion}
 
-This study successfully demonstrated the effectiveness and generalizability of the Dholes-Inspired Optimization algorithm for simultaneous feature selection and hyperparameter optimization across diverse machine learning domains. By developing a complete Python-based implementation of DIO and designing a novel nested optimization framework, we achieved robust and efficient models for both medical classification (breast cancer diagnosis) and computer vision (CIFAR-10 image classification).
+This study demonstrated both the effectiveness and the limitations of the Dholes-Inspired Optimization algorithm for simultaneous feature selection and hyperparameter optimization across diverse machine learning domains. By developing a complete Python-based implementation of DIO and designing a novel nested optimization framework, we achieved robust and efficient models for medical classification (breast cancer diagnosis, 96.88\% accuracy with 67\% feature reduction), while discovering critical failure modes in computer vision (CIFAR-10) that provide valuable insights into optimization budget requirements for high-dimensional problems.
 
 \subsection{Summary of Contributions}
 Our research makes several key contributions to the field:
@@ -1373,10 +1388,10 @@ Our research makes several key contributions to the field:
     \item \textbf{Python Implementation:} First documented Python implementation of the DIO algorithm, enabling integration with modern machine learning ecosystems (original was MATLAB-based).
     \item \textbf{Nested Optimization Framework:} Novel application of hierarchical DIO for simultaneous hyperparameter tuning and feature selection, addressing the interdependence between these two optimization tasks.
     \item \textbf{Multi-Algorithm and Multi-Domain Validation:} Successfully applied DIO to Random Forest and XGBoost across two fundamentally different domains (medical tabular data and image features), demonstrating framework versatility.
-    \item \textbf{CV-Based Optimization Methodology:} Demonstrated the critical importance of k-fold cross-validation within the optimization loop, preventing optimization overfitting and achieving 1.54\% accuracy improvement over single-split optimization.
+    \item \textbf{CV-Based Optimization Methodology:} Demonstrated the critical importance of k-fold cross-validation within the optimization loop, preventing optimization overfitting and achieving 2.18\% accuracy improvement over single-split optimization (94.37\% → 96.55\%).
     \item \textbf{Statistical Rigor:} Rigorous validation through 30 independent runs with different train/test splits across three optimization approaches (RF single-split, RF CV-based, XGBoost single-split), ensuring robust statistical conclusions.
-    \item \textbf{Multiple Pareto-Optimal Solutions:} Identified distinct Pareto-optimal solutions across both domains, representing different accuracy-complexity trade-offs and enabling deployment flexibility based on application priorities.
-    \item \textbf{High-Dimensional Scalability:} Validated DIO effectiveness on 2048-D image features (68× larger than medical data), demonstrating practical applicability to modern deep learning pipelines.
+    \item \textbf{Pareto-Optimal Solutions:} Identified distinct Pareto-optimal solutions for medical domain (RF-CV: 96.55\%/6 features vs XGBoost: 96.88\%/10 features), representing different accuracy-complexity trade-offs and enabling deployment flexibility based on application priorities.
+    \item \textbf{High-Dimensional Failure Analysis:} Documented CIFAR-10 optimization failure (81.91\% vs 83.27\% defaults, p<0.0001) on 2048-D features, revealing that budget must scale with dimensionality\textsuperscript{2}—a critical lesson for practitioners.
     \item \textbf{Benchmark Validation:} Rigorous algorithm verification on 14 standard test functions (F1-F14) with full paper parameters, confirming implementation correctness.
 \end{enumerate}
 
