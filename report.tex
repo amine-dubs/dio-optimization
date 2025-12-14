@@ -1300,22 +1300,6 @@ The 30-run statistical validation revealed a stark contrast to the single-run re
     \item \textbf{At Least Model Selection Worked:} Despite the optimization struggles, our initial model comparison was validated: XGBoost really is the best choice for CIFAR-10 features (83.27\% default), and RF-CV really is best for medical data (96.55\% optimized). So the methodology for \emph{choosing} which algorithm to optimize worked correctly, even if fully optimizing it proved harder than expected.
 \end{enumerate}
 
-\subsection{Real-World Applications for Vision Tasks}
-
-The CIFAR-10 extension demonstrates DIO's applicability to modern deep learning pipelines:
-
-\begin{itemize}
-    \item \textbf{Transfer Learning Optimization:} DIO can optimize classifiers on frozen deep features (58.35\% reduction), reducing deployment costs and inference time without retraining neural networks.
-    
-    \item \textbf{Real-Time Systems:} 58.35\% feature reduction enables ~2.4× faster inference for resource-constrained edge devices (smartphones, IoT, embedded systems).
-    
-    \item \textbf{Hybrid Pipelines:} Combining pre-trained CNNs (feature extraction) with DIO-optimized traditional ML (classification) offers a practical middle ground between full fine-tuning and frozen features, with 2.8\% accuracy gains.
-    
-    \item \textbf{Subset Training Viability:} Results on 2,000 samples (4\% of training data) with 2.8\% improvement suggest DIO can identify effective configurations even with limited labeled data—valuable for domains with expensive annotation (medical imaging, autonomous vehicles).
-    
-    \item \textbf{Feature Redundancy Discovery:} Elimination of 58\% of ResNet50 features while improving accuracy reveals optimization opportunities in standard pre-trained models, motivating targeted feature engineering.
-\end{itemize}
-
 \subsection{Limitations and Future Work}
 
 \textbf{Current Limitations:}
@@ -1415,13 +1399,15 @@ Our research makes several key contributions to the field:
 
 \textbf{3. XGBoost Single-Split Optimization (Best Medical Accuracy):} Achieved \textbf{96.88\% $\pm$ 1.10\%} with \textbf{10 features (67\% reduction)}, ranking \textbf{\#1 overall}—the highest medical accuracy across all experiments. Completed in only 54 seconds, suggesting gradient boosting's regularization provides natural protection against optimization overfitting.
 
-\textbf{Computer Vision Domain (CIFAR-10 Classification):}
+\textbf{Computer Vision Domain (CIFAR-10 Classification) - Failure Case:}
 
-\textbf{XGBoost DIO Optimization on Deep Features:} Achieved \textbf{83.0\% accuracy} on optimization subset (2K train, 500 test) with \textbf{598/2048 features (70.8\% reduction)}, outperforming baseline (80.8\%) by +2.2\% while reducing inference cost by ~3.4×. Full dataset baseline (50K samples) achieved 85\% accuracy, demonstrating model selection effectiveness. Optimization completed in 3.6 hours (215.98 minutes) on stratified subset, demonstrating scalability to high-dimensional spaces.
+\textbf{Single-Run Illusion:} Initial DIO-XGBoost result appeared promising: 83.0\% accuracy on optimization subset (2K train, 500 test) vs. 80.8\% baseline (+2.2\%), with 598/2048 features (70.8\% reduction). Optimization completed in 3.6 hours (215.98 minutes).
+
+\textbf{Statistical Validation Revealed Failure:} 30-run validation on the same dataset demonstrated the single-run result was \textbf{optimization overfitting}. DIO-XGBoost achieved only 81.91\% $\pm$ 1.38\% across 30 runs—\textbf{significantly worse} than default XGBoost (83.27\% $\pm$ 1.25\%, p=7.15×10\textsuperscript{-5}, ***). Root cause: 576 total function evaluations proved catastrophically insufficient for a 2051-dimensional search space (2048 features + 3 hyperparameters); proper optimization would require 10,000-50,000 evaluations. This failure demonstrates that budget constraints, not the DIO algorithm itself, determine success in high-dimensional problems.
 
 \textbf{Cross-Domain Methodological Insights:}
 \begin{enumerate}
-    \item \textbf{Consistent Value Delivery:} DIO improved accuracy-complexity trade-offs in both 30-D medical data (up to +2.18\% accuracy, 80-87\% feature reduction) and 2048-D image features (single-run +2.2\% but failed statistical validation, 70.8\% reduction).
+    \item \textbf{Medical Success vs Vision Failure:} DIO achieved +2.18\% accuracy gain in 30-D medical data (94.37\% → 96.55\% with CV), but failed catastrophically in 2048-D vision data (-1.36\% relative to defaults, p<0.0001). The difference: medical domain had adequate budget (10K evals for 34-D space), vision domain was severely under-resourced (576 evals for 2051-D space).
     
     \item \textbf{Optimization Overfitting is Algorithm-Dependent:} RF single-split suffered from overfitting, while XGBoost single-split achieved top performance on medical data, validating gradient boosting's robustness for low-dimensional problems.
     
@@ -1456,28 +1442,14 @@ From a clinical deployment perspective, this research provides three validated m
     \item \textbf{Generalization Assurance:} CV-based optimization provides statistical guarantee of real-world effectiveness
 \end{itemize}
 
-\textbf{Computer Vision (Image Classification):}
-
-For image recognition and transfer learning applications:
-\begin{itemize}
-    \item \textbf{Inference Speedup:} 58.35\% feature reduction translates to 2.4× faster classification for real-time systems and edge devices
-    \item \textbf{Edge Deployment:} Reduced feature dimensionality (2048→598) enables deployment on resource-constrained IoT devices, smartphones, and embedded systems
-    \item \textbf{Cost-Effective Transfer Learning:} DIO optimizes frozen deep features (+2.8\% accuracy) without expensive neural network fine-tuning or retraining
-    \item \textbf{Data-Efficient Optimization:} Achieved substantial improvements using only 4\% of training data (2,000/50,000 samples), valuable for limited annotation budgets (medical imaging, satellite imagery)
-    \item \textbf{Feature Redundancy Insights:} Discovery that 58\% of ResNet50 features are redundant motivates targeted feature engineering and efficient architectures
-    \item \textbf{Hybrid Pipeline Template:} Pre-trained CNN (feature extraction) + DIO-optimized ML (classification) offers practical middle ground between full fine-tuning and frozen features
-\end{itemize}
-
 \subsection{Broader Implications}
 This work provides a strong methodological foundation for applying DIO and other metaheuristics to complex, multi-objective optimization problems across diverse machine learning domains. Key lessons learned:
 
 \begin{enumerate}
     \item \textbf{CV is Essential (Domain-Dependent):} For algorithms prone to overfitting (e.g., Random Forest), cross-validation within optimization is critical. For naturally regularized methods (e.g., XGBoost), single-split may suffice with substantial time savings.
     \item \textbf{Computational Cost Justified:} Medical domain CV optimization's 476× time increase (7.9 hours vs. 1 minute) was fully justified by 1.54\% accuracy gain and 7\% better feature reduction.
-    \item \textbf{Domain-Specific Trade-offs:} Medical data prioritizes interpretability (6 features), while computer vision leverages redundancy tolerance (29\% reduction still valuable in 2048-D space).
-    \item \textbf{Scalability Through Configuration:} Fast DIO setups (3 dholes, 8 iterations) enable practical optimization in high-dimensional spaces (2048-D) within 1-2 hours.
     \item \textbf{Pareto Thinking:} Multi-objective optimization targeting accuracy-complexity trade-offs is more valuable for real-world deployment than pure accuracy maximization.
-    \item \textbf{Generalizability Validated:} Consistent improvements across tabular medical data (30-D) and deep learning image features (2048-D) demonstrate framework robustness.
+    \item \textbf{Domain-Dependent Effectiveness:} Results demonstrate DIO's robustness is conditional, not universal—significant improvements on low-dimensional tabular medical data (30-D) versus clear failure on under-budgeted high-dimensional vision features (2048-D), establishing critical applicability boundaries.
 \end{enumerate}
 
 \subsection{Final Remarks}
